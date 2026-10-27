@@ -163,6 +163,11 @@ def third_party(modules: list[dict], sources: dict) -> str:
         s = m["source"]
         lines.append(f"| `{m['id']}` | {s['upstream_name']} | {s['authors']} | {s['license']} | [{s['commit'][:10]}]({s['repo']}/tree/{s['commit']}) |")
     used = {m["source"]["source_key"] for m in modules}
+    bundled = [k for k in sorted(used) if sources[k].get("includes")]
+    if bundled:
+        lines += ["", "Bundled libraries inside those upstreams:", ""]
+        for k in bundled:
+            lines.append(f"- {k}: {sources[k]['includes']}")
     support = [k for k in sources if k not in used and sources[k].get("note")]
     if support:
         lines += ["", "Supporting sources (constants only, not ported code):", ""]

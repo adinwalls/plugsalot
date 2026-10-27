@@ -8,7 +8,7 @@
       {
         "module": "multicomp",
         "params": {
-          "mode": "Vintage VCA (Bus)",
+          "mode": "Bus",
           "bus_threshold": -6,
           "bus_ratio": "4:1",
           "bus_attack": "30ms",

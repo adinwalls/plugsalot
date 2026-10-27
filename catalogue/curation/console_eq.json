@@ -1,0 +1,57 @@
+{
+  "id": "console_eq",
+  "name": "Console EQ",
+  "kind": "effect",
+  "category": "eq",
+  "source": {
+    "source_key": "dusk-audio",
+    "path": "plugins/shared-daf/dsp/FourKEQDSP.cpp",
+    "upstream_name": "Dusk Audio 4K EQ 2"
+  },
+  "extractor": {
+    "type": "dusk_table",
+    "file": "plugins/4k-eq/daf-plugin/FourKEQParams.hpp",
+    "table": "kFourKParams",
+    "fields": ["id", "min", "max", "default"],
+    "labels": { "eq_type": "kEqTypeLabels", "oversampling": "kOversampleLabels" },
+    "booleans": ["hpf_enabled", "lpf_enabled", "lf_bell", "hf_bell", "bypass", "ms_mode", "auto_gain", "spectrum_prepost", "show_graph"],
+    "meters": ["out_peak_l", "out_peak_r"],
+    "inert": ["saturation", "legacy_dial_bands", "legacy_dial_filters", "show_graph", "spectrum_prepost",
+              "hpf_freq", "lpf_freq", "lf_freq", "lm_freq", "hm_freq", "hf_freq"]
+  },
+  "purpose": "British console-style channel EQ: high-pass and low-pass filters plus four bands (two shelving or bell, two sweepable mids) with musical, slightly coloured curves.",
+  "good_for": ["lead vocal", "backing vocal", "acoustic guitar", "electric guitar", "bass", "kick", "snare", "full kit", "software drums", "synth", "keys", "bus", "master"],
+  "tags": ["corrective", "tonal", "console", "high-pass", "musical"],
+  "cpu_points": null,
+  "latency": { "type": "variable", "note": "Oversampling adds latency; 1x has none." },
+  "tracking_safe": true,
+  "tracking_overrides": { "oversampling": "1x" },
+  "channels": ["mono", "stereo"],
+  "expose": [
+    { "upstream_id": "eq_type", "name": "Console type", "ai_hint": "Brown: broader, warmer E-series curves. Black: tighter G-series curves with proportional Q." },
+    { "upstream_id": "hpf_enabled", "name": "High-pass on", "ai_hint": "On for almost every source except kick, bass and full mixes." },
+    { "upstream_id": "hpf_hz", "name": "High-pass frequency", "unit": "Hz", "ai_hint": "Just below the source's lowest useful note: vocals 80-120 Hz, acoustic guitar 80-100 Hz." },
+    { "upstream_id": "lpf_enabled", "name": "Low-pass on", "ai_hint": "Usually off; use to tame fizz on distorted guitars or dull a harsh source." },
+    { "upstream_id": "lpf_hz", "name": "Low-pass frequency", "unit": "Hz" },
+    { "upstream_id": "lf_gain", "name": "Low band gain", "unit": "dB", "min": -12, "max": 12, "ai_hint": "Low shelf (or bell). Small moves of 1-3 dB." },
+    { "upstream_id": "lf_hz", "name": "Low band frequency", "unit": "Hz" },
+    { "upstream_id": "lf_bell", "name": "Low band bell", "ai_hint": "Off = shelf, on = bell." },
+    { "upstream_id": "lm_gain", "name": "Low-mid gain", "unit": "dB", "min": -12, "max": 12, "ai_hint": "Mud lives at 200-500 Hz; cut 2-4 dB." },
+    { "upstream_id": "lm_hz", "name": "Low-mid frequency", "unit": "Hz" },
+    { "upstream_id": "lm_q", "name": "Low-mid Q", "ai_hint": "0.5 broad to 3 narrow." },
+    { "upstream_id": "hm_gain", "name": "High-mid gain", "unit": "dB", "min": -12, "max": 12, "ai_hint": "Presence 2-5 kHz; harshness often 2.5-4 kHz." },
+    { "upstream_id": "hm_hz", "name": "High-mid frequency", "unit": "Hz" },
+    { "upstream_id": "hm_q", "name": "High-mid Q", "ai_hint": "0.5 broad to 3 narrow." },
+    { "upstream_id": "hf_gain", "name": "High band gain", "unit": "dB", "min": -12, "max": 12, "ai_hint": "Air above 8-12 kHz; boosts here also lift sibilance." },
+    { "upstream_id": "hf_hz", "name": "High band frequency", "unit": "Hz" },
+    { "upstream_id": "hf_bell", "name": "High band bell", "ai_hint": "Off = shelf, on = bell." },
+    { "upstream_id": "input_gain", "name": "Input gain", "unit": "dB", "ai_hint": "Drives the modelled console path; leave at 0 unless colour is wanted." },
+    { "upstream_id": "output_gain", "name": "Output gain", "unit": "dB", "ai_hint": "Match output level to input after boosts." },
+    { "upstream_id": "oversampling", "ai_hint": "4x default for best sound. 1x when tracking." }
+  ],
+  "hidden_reason": "Mid/side mode, auto gain and the legacy dial-position controls stay at defaults; the Hz controls are used instead.",
+  "notes": [
+    "Embeds Dusk's framework-free FourKEQDSP core. Frequencies are set through the core's Hz setters, which take precedence over the legacy dial positions.",
+    "Used as the prototype EQ while the LSP Parametric EQ port is pending."
+  ]
+}

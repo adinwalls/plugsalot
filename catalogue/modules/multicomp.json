@@ -8,13 +8,13 @@
     "source_key": "dusk-audio",
     "repo": "https://github.com/dusk-audio/dusk-audio-plugins",
     "commit": "e0991c57cac4f8f666b5749dcb90dcbd9081cd30",
-    "path": "plugins/multi-comp/multicomp.cpp",
+    "path": "plugins/multi-comp",
     "upstream_name": "Dusk Audio Multi-Comp",
     "license": "GPL-3.0-or-later",
     "authors": "Dusk Audio",
-    "extractor": "juce_apvts"
+    "extractor": "dusk_table"
   },
-  "purpose": "Compressor with seven hardware-style modes (opto, FET, VCA, bus, studio, digital) for levelling vocals, adding punch to drums and gluing buses.",
+  "purpose": "Compressor with seven hardware-style modes (opto, FET, VCA, bus, studio FET, studio VCA, digital) for levelling vocals, adding punch to drums and gluing buses.",
   "good_for": [
     "lead vocal",
     "backing vocal",
@@ -38,7 +38,7 @@
   "cpu_measured": false,
   "latency": {
     "type": "variable",
-    "note": "Oversampling and lookahead add latency."
+    "note": "Oversampling and lookahead add latency; the core reports it."
   },
   "tracking_safe": true,
   "tracking_overrides": {
@@ -54,27 +54,27 @@
       "upstream_id": "mode",
       "name": "Mode",
       "type": "enum",
-      "default": "Vintage Opto",
+      "default": "Opto",
       "options": [
-        "Vintage Opto",
-        "Vintage FET",
-        "Classic VCA",
-        "Vintage VCA (Bus)",
+        "Opto",
+        "FET",
+        "VCA",
+        "Bus",
         "Studio FET",
         "Studio VCA",
         "Digital"
       ],
       "convert": "enum_index",
-      "ai_hint": "Opto: smooth vocal levelling. Vintage FET: aggressive, forward vocals and drums. Bus: drum and mix glue. Studio modes: cleaner. Digital: precise. Set only the parameters of the chosen mode."
+      "ai_hint": "Opto: smooth vocal levelling. FET: aggressive, forward vocals and drums. Bus: drum and mix glue. Studio modes: cleaner. Digital: precise. Set only the parameters of the chosen mode."
     },
     {
       "id": "mix",
       "upstream_id": "mix",
       "name": "Mix",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 100.0,
+      "min": 0,
+      "max": 100,
+      "default": 100,
       "unit": "%",
       "ai_hint": "Below 100% for parallel compression."
     },
@@ -83,9 +83,9 @@
       "upstream_id": "sidechain_hp",
       "name": "SC HP Filter",
       "type": "float",
-      "min": 0.0,
-      "max": 500.0,
-      "default": 0.0,
+      "min": 0,
+      "max": 500,
+      "default": 0,
       "unit": "Hz",
       "scale": "log",
       "ai_hint": "60-100 Hz stops low end from pumping the compressor; 0 = off."
@@ -94,13 +94,8 @@
       "id": "auto_makeup",
       "upstream_id": "auto_makeup",
       "name": "Auto Makeup",
-      "type": "enum",
-      "default": "Off",
-      "options": [
-        "Off",
-        "On"
-      ],
-      "convert": "enum_index",
+      "type": "bool",
+      "default": false,
       "ai_hint": "On to keep output level matched while adjusting compression."
     },
     {
@@ -120,51 +115,51 @@
     {
       "id": "opto_peak_reduction",
       "upstream_id": "opto_peak_reduction",
-      "name": "Peak Reduction",
+      "name": "Opto Peak Reduction",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 0.0,
+      "min": 0,
+      "max": 100,
+      "default": 0,
       "unit": "%",
-      "ai_hint": "Vintage Opto only. Compression amount; 50% gives roughly 4-6 dB reduction on a typical lead vocal."
+      "ai_hint": "Opto only. Compression amount; around 50 gives roughly 4-6 dB of reduction on a typical lead vocal."
     },
     {
       "id": "opto_gain",
       "upstream_id": "opto_gain",
-      "name": "Gain",
+      "name": "Opto Gain",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 50.0,
+      "min": 0,
+      "max": 100,
+      "default": 23.409226,
       "unit": "%",
-      "ai_hint": "Vintage Opto only. Output gain; 50% is unity."
+      "ai_hint": "Opto only. Output gain knob; 23.4 is unity (0 dB), 32 is about +5.6 dB, 41 about +11 dB."
     },
     {
       "id": "fet_input",
       "upstream_id": "fet_input",
-      "name": "Input",
+      "name": "FET Input",
       "type": "float",
-      "min": -20.0,
-      "max": 40.0,
-      "default": 0.0,
+      "min": -20,
+      "max": 40,
+      "default": 0,
       "unit": "dB",
-      "ai_hint": "Vintage/Studio FET. Drive into the compressor."
+      "ai_hint": "FET and Studio FET. Drive into the compressor."
     },
     {
       "id": "fet_threshold",
       "upstream_id": "fet_threshold",
-      "name": "Threshold",
+      "name": "FET Threshold",
       "type": "float",
-      "min": -60.0,
-      "max": 0.0,
-      "default": -10.0,
+      "min": -60,
+      "max": 0,
+      "default": -10,
       "unit": "dB",
-      "ai_hint": "Vintage/Studio FET. Where compression starts."
+      "ai_hint": "FET and Studio FET. Where compression starts."
     },
     {
       "id": "fet_ratio",
       "upstream_id": "fet_ratio",
-      "name": "Ratio",
+      "name": "FET Ratio",
       "type": "enum",
       "default": "4:1",
       "options": [
@@ -175,124 +170,101 @@
         "All"
       ],
       "convert": "enum_index",
-      "ai_hint": "Vintage/Studio FET. 4:1 for vocals; All for extreme room-mic smash only."
+      "ai_hint": "FET and Studio FET. 4:1 for vocals; All only for extreme room-mic smash."
     },
     {
       "id": "fet_attack",
       "upstream_id": "fet_attack",
-      "name": "Attack",
+      "name": "FET Attack",
       "type": "float",
       "min": 0.02,
-      "max": 80.0,
+      "max": 80,
       "default": 0.2,
       "unit": "ms",
       "scale": "log",
-      "ai_hint": "Vintage/Studio FET. Fast (under 1 ms) for presence; slower to keep transients."
+      "ai_hint": "FET and Studio FET. Under 1 ms for presence; slower to keep transients."
     },
     {
       "id": "fet_release",
       "upstream_id": "fet_release",
-      "name": "Release",
+      "name": "FET Release",
       "type": "float",
-      "min": 50.0,
-      "max": 1100.0,
-      "default": 400.0,
+      "min": 50,
+      "max": 1100,
+      "default": 400,
       "unit": "ms",
-      "ai_hint": "Vintage/Studio FET."
+      "ai_hint": "FET and Studio FET."
     },
     {
       "id": "fet_output",
       "upstream_id": "fet_output",
-      "name": "Output",
+      "name": "FET Output",
       "type": "float",
-      "min": -20.0,
-      "max": 20.0,
-      "default": 0.0,
+      "min": -20,
+      "max": 20,
+      "default": 0,
       "unit": "dB",
-      "ai_hint": "Vintage/Studio FET. Output trim."
+      "ai_hint": "FET and Studio FET. Output trim."
     },
     {
       "id": "fet_transient",
       "upstream_id": "fet_transient",
-      "name": "Transient",
+      "name": "FET Transient",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 0.0,
+      "min": 0,
+      "max": 100,
+      "default": 0,
       "unit": "%",
-      "ai_hint": "Vintage/Studio FET. Blends raw transients past the compressor."
+      "ai_hint": "FET and Studio FET. Blends raw transients past the compressor."
     },
     {
       "id": "vca_threshold",
       "upstream_id": "vca_threshold",
-      "name": "Threshold",
+      "name": "VCA Threshold",
       "type": "float",
-      "min": -38.0,
-      "max": 12.0,
-      "default": 0.0,
+      "min": -55.0,
+      "max": 0.0,
+      "default": -27.0,
       "unit": "dB",
-      "ai_hint": "Classic VCA only."
+      "ai_hint": "VCA only."
     },
     {
-      "id": "vca_ratio",
-      "upstream_id": "vca_ratio",
-      "name": "Ratio",
+      "id": "vca_compression",
+      "upstream_id": "vca_compression",
+      "name": "VCA Compression",
       "type": "float",
-      "min": 1.0,
-      "max": 20,
-      "default": 4.0,
-      "unit": ":1",
-      "scale": "log",
-      "ai_hint": "Classic VCA only. Upstream allows up to 120:1 (limiting); capped at 20:1 here."
-    },
-    {
-      "id": "vca_attack",
-      "upstream_id": "vca_attack",
-      "name": "Attack",
-      "type": "float",
-      "min": 0.1,
-      "max": 50.0,
-      "default": 1.0,
-      "unit": "ms",
-      "ai_hint": "Classic VCA only."
-    },
-    {
-      "id": "vca_release",
-      "upstream_id": "vca_release",
-      "name": "Release",
-      "type": "float",
-      "min": 10.0,
-      "max": 5000.0,
-      "default": 100.0,
-      "unit": "ms",
-      "ai_hint": "Classic VCA only."
+      "min": 0,
+      "max": 95,
+      "default": 50.4944,
+      "unit": "%",
+      "ai_hint": "VCA only. Compression knob: 0 = 1:1, about 50 = moderate, 80+ heavy. Above 95 over-compresses, so it is capped."
     },
     {
       "id": "vca_output",
       "upstream_id": "vca_output",
-      "name": "Output",
+      "name": "VCA Output",
       "type": "float",
-      "min": -20.0,
-      "max": 20.0,
-      "default": 0.0,
+      "min": -20,
+      "max": 20,
+      "default": 0,
       "unit": "dB",
-      "ai_hint": "Classic VCA only."
+      "ai_hint": "VCA only."
     },
     {
       "id": "bus_threshold",
       "upstream_id": "bus_threshold",
-      "name": "Threshold",
+      "name": "Bus Threshold",
       "type": "float",
-      "min": -30.0,
-      "max": 15.0,
-      "default": 0.0,
+      "min": -30,
+      "max": 15,
+      "default": 0,
       "unit": "dB",
-      "ai_hint": "Vintage VCA (Bus) only. Aim for 1-4 dB of gain reduction for glue."
+      "ai_hint": "Bus only. Aim for 1-4 dB of gain reduction for glue."
     },
     {
       "id": "bus_ratio",
       "upstream_id": "bus_ratio",
-      "name": "Ratio",
+      "name": "Bus Ratio",
       "type": "enum",
       "default": "2:1",
       "options": [
@@ -301,12 +273,12 @@
         "10:1"
       ],
       "convert": "enum_index",
-      "ai_hint": "Vintage VCA (Bus) only. 2:1 subtle, 4:1 classic drum glue."
+      "ai_hint": "Bus only. 2:1 subtle, 4:1 classic drum glue."
     },
     {
       "id": "bus_attack",
       "upstream_id": "bus_attack",
-      "name": "Attack",
+      "name": "Bus Attack",
       "type": "enum",
       "default": "1ms",
       "options": [
@@ -318,12 +290,12 @@
         "30ms"
       ],
       "convert": "enum_index",
-      "ai_hint": "Vintage VCA (Bus) only. 30ms lets drum transients punch through."
+      "ai_hint": "Bus only. 30ms lets drum transients punch through."
     },
     {
       "id": "bus_release",
       "upstream_id": "bus_release",
-      "name": "Release",
+      "name": "Bus Release",
       "type": "enum",
       "default": "0.3s",
       "options": [
@@ -334,93 +306,93 @@
         "Auto"
       ],
       "convert": "enum_index",
-      "ai_hint": "Vintage VCA (Bus) only. Auto is the classic glue setting."
+      "ai_hint": "Bus only. Auto is the classic glue setting."
     },
     {
       "id": "bus_makeup",
       "upstream_id": "bus_makeup",
-      "name": "Makeup",
+      "name": "Bus Makeup",
       "type": "float",
-      "min": 0.0,
-      "max": 20.0,
-      "default": 0.0,
+      "min": 0,
+      "max": 20,
+      "default": 0,
       "unit": "dB",
-      "ai_hint": "Vintage VCA (Bus) only."
+      "ai_hint": "Bus only."
     },
     {
       "id": "studio_vca_threshold",
       "upstream_id": "studio_vca_threshold",
-      "name": "Threshold",
+      "name": "Studio VCA Threshold",
       "type": "float",
-      "min": -40.0,
-      "max": 20.0,
-      "default": -10.0,
+      "min": -50,
+      "max": 20,
+      "default": -10,
       "unit": "dB",
       "ai_hint": "Studio VCA only."
     },
     {
       "id": "studio_vca_ratio",
       "upstream_id": "studio_vca_ratio",
-      "name": "Ratio",
+      "name": "Studio VCA Ratio",
       "type": "float",
-      "min": 1.0,
-      "max": 10.0,
-      "default": 3.0,
+      "min": 1,
+      "max": 20,
+      "default": 1.5,
       "unit": ":1",
-      "ai_hint": "Studio VCA only."
+      "ai_hint": "Studio VCA only. Capped at 20:1 here (upstream allows 50:1)."
     },
     {
       "id": "studio_vca_attack",
       "upstream_id": "studio_vca_attack",
-      "name": "Attack",
+      "name": "Studio VCA Attack",
       "type": "float",
-      "min": 0.3,
-      "max": 75.0,
-      "default": 10.0,
+      "min": 0.1805,
+      "max": 75,
+      "default": 7.2305,
       "unit": "ms",
       "ai_hint": "Studio VCA only."
     },
     {
       "id": "studio_vca_release",
       "upstream_id": "studio_vca_release",
-      "name": "Release",
+      "name": "Studio VCA Release",
       "type": "float",
-      "min": 100.0,
-      "max": 4000.0,
-      "default": 300.0,
+      "min": 100,
+      "max": 4000,
+      "default": 1000,
       "unit": "ms",
       "ai_hint": "Studio VCA only."
     },
     {
       "id": "studio_vca_output",
       "upstream_id": "studio_vca_output",
-      "name": "Output",
+      "name": "Studio VCA Make Up",
       "type": "float",
-      "min": -20.0,
-      "max": 20.0,
-      "default": 0.0,
+      "min": -20,
+      "max": 20,
+      "default": 0,
       "unit": "dB",
       "ai_hint": "Studio VCA only."
     },
     {
       "id": "digital_threshold",
       "upstream_id": "digital_threshold",
-      "name": "Threshold",
+      "name": "Digital Threshold",
       "type": "float",
-      "min": -60.0,
-      "max": 0.0,
-      "default": -20.0,
+      "min": -60,
+      "max": 0,
+      "default": -20,
       "unit": "dB",
       "ai_hint": "Digital only."
     },
     {
       "id": "digital_ratio",
       "upstream_id": "digital_ratio",
-      "name": "Ratio",
+      "name": "Digital Ratio",
       "type": "float",
-      "min": 1.0,
+      "min": 1,
       "max": 20,
-      "default": 4.0,
+      "default": 4,
       "unit": ":1",
       "scale": "log",
       "ai_hint": "Digital only. Capped at 20:1 here."
@@ -428,22 +400,22 @@
     {
       "id": "digital_knee",
       "upstream_id": "digital_knee",
-      "name": "Knee",
+      "name": "Digital Knee",
       "type": "float",
-      "min": 0.0,
-      "max": 20.0,
-      "default": 6.0,
+      "min": 0,
+      "max": 20,
+      "default": 6,
       "unit": "dB",
       "ai_hint": "Digital only. 6 dB is a soft, musical knee."
     },
     {
       "id": "digital_attack",
       "upstream_id": "digital_attack",
-      "name": "Attack",
+      "name": "Digital Attack",
       "type": "float",
       "min": 0.01,
-      "max": 500.0,
-      "default": 10.0,
+      "max": 500,
+      "default": 10,
       "unit": "ms",
       "scale": "log",
       "ai_hint": "Digital only."
@@ -451,11 +423,11 @@
     {
       "id": "digital_release",
       "upstream_id": "digital_release",
-      "name": "Release",
+      "name": "Digital Release",
       "type": "float",
-      "min": 1.0,
-      "max": 5000.0,
-      "default": 100.0,
+      "min": 1,
+      "max": 5000,
+      "default": 100,
       "unit": "ms",
       "scale": "log",
       "ai_hint": "Digital only."
@@ -463,22 +435,23 @@
     {
       "id": "digital_output",
       "upstream_id": "digital_output",
-      "name": "Output",
+      "name": "Digital Output",
       "type": "float",
-      "min": -24.0,
-      "max": 24.0,
-      "default": 0.0,
+      "min": -24,
+      "max": 24,
+      "default": 0,
       "unit": "dB",
       "ai_hint": "Digital only."
     }
   ],
   "hidden_params": {
-    "count": 40,
-    "reason": "Multiband mode, sidechain EQ, external sidechain, lookahead, distortion, link modes and meters stay at defaults for now; multiband needs its own catalogue entry."
+    "count": 26,
+    "reason": "Multiband mode, sidechain EQ, external sidechain, lookahead, distortion, link modes and meters stay at defaults; multiband needs its own catalogue entry."
   },
   "notes": [
-    "Starting points and hints are drawn from the Dusk Audio Multi-Comp manual (manuals/multi-comp.md).",
-    "Several thresholds and times have no unit label in code; units here follow the manual.",
+    "Parameters come from the DAF build's descriptor table, which drives the framework-free MultiCompDSP core Plugsalot embeds. The older JUCE layout differs (e.g. Opto gain unity point, VCA controls).",
+    "VCA attack, release, over-easy and detector are inert in the current core and are excluded.",
+    "Starting points and hints are drawn from the Dusk Audio Multi-Comp manual (manuals/multi-comp.md) and core source comments.",
     "Each mode has its own threshold scale, so switching mode means re-setting the compression amount."
   ]
 }

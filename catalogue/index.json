@@ -52,7 +52,7 @@
       "name": "Multi-Comp",
       "kind": "effect",
       "category": "dynamics",
-      "purpose": "Compressor with seven hardware-style modes (opto, FET, VCA, bus, studio, digital) for levelling vocals, adding punch to drums and gluing buses.",
+      "purpose": "Compressor with seven hardware-style modes (opto, FET, VCA, bus, studio FET, studio VCA, digital) for levelling vocals, adding punch to drums and gluing buses.",
       "good_for": [
         "lead vocal",
         "backing vocal",
@@ -64,6 +64,30 @@
         "acoustic guitar",
         "electric guitar",
         "bus"
+      ],
+      "cpu_points": null,
+      "tracking_safe": true
+    },
+    {
+      "id": "console_eq",
+      "name": "Console EQ",
+      "kind": "effect",
+      "category": "eq",
+      "purpose": "British console-style channel EQ: high-pass and low-pass filters plus four bands (two shelving or bell, two sweepable mids) with musical, slightly coloured curves.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "electric guitar",
+        "bass",
+        "kick",
+        "snare",
+        "full kit",
+        "software drums",
+        "synth",
+        "keys",
+        "bus",
+        "master"
       ],
       "cpu_points": null,
       "tracking_safe": true

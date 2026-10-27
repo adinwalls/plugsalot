@@ -3,78 +3,150 @@
   "source_key": "dusk-audio",
   "commit": "e0991c57cac4f8f666b5749dcb90dcbd9081cd30",
   "extractor": {
-    "type": "juce_apvts",
-    "file": "plugins/multi-comp/multicomp.cpp",
-    "function": "UniversalCompressor::createParameterLayout",
-    "bool_classes": [
-      "SnappingBoolParameter"
+    "type": "dusk_table",
+    "file": "plugins/multi-comp/daf-plugin/MultiCompParams.hpp",
+    "table": "kParams",
+    "fields": [
+      "id",
+      "name",
+      "unit",
+      "min",
+      "max",
+      "default",
+      "core",
+      "integer",
+      "interval",
+      "skew",
+      "midpoint"
+    ],
+    "constant_files": [
+      "plugins/multi-comp/core/MultiCompParams.hpp",
+      "plugins/multi-comp/core/MultiCompVcaLaw.hpp"
+    ],
+    "labels": {
+      "mode": "kModes",
+      "fet_ratio": "kRatios",
+      "oversampling": "kOversampling",
+      "bus_ratio": "kBusRatios",
+      "bus_attack": "kBusAttack",
+      "bus_release": "kBusRelease",
+      "distortion_type": "kDistortion",
+      "true_peak_quality": "kTruePeakQuality",
+      "fet_curve_mode": "kFetCurve",
+      "stereo_link_mode": "kLinkMode"
+    },
+    "booleans": [
+      "bypass",
+      "true_peak_enable",
+      "sidechain_enable",
+      "auto_makeup",
+      "opto_limit",
+      "digital_adaptive",
+      "global_sidechain_listen",
+      "noise_enable"
+    ],
+    "inert": [
+      "vca_attack",
+      "vca_release",
+      "vca_overeasy",
+      "vca_detector_mode"
     ]
   },
   "params": [
     {
       "upstream_id": "mode",
       "name": "Mode",
+      "core": "Mode",
       "type": "enum",
       "options": [
-        "Vintage Opto",
-        "Vintage FET",
-        "Classic VCA",
-        "Vintage VCA (Bus)",
+        "Opto",
+        "FET",
+        "VCA",
+        "Bus",
         "Studio FET",
         "Studio VCA",
         "Digital",
         "Multiband"
       ],
-      "default": "Vintage Opto"
+      "default": "Opto",
+      "convert": "enum_index"
     },
     {
       "upstream_id": "bypass",
       "name": "Bypass",
+      "core": "Bypass",
       "type": "bool",
-      "default": false
+      "default": false,
+      "role": "bypass"
     },
     {
       "upstream_id": "stereo_link",
       "name": "Stereo Link",
+      "core": "StereoLink",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 100.0,
+      "min": 0,
+      "max": 100,
+      "default": 100,
       "unit": "%"
     },
     {
       "upstream_id": "mix",
       "name": "Mix",
+      "core": "Mix",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 100.0,
+      "min": 0,
+      "max": 100,
+      "default": 100,
       "unit": "%"
     },
     {
       "upstream_id": "sidechain_hp",
       "name": "SC HP Filter",
+      "core": "SidechainHP",
       "type": "float",
-      "min": 0.0,
-      "max": 500.0,
-      "scale": "log",
-      "skew": 0.5,
-      "default": 0.0,
-      "unit": "Hz"
+      "min": 0,
+      "max": 500,
+      "default": 0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "true_peak_enable",
+      "name": "True Peak",
+      "core": "TruePeakEnable",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "upstream_id": "true_peak_quality",
+      "name": "TP Quality",
+      "core": "TruePeakQuality",
+      "type": "enum",
+      "options": [
+        "4x (Standard)",
+        "8x (High)"
+      ],
+      "default": "4x (Standard)",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "sidechain_enable",
+      "name": "External Sidechain",
+      "core": "ExternalSidechain",
+      "type": "bool",
+      "default": false
     },
     {
       "upstream_id": "auto_makeup",
       "name": "Auto Makeup",
-      "type": "enum",
-      "options": [
-        "Off",
-        "On"
-      ],
-      "default": "Off"
+      "core": "AutoMakeup",
+      "type": "bool",
+      "default": false
     },
     {
       "upstream_id": "distortion_type",
       "name": "Distortion",
+      "core": "Distortion",
       "type": "enum",
       "options": [
         "Off",
@@ -82,211 +154,114 @@
         "Hard",
         "Clip"
       ],
-      "default": "Off"
+      "default": "Off",
+      "convert": "enum_index"
     },
     {
       "upstream_id": "distortion_amount",
       "name": "Distortion Amt",
+      "core": "DistortionAmount",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 50.0,
+      "min": 0,
+      "max": 100,
+      "default": 50,
       "unit": "%"
-    },
-    {
-      "upstream_id": "envelope_curve",
-      "name": "Envelope Curve",
-      "type": "enum",
-      "options": [
-        "Logarithmic (Analog)",
-        "Linear (Digital)"
-      ],
-      "default": "Logarithmic (Analog)"
-    },
-    {
-      "upstream_id": "saturation_mode",
-      "name": "Saturation Mode",
-      "type": "enum",
-      "options": [
-        "Vintage (Warm)",
-        "Modern (Clean)",
-        "Pristine (Minimal)"
-      ],
-      "default": "Vintage (Warm)"
-    },
-    {
-      "upstream_id": "sidechain_enable",
-      "name": "External Sidechain",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "upstream_id": "global_lookahead",
-      "name": "Lookahead",
-      "type": "float",
-      "min": 0.0,
-      "max": 10.0,
-      "default": 0.0,
-      "unit": "ms"
-    },
-    {
-      "upstream_id": "global_sidechain_listen",
-      "name": "SC Listen",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "upstream_id": "stereo_link_mode",
-      "name": "Link Mode",
-      "type": "enum",
-      "options": [
-        "Stereo",
-        "Mid-Side",
-        "Dual Mono"
-      ],
-      "default": "Stereo"
-    },
-    {
-      "upstream_id": "noise_enable",
-      "name": "Analog Noise",
-      "type": "bool",
-      "default": false
     },
     {
       "upstream_id": "oversampling",
       "name": "Oversampling",
+      "core": "Oversampling",
       "type": "enum",
       "options": [
         "Off",
         "2x",
         "4x"
       ],
-      "default": "2x"
+      "default": "2x",
+      "convert": "enum_index"
     },
     {
-      "upstream_id": "sc_low_freq",
-      "name": "SC Low Freq",
+      "upstream_id": "global_lookahead",
+      "name": "Lookahead",
+      "core": "GlobalLookahead",
       "type": "float",
-      "min": 60.0,
-      "max": 500.0,
-      "scale": "log",
-      "skew": 0.5,
-      "default": 100.0,
-      "unit": "Hz"
-    },
-    {
-      "upstream_id": "sc_low_gain",
-      "name": "SC Low Gain",
-      "type": "float",
-      "min": -12.0,
-      "max": 12.0,
-      "default": 0.0,
-      "unit": "dB"
-    },
-    {
-      "upstream_id": "sc_high_freq",
-      "name": "SC High Freq",
-      "type": "float",
-      "min": 2000.0,
-      "max": 16000.0,
-      "scale": "log",
-      "skew": 0.5,
-      "default": 8000.0,
-      "unit": "Hz"
-    },
-    {
-      "upstream_id": "sc_high_gain",
-      "name": "SC High Gain",
-      "type": "float",
-      "min": -12.0,
-      "max": 12.0,
-      "default": 0.0,
-      "unit": "dB"
-    },
-    {
-      "upstream_id": "true_peak_enable",
-      "name": "True Peak",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "upstream_id": "true_peak_quality",
-      "name": "TP Quality",
-      "type": "enum",
-      "options": [
-        "4x (Standard)",
-        "8x (High)"
-      ],
-      "default": "4x (Standard)"
-    },
-    {
-      "upstream_id": "gr_meter",
-      "name": "GR",
-      "type": "float",
-      "min": -30.0,
-      "max": 0.0,
-      "default": 0.0,
-      "unit": "dB"
+      "min": 0,
+      "max": 10,
+      "default": 0,
+      "unit": "ms"
     },
     {
       "upstream_id": "opto_peak_reduction",
-      "name": "Peak Reduction",
+      "name": "Opto Peak Reduction",
+      "core": "OptoPeakReduction",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 0.0
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "unit": "%"
     },
     {
       "upstream_id": "opto_gain",
-      "name": "Gain",
+      "name": "Opto Gain",
+      "core": "OptoGain",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 50.0
+      "min": 0,
+      "max": 100,
+      "default": 23.409226,
+      "unit": "%"
     },
     {
       "upstream_id": "opto_limit",
-      "name": "Limit Mode",
+      "name": "Opto Limit",
+      "core": "OptoLimit",
       "type": "bool",
       "default": false
     },
     {
       "upstream_id": "fet_input",
-      "name": "Input",
+      "name": "FET Input",
+      "core": "FetInput",
       "type": "float",
-      "min": -20.0,
-      "max": 40.0,
-      "default": 0.0
+      "min": -20,
+      "max": 40,
+      "default": 0,
+      "unit": "dB"
     },
     {
       "upstream_id": "fet_output",
-      "name": "Output",
+      "name": "FET Output",
+      "core": "FetOutput",
       "type": "float",
-      "min": -20.0,
-      "max": 20.0,
-      "default": 0.0
+      "min": -20,
+      "max": 20,
+      "default": 0,
+      "unit": "dB"
     },
     {
       "upstream_id": "fet_attack",
-      "name": "Attack",
+      "name": "FET Attack",
+      "core": "FetAttack",
       "type": "float",
       "min": 0.02,
-      "max": 80.0,
-      "scale": "log",
-      "skew": 0.3,
-      "default": 0.2
+      "max": 80,
+      "default": 0.2,
+      "unit": "ms",
+      "scale": "log"
     },
     {
       "upstream_id": "fet_release",
-      "name": "Release",
+      "name": "FET Release",
+      "core": "FetRelease",
       "type": "float",
-      "min": 50.0,
-      "max": 1100.0,
-      "default": 400.0
+      "min": 50,
+      "max": 1100,
+      "default": 400,
+      "unit": "ms"
     },
     {
       "upstream_id": "fet_ratio",
-      "name": "Ratio",
+      "name": "FET Ratio",
+      "core": "FetRatio",
       "type": "enum",
       "options": [
         "4:1",
@@ -295,115 +270,102 @@
         "20:1",
         "All"
       ],
-      "default": "4:1"
-    },
-    {
-      "upstream_id": "fet_threshold",
-      "name": "Threshold",
-      "type": "float",
-      "min": -60.0,
-      "max": 0.0,
-      "default": -10.0
+      "default": "4:1",
+      "convert": "enum_index"
     },
     {
       "upstream_id": "fet_curve_mode",
-      "name": "Curve Mode",
+      "name": "FET Curve",
+      "core": "FetCurve",
       "type": "enum",
       "options": [
         "Modern",
         "Measured"
       ],
-      "default": "Modern"
+      "default": "Modern",
+      "convert": "enum_index"
     },
     {
       "upstream_id": "fet_transient",
-      "name": "Transient",
+      "name": "FET Transient",
+      "core": "FetTransient",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 0.0,
+      "min": 0,
+      "max": 100,
+      "default": 0,
       "unit": "%"
     },
     {
+      "upstream_id": "fet_threshold",
+      "name": "FET Threshold",
+      "core": "FetThreshold",
+      "type": "float",
+      "min": -60,
+      "max": 0,
+      "default": -10,
+      "unit": "dB"
+    },
+    {
       "upstream_id": "vca_threshold",
-      "name": "Threshold",
+      "name": "VCA Threshold",
+      "core": "VcaThreshold",
       "type": "float",
-      "min": -38.0,
-      "max": 12.0,
-      "default": 0.0
+      "min": -55.0,
+      "max": 0.0,
+      "default": -27.0,
+      "unit": "dB"
     },
     {
-      "upstream_id": "vca_ratio",
-      "name": "Ratio",
+      "upstream_id": "vca_compression",
+      "name": "VCA Compression",
+      "core": "VcaRatio",
       "type": "float",
-      "min": 1.0,
-      "max": 120.0,
-      "scale": "log",
-      "skew": 0.3,
-      "default": 4.0
-    },
-    {
-      "upstream_id": "vca_attack",
-      "name": "Attack",
-      "type": "float",
-      "min": 0.1,
-      "max": 50.0,
-      "default": 1.0
-    },
-    {
-      "upstream_id": "vca_release",
-      "name": "Release",
-      "type": "float",
-      "min": 10.0,
-      "max": 5000.0,
-      "default": 100.0
+      "unit": "",
+      "unresolved": true,
+      "missing": [
+        "min",
+        "max"
+      ],
+      "raw": "{\"vca_compression\",\"VCA Compression\",\"\",duskaudio::vcaLaw::kCompressLaw.front().position,duskaudio::vcaLaw::kCompressLaw.back().position,duskaudio::vcaLaw::kCompressDefaultPosition,CoreParameter::VcaR",
+      "default": 50.4944
     },
     {
       "upstream_id": "vca_output",
-      "name": "Output",
+      "name": "VCA Output",
+      "core": "VcaOutput",
       "type": "float",
-      "min": -20.0,
-      "max": 20.0,
-      "default": 0.0
-    },
-    {
-      "upstream_id": "vca_overeasy",
-      "name": "Over Easy",
-      "type": "bool",
-      "default": false
-    },
-    {
-      "upstream_id": "vca_detector_mode",
-      "name": "VCA Detector",
-      "type": "enum",
-      "options": [
-        "Adaptive",
-        "Classic"
-      ],
-      "default": "Adaptive"
+      "min": -20,
+      "max": 20,
+      "default": 0,
+      "unit": "dB"
     },
     {
       "upstream_id": "bus_threshold",
-      "name": "Threshold",
+      "name": "Bus Threshold",
+      "core": "BusThreshold",
       "type": "float",
-      "min": -30.0,
-      "max": 15.0,
-      "default": 0.0
+      "min": -30,
+      "max": 15,
+      "default": 0,
+      "unit": "dB"
     },
     {
       "upstream_id": "bus_ratio",
-      "name": "Ratio",
+      "name": "Bus Ratio",
+      "core": "BusRatio",
       "type": "enum",
       "options": [
         "2:1",
         "4:1",
         "10:1"
       ],
-      "default": "2:1"
+      "default": "2:1",
+      "convert": "enum_index"
     },
     {
       "upstream_id": "bus_attack",
-      "name": "Attack",
+      "name": "Bus Attack",
+      "core": "BusAttack",
       "type": "enum",
       "options": [
         "0.1ms",
@@ -413,11 +375,13 @@
         "10ms",
         "30ms"
       ],
-      "default": "1ms"
+      "default": "1ms",
+      "convert": "enum_index"
     },
     {
       "upstream_id": "bus_release",
-      "name": "Release",
+      "name": "Bus Release",
+      "core": "BusRelease",
       "type": "enum",
       "options": [
         "0.1s",
@@ -426,316 +390,290 @@
         "1.2s",
         "Auto"
       ],
-      "default": "0.3s"
+      "default": "0.3s",
+      "convert": "enum_index"
     },
     {
       "upstream_id": "bus_makeup",
-      "name": "Makeup",
+      "name": "Bus Makeup",
+      "core": "BusMakeup",
       "type": "float",
-      "min": 0.0,
-      "max": 20.0,
-      "default": 0.0
+      "min": 0,
+      "max": 20,
+      "default": 0,
+      "unit": "dB"
     },
     {
       "upstream_id": "bus_mix",
       "name": "Bus Mix",
+      "core": "BusMix",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 100.0,
+      "min": 0,
+      "max": 100,
+      "default": 100,
       "unit": "%"
     },
     {
       "upstream_id": "studio_vca_threshold",
-      "name": "Threshold",
+      "name": "Studio VCA Threshold",
+      "core": "StudioVcaThreshold",
       "type": "float",
-      "min": -40.0,
-      "max": 20.0,
-      "default": -10.0
+      "min": -50,
+      "max": 20,
+      "default": -10,
+      "unit": "dB"
     },
     {
       "upstream_id": "studio_vca_ratio",
-      "name": "Ratio",
+      "name": "Studio VCA Ratio",
+      "core": "StudioVcaRatio",
       "type": "float",
-      "min": 1.0,
-      "max": 10.0,
-      "default": 3.0
+      "min": 1,
+      "max": 50,
+      "default": 1.5,
+      "unit": ":1"
     },
     {
       "upstream_id": "studio_vca_attack",
-      "name": "Attack",
+      "name": "Studio VCA Attack",
+      "core": "StudioVcaAttack",
       "type": "float",
-      "min": 0.3,
-      "max": 75.0,
-      "default": 10.0
+      "min": 0.1805,
+      "max": 75,
+      "default": 7.2305,
+      "unit": "ms"
     },
     {
       "upstream_id": "studio_vca_release",
-      "name": "Release",
+      "name": "Studio VCA Release",
+      "core": "StudioVcaRelease",
       "type": "float",
-      "min": 100.0,
-      "max": 4000.0,
-      "default": 300.0
+      "min": 100,
+      "max": 4000,
+      "default": 1000,
+      "unit": "ms"
     },
     {
       "upstream_id": "studio_vca_output",
-      "name": "Output",
+      "name": "Studio VCA Make Up",
+      "core": "StudioVcaOutput",
       "type": "float",
-      "min": -20.0,
-      "max": 20.0,
-      "default": 0.0
-    },
-    {
-      "upstream_id": "studio_vca_mix",
-      "name": "Mix",
-      "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 100.0
+      "min": -20,
+      "max": 40,
+      "default": 0,
+      "unit": "dB"
     },
     {
       "upstream_id": "digital_threshold",
-      "name": "Threshold",
+      "name": "Digital Threshold",
+      "core": "DigitalThreshold",
       "type": "float",
-      "min": -60.0,
-      "max": 0.0,
-      "default": -20.0
+      "min": -60,
+      "max": 0,
+      "default": -20,
+      "unit": "dB"
     },
     {
       "upstream_id": "digital_ratio",
-      "name": "Ratio",
+      "name": "Digital Ratio",
+      "core": "DigitalRatio",
       "type": "float",
-      "min": 1.0,
-      "max": 100.0,
-      "scale": "log",
-      "skew": 0.4,
-      "default": 4.0
+      "min": 1,
+      "max": 100,
+      "default": 4,
+      "unit": ":1",
+      "scale": "log"
     },
     {
       "upstream_id": "digital_knee",
-      "name": "Knee",
+      "name": "Digital Knee",
+      "core": "DigitalKnee",
       "type": "float",
-      "min": 0.0,
-      "max": 20.0,
-      "default": 6.0
+      "min": 0,
+      "max": 20,
+      "default": 6,
+      "unit": "dB"
     },
     {
       "upstream_id": "digital_attack",
-      "name": "Attack",
+      "name": "Digital Attack",
+      "core": "DigitalAttack",
       "type": "float",
       "min": 0.01,
-      "max": 500.0,
-      "scale": "log",
-      "skew": 0.3,
-      "default": 10.0
+      "max": 500,
+      "default": 10,
+      "unit": "ms",
+      "scale": "log"
     },
     {
       "upstream_id": "digital_release",
-      "name": "Release",
+      "name": "Digital Release",
+      "core": "DigitalRelease",
       "type": "float",
-      "min": 1.0,
-      "max": 5000.0,
-      "scale": "log",
-      "skew": 0.4,
-      "default": 100.0
+      "min": 1,
+      "max": 5000,
+      "default": 100,
+      "unit": "ms",
+      "scale": "log"
     },
     {
       "upstream_id": "digital_lookahead",
-      "name": "Lookahead",
+      "name": "Digital Lookahead",
+      "core": "DigitalLookahead",
       "type": "float",
-      "min": 0.0,
-      "max": 10.0,
-      "default": 0.0
+      "min": 0,
+      "max": 10,
+      "default": 0,
+      "unit": "ms"
     },
     {
       "upstream_id": "digital_mix",
-      "name": "Mix",
+      "name": "Digital Mix",
+      "core": "DigitalMix",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 100.0
+      "min": 0,
+      "max": 100,
+      "default": 100,
+      "unit": "%"
     },
     {
       "upstream_id": "digital_output",
-      "name": "Output",
+      "name": "Digital Output",
+      "core": "DigitalOutput",
       "type": "float",
-      "min": -24.0,
-      "max": 24.0,
-      "default": 0.0
+      "min": -24,
+      "max": 24,
+      "default": 0,
+      "unit": "dB"
     },
     {
       "upstream_id": "digital_adaptive",
-      "name": "Adaptive Release",
+      "name": "Digital Adaptive Release",
+      "core": "DigitalAdaptive",
       "type": "bool",
       "default": false
     },
     {
       "upstream_id": "mb_crossover_1",
-      "name": "Crossover 1",
+      "name": "MB Crossover 1",
+      "core": "Crossover1",
       "type": "float",
-      "min": 20.0,
-      "max": 500.0,
-      "scale": "log",
-      "skew": 0.4,
-      "default": 200.0,
-      "unit": "Hz"
+      "min": 20,
+      "max": 500,
+      "default": 200,
+      "unit": "Hz",
+      "scale": "log"
     },
     {
       "upstream_id": "mb_crossover_2",
-      "name": "Crossover 2",
+      "name": "MB Crossover 2",
+      "core": "Crossover2",
       "type": "float",
-      "min": 200.0,
-      "max": 5000.0,
-      "scale": "log",
-      "skew": 0.4,
-      "default": 2000.0,
-      "unit": "Hz"
+      "min": 200,
+      "max": 5000,
+      "default": 2000,
+      "unit": "Hz",
+      "scale": "log"
     },
     {
       "upstream_id": "mb_crossover_3",
-      "name": "Crossover 3",
+      "name": "MB Crossover 3",
+      "core": "Crossover3",
       "type": "float",
-      "min": 2000.0,
-      "max": 16000.0,
-      "scale": "log",
-      "skew": 0.4,
-      "default": 8000.0,
-      "unit": "Hz"
+      "min": 2000,
+      "max": 16000,
+      "default": 8000,
+      "unit": "Hz",
+      "scale": "log"
     },
     {
-      "upstream_id": null,
-      "name": null,
-      "type": "float",
-      "min": -60.0,
-      "max": 0.0,
-      "default": -20.0,
-      "unit": "dB",
-      "unresolved": true,
-      "missing": [
-        "upstream_id",
-        "name"
-      ],
-      "raw": " \"mb_\" + name + \"_threshold\", label + \" Threshold\", juce::NormalisableRange<float>(-60.0f, 0.0f, 0.1f), -20.0f, juce::AudioParameterFloatAttributes().withLabel(\"dB\")"
-    },
-    {
-      "upstream_id": null,
-      "name": null,
-      "type": "float",
-      "min": 1.0,
-      "max": 20.0,
-      "scale": "log",
-      "skew": 0.5,
-      "default": 4.0,
-      "unit": ":1",
-      "unresolved": true,
-      "missing": [
-        "upstream_id",
-        "name"
-      ],
-      "raw": " \"mb_\" + name + \"_ratio\", label + \" Ratio\", juce::NormalisableRange<float>(1.0f, 20.0f, 0.1f, 0.5f), 4.0f, juce::AudioParameterFloatAttributes().withLabel(\":1\")"
-    },
-    {
-      "upstream_id": null,
-      "name": null,
-      "type": "float",
-      "min": 0.1,
-      "max": 100.0,
-      "scale": "log",
-      "skew": 0.4,
-      "default": 10.0,
-      "unit": "ms",
-      "unresolved": true,
-      "missing": [
-        "upstream_id",
-        "name"
-      ],
-      "raw": " \"mb_\" + name + \"_attack\", label + \" Attack\", juce::NormalisableRange<float>(0.1f, 100.0f, 0.1f, 0.4f), 10.0f, juce::AudioParameterFloatAttributes().withLabel(\"ms\")"
-    },
-    {
-      "upstream_id": null,
-      "name": null,
-      "type": "float",
-      "min": 10.0,
-      "max": 1000.0,
-      "scale": "log",
-      "skew": 0.4,
-      "default": 100.0,
-      "unit": "ms",
-      "unresolved": true,
-      "missing": [
-        "upstream_id",
-        "name"
-      ],
-      "raw": " \"mb_\" + name + \"_release\", label + \" Release\", juce::NormalisableRange<float>(10.0f, 1000.0f, 1.0f, 0.4f), 100.0f, juce::AudioParameterFloatAttributes().withLabel(\"ms\")"
-    },
-    {
-      "upstream_id": null,
-      "name": null,
-      "type": "float",
-      "min": -12.0,
-      "max": 12.0,
-      "default": 0.0,
-      "unit": "dB",
-      "unresolved": true,
-      "missing": [
-        "upstream_id",
-        "name"
-      ],
-      "raw": " \"mb_\" + name + \"_makeup\", label + \" Makeup\", juce::NormalisableRange<float>(-12.0f, 12.0f, 0.1f), 0.0f, juce::AudioParameterFloatAttributes().withLabel(\"dB\")"
-    },
-    {
-      "upstream_id": null,
-      "name": null,
+      "upstream_id": "global_sidechain_listen",
+      "name": "SC Listen",
+      "core": "GlobalSidechainListen",
       "type": "bool",
-      "default": false,
-      "unresolved": true,
-      "missing": [
-        "upstream_id",
-        "name"
-      ],
-      "raw": " \"mb_\" + name + \"_bypass\", label + \" Bypass\", false"
-    },
-    {
-      "upstream_id": null,
-      "name": null,
-      "type": "bool",
-      "default": false,
-      "unresolved": true,
-      "missing": [
-        "upstream_id",
-        "name"
-      ],
-      "raw": " \"mb_\" + name + \"_solo\", label + \" Solo\", false"
-    },
-    {
-      "upstream_id": null,
-      "name": null,
-      "type": "bool",
-      "default": true,
-      "unresolved": true,
-      "missing": [
-        "upstream_id",
-        "name"
-      ],
-      "raw": " \"mb_\" + name + \"_enabled\", label + \" Enabled\", true"
-    },
-    {
-      "upstream_id": "mb_output",
-      "name": "MB Output",
-      "type": "float",
-      "min": -24.0,
-      "max": 24.0,
-      "default": 0.0,
-      "unit": "dB"
+      "default": false
     },
     {
       "upstream_id": "mb_mix",
       "name": "MB Mix",
+      "core": "MbMix",
       "type": "float",
-      "min": 0.0,
-      "max": 100.0,
-      "default": 100.0,
+      "min": 0,
+      "max": 100,
+      "default": 100,
       "unit": "%"
+    },
+    {
+      "upstream_id": "mb_output",
+      "name": "MB Output",
+      "core": "MbOutput",
+      "type": "float",
+      "min": -24,
+      "max": 24,
+      "default": 0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "noise_enable",
+      "name": "Analog Noise",
+      "core": "NoiseEnable",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "upstream_id": "sc_low_freq",
+      "name": "SC Low Freq",
+      "core": "ScLowFreq",
+      "type": "float",
+      "min": 60,
+      "max": 500,
+      "default": 100,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "sc_low_gain",
+      "name": "SC Low Gain",
+      "core": "ScLowGain",
+      "type": "float",
+      "min": -12,
+      "max": 12,
+      "default": 0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "sc_high_freq",
+      "name": "SC High Freq",
+      "core": "ScHighFreq",
+      "type": "float",
+      "min": 2000,
+      "max": 16000,
+      "default": 8000,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "sc_high_gain",
+      "name": "SC High Gain",
+      "core": "ScHighGain",
+      "type": "float",
+      "min": -12,
+      "max": 12,
+      "default": 0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "stereo_link_mode",
+      "name": "Link Mode",
+      "core": "StereoLinkMode",
+      "type": "enum",
+      "options": [
+        "Stereo",
+        "Mid-Side",
+        "Dual Mono"
+      ],
+      "default": "Stereo",
+      "convert": "enum_index"
     }
   ]
 }

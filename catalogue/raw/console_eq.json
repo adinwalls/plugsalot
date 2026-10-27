@@ -1,0 +1,262 @@
+{
+  "module": "console_eq",
+  "source_key": "dusk-audio",
+  "commit": "e0991c57cac4f8f666b5749dcb90dcbd9081cd30",
+  "extractor": {
+    "type": "dusk_table",
+    "file": "plugins/4k-eq/daf-plugin/FourKEQParams.hpp",
+    "table": "kFourKParams",
+    "fields": [
+      "id",
+      "min",
+      "max",
+      "default"
+    ],
+    "labels": {
+      "eq_type": "kEqTypeLabels",
+      "oversampling": "kOversampleLabels"
+    },
+    "booleans": [
+      "hpf_enabled",
+      "lpf_enabled",
+      "lf_bell",
+      "hf_bell",
+      "bypass",
+      "ms_mode",
+      "auto_gain",
+      "spectrum_prepost",
+      "show_graph"
+    ],
+    "meters": [
+      "out_peak_l",
+      "out_peak_r"
+    ],
+    "inert": [
+      "saturation",
+      "legacy_dial_bands",
+      "legacy_dial_filters",
+      "show_graph",
+      "spectrum_prepost",
+      "hpf_freq",
+      "lpf_freq",
+      "lf_freq",
+      "lm_freq",
+      "hm_freq",
+      "hf_freq"
+    ]
+  },
+  "params": [
+    {
+      "upstream_id": "hpf_enabled",
+      "name": "hpf_enabled",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "upstream_id": "lpf_enabled",
+      "name": "lpf_enabled",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "upstream_id": "lf_gain",
+      "name": "lf_gain",
+      "type": "float",
+      "min": -15.0,
+      "max": 15.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "lf_bell",
+      "name": "lf_bell",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "upstream_id": "lm_gain",
+      "name": "lm_gain",
+      "type": "float",
+      "min": -15.0,
+      "max": 15.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "lm_q",
+      "name": "lm_q",
+      "type": "float",
+      "min": 0.5,
+      "max": 3.0,
+      "default": 1.5,
+      "unit": ""
+    },
+    {
+      "upstream_id": "hm_gain",
+      "name": "hm_gain",
+      "type": "float",
+      "min": -15.0,
+      "max": 15.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "hm_q",
+      "name": "hm_q",
+      "type": "float",
+      "min": 0.5,
+      "max": 3.0,
+      "default": 1.5,
+      "unit": ""
+    },
+    {
+      "upstream_id": "hf_gain",
+      "name": "hf_gain",
+      "type": "float",
+      "min": -15.0,
+      "max": 15.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "hf_bell",
+      "name": "hf_bell",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "upstream_id": "eq_type",
+      "name": "eq_type",
+      "type": "enum",
+      "options": [
+        "Brown",
+        "Black"
+      ],
+      "default": "Brown",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "bypass",
+      "name": "bypass",
+      "type": "bool",
+      "default": false,
+      "role": "bypass"
+    },
+    {
+      "upstream_id": "input_gain",
+      "name": "input_gain",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "output_gain",
+      "name": "output_gain",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "oversampling",
+      "name": "oversampling",
+      "type": "enum",
+      "options": [
+        "1x",
+        "2x",
+        "4x"
+      ],
+      "default": "4x",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "ms_mode",
+      "name": "ms_mode",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "upstream_id": "auto_gain",
+      "name": "auto_gain",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "upstream_id": "out_peak_l",
+      "name": "out_peak_l",
+      "type": "float",
+      "min": 0.0,
+      "max": 2.0,
+      "default": 0.0,
+      "unit": "",
+      "role": "meter"
+    },
+    {
+      "upstream_id": "out_peak_r",
+      "name": "out_peak_r",
+      "type": "float",
+      "min": 0.0,
+      "max": 2.0,
+      "default": 0.0,
+      "unit": "",
+      "role": "meter"
+    },
+    {
+      "upstream_id": "lf_hz",
+      "name": "lf_hz",
+      "type": "float",
+      "min": 30.0,
+      "max": 450.0,
+      "default": 200.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "lm_hz",
+      "name": "lm_hz",
+      "type": "float",
+      "min": 200.0,
+      "max": 2500.0,
+      "default": 1000.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "hm_hz",
+      "name": "hm_hz",
+      "type": "float",
+      "min": 600.0,
+      "max": 7000.0,
+      "default": 3000.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "hf_hz",
+      "name": "hf_hz",
+      "type": "float",
+      "min": 1500.0,
+      "max": 16000.0,
+      "default": 8000.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "hpf_hz",
+      "name": "hpf_hz",
+      "type": "float",
+      "min": 16.0,
+      "max": 350.0,
+      "default": 16.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "lpf_hz",
+      "name": "lpf_hz",
+      "type": "float",
+      "min": 3000.0,
+      "max": 15201.0,
+      "default": 15201.0,
+      "unit": ""
+    }
+  ]
+}

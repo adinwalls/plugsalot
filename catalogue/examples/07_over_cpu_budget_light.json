@@ -22,7 +22,7 @@
       {
         "module": "multicomp",
         "params": {
-          "mode": "Vintage Opto",
+          "mode": "Opto",
           "opto_peak_reduction": 45,
           "opto_gain": 55,
           "sidechain_hp": 80

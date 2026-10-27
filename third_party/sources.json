@@ -7,7 +7,8 @@
       "commit_date": "2026-10-26",
       "license": "GPL-3.0-or-later",
       "license_file": "LICENSE",
-      "authors": "Dusk Audio"
+      "authors": "Dusk Audio",
+      "includes": "Dusk Audio DSP cores (multi-comp/core, TapeMachine/core, shared-daf/dsp), GPL-3.0-or-later"
     },
     "dragonfly-reverb": {
       "repo": "https://github.com/michaelwillis/dragonfly-reverb",
@@ -15,7 +16,8 @@
       "commit_date": "2026-05-21",
       "license": "GPL-3.0",
       "license_file": "LICENSE",
-      "authors": "Michael Willis and contributors"
+      "authors": "Michael Willis and contributors",
+      "includes": "freeverb3 by Teru Kamogashira (common/freeverb), GPL-2.0-or-later"
     },
     "x42-dpl": {
       "repo": "https://github.com/x42/dpl.lv2",
@@ -58,7 +60,11 @@
       "license": "MIT",
       "license_file": "LICENSE",
       "authors": "Chris Johnson (airwindows)",
-      "sparse_paths": ["/LICENSE", "/Airwindopedia.txt", "/plugins/LinuxVST/src/"]
+      "sparse_paths": [
+        "/LICENSE",
+        "/Airwindopedia.txt",
+        "/plugins/LinuxVST/src/"
+      ]
     },
     "sfizz": {
       "repo": "https://github.com/sfztools/sfizz",
