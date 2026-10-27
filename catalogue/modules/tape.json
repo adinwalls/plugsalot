@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "id": "tape",
+  "name": "TapeMachine 2",
+  "kind": "effect",
+  "category": "character",
+  "source": {
+    "source_key": "dusk-audio",
+    "repo": "https://github.com/dusk-audio/dusk-audio-plugins",
+    "commit": "e0991c57cac4f8f666b5749dcb90dcbd9081cd30",
+    "path": "plugins/TapeMachine/daf-plugin",
+    "upstream_name": "Dusk Audio TapeMachine 2",
+    "license": "GPL-3.0-or-later",
+    "authors": "Dusk Audio",
+    "extractor": "dusk_daf"
+  },
+  "purpose": "Analog tape emulation adding saturation, head bump, gentle compression and optional wow and flutter; Swiss deck for tracking and mix colour, American deck for mastering.",
+  "good_for": [
+    "bass",
+    "full kit",
+    "software drums",
+    "kick",
+    "snare",
+    "electric guitar",
+    "lead vocal",
+    "synth",
+    "bus",
+    "master"
+  ],
+  "tags": [
+    "saturation",
+    "warmth",
+    "vintage",
+    "glue"
+  ],
+  "cpu_points": null,
+  "cpu_measured": false,
+  "latency": {
+    "type": "variable",
+    "note": "Uses a 2x oversampled nonlinear core; latency not yet measured."
+  },
+  "tracking_safe": false,
+  "channels": [
+    "stereo"
+  ],
+  "params": [
+    {
+      "id": "deck",
+      "upstream_id": "tapeMachine",
+      "name": "Tape Machine",
+      "type": "enum",
+      "default": "Swiss",
+      "options": [
+        "Swiss",
+        "American"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Swiss for tracks and mix buses; American for mastering."
+    },
+    {
+      "id": "speed",
+      "upstream_id": "tapeSpeed",
+      "name": "Tape Speed",
+      "type": "enum",
+      "default": "15 IPS",
+      "options": [
+        "7.5 IPS",
+        "15 IPS",
+        "30 IPS"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "15 IPS is the all-round default. 7.5 IPS = more head bump and lo-fi; 30 IPS = cleaner, tighter low end."
+    },
+    {
+      "id": "formulation",
+      "upstream_id": "tapeType",
+      "name": "Tape Type",
+      "type": "enum",
+      "default": "456",
+      "options": [
+        "456",
+        "GP9",
+        "900",
+        "250"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "456 classic warm saturation; GP9 cleaner with more headroom."
+    },
+    {
+      "id": "drive",
+      "upstream_id": "inputGain",
+      "name": "Input Gain",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": "dB",
+      "ai_hint": "The main saturation control. 0 to +3 dB subtle; +6 dB and above clearly driven."
+    },
+    {
+      "id": "highpass",
+      "upstream_id": "highpassFreq",
+      "name": "Highpass Freq",
+      "type": "float",
+      "min": 20.0,
+      "max": 500.0,
+      "default": 20.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Cleans up low rumble; leave at 20 Hz unless needed."
+    },
+    {
+      "id": "lowpass",
+      "upstream_id": "lowpassFreq",
+      "name": "Lowpass Freq",
+      "type": "float",
+      "min": 3000.0,
+      "max": 20000.0,
+      "default": 20000.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Rolls off the top end for a darker, vintage sound."
+    },
+    {
+      "id": "wow",
+      "upstream_id": "wowAmount",
+      "name": "Wow",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 7.0,
+      "unit": "%",
+      "ai_hint": "Slow pitch drift. Keep low (under 10%) unless a lo-fi effect is wanted."
+    },
+    {
+      "id": "flutter",
+      "upstream_id": "flutterAmount",
+      "name": "Flutter",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 3.0,
+      "unit": "%",
+      "ai_hint": "Fast pitch wobble. Keep low unless a lo-fi effect is wanted."
+    },
+    {
+      "id": "output",
+      "upstream_id": "outputGain",
+      "name": "Output Gain",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": "dB",
+      "ai_hint": "Output trim after Auto Compensation."
+    },
+    {
+      "id": "auto_comp",
+      "upstream_id": "autoComp",
+      "name": "Auto Compensation",
+      "type": "bool",
+      "default": true,
+      "convert": "enum_index",
+      "ai_hint": "Keep on so output level follows drive changes."
+    }
+  ],
+  "hidden_params": {
+    "count": 24,
+    "reason": "Signal path, EQ standard, bias, calibration, noise, oversampling, American-only switches, advanced repro EQ and the hidden factory-preset calibration trims stay at defaults."
+  },
+  "notes": [
+    "3.75 IPS is American-only, so it is excluded from the speed options.",
+    "TapeMachine 2 ships 20 calibrated factory presets (TapeMachinePresets.hpp); a preset extractor is a follow-up task.",
+    "Marked not tracking-safe until its latency is measured."
+  ]
+}

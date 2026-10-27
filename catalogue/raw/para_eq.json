@@ -1,0 +1,749 @@
+{
+  "module": "para_eq",
+  "source_key": "lsp-para-equalizer",
+  "commit": "8e256db4e77154c9cecb207ebf769a3e1e49f878",
+  "extractor": {
+    "type": "lsp_para_eq",
+    "ports_array": "para_equalizer_x8_stereo_ports"
+  },
+  "params": [
+    {
+      "upstream_id": "g_in",
+      "name": "Input gain",
+      "type": "float",
+      "min": -144.0,
+      "max": 20.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "g_out",
+      "name": "Output gain",
+      "type": "float",
+      "min": -144.0,
+      "max": 20.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "mode",
+      "name": "Equalizer mode",
+      "type": "enum",
+      "options": [
+        "IIR",
+        "FIR",
+        "FFT",
+        "SPM"
+      ],
+      "default": "IIR",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "ft_0",
+      "name": "Filter type 0",
+      "type": "enum",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch",
+        "Resonance",
+        "Allpass",
+        "Bandpass",
+        "Ladder-pass",
+        "Ladder-rej"
+      ],
+      "default": "Off",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "fm_0",
+      "name": "Filter mode 0",
+      "type": "enum",
+      "options": [
+        "RLC (BT)",
+        "RLC (MT)",
+        "BWC (BT)",
+        "BWC (MT)",
+        "LRX (BT)",
+        "LRX (MT)",
+        "APO (DR)"
+      ],
+      "default": "RLC (BT)",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "s_0",
+      "name": "Filter slope 0",
+      "type": "enum",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "default": "x1",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "f_0",
+      "name": "Frequency 0",
+      "type": "float",
+      "min": 10.0,
+      "max": 24000.0,
+      "default": 16.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "g_0",
+      "name": "Gain 0",
+      "type": "float",
+      "min": -36.0,
+      "max": 36.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "q_0",
+      "name": "Quality factor 0",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "w_0",
+      "name": "Filter width 0",
+      "type": "float",
+      "min": 0.0,
+      "max": 12.0,
+      "default": 4.0,
+      "unit": "octaves"
+    },
+    {
+      "upstream_id": "ft_1",
+      "name": "Filter type 1",
+      "type": "enum",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch",
+        "Resonance",
+        "Allpass",
+        "Bandpass",
+        "Ladder-pass",
+        "Ladder-rej"
+      ],
+      "default": "Off",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "fm_1",
+      "name": "Filter mode 1",
+      "type": "enum",
+      "options": [
+        "RLC (BT)",
+        "RLC (MT)",
+        "BWC (BT)",
+        "BWC (MT)",
+        "LRX (BT)",
+        "LRX (MT)",
+        "APO (DR)"
+      ],
+      "default": "RLC (BT)",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "s_1",
+      "name": "Filter slope 1",
+      "type": "enum",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "default": "x1",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "f_1",
+      "name": "Frequency 1",
+      "type": "float",
+      "min": 10.0,
+      "max": 24000.0,
+      "default": 40.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "g_1",
+      "name": "Gain 1",
+      "type": "float",
+      "min": -36.0,
+      "max": 36.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "q_1",
+      "name": "Quality factor 1",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "w_1",
+      "name": "Filter width 1",
+      "type": "float",
+      "min": 0.0,
+      "max": 12.0,
+      "default": 4.0,
+      "unit": "octaves"
+    },
+    {
+      "upstream_id": "ft_2",
+      "name": "Filter type 2",
+      "type": "enum",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch",
+        "Resonance",
+        "Allpass",
+        "Bandpass",
+        "Ladder-pass",
+        "Ladder-rej"
+      ],
+      "default": "Off",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "fm_2",
+      "name": "Filter mode 2",
+      "type": "enum",
+      "options": [
+        "RLC (BT)",
+        "RLC (MT)",
+        "BWC (BT)",
+        "BWC (MT)",
+        "LRX (BT)",
+        "LRX (MT)",
+        "APO (DR)"
+      ],
+      "default": "RLC (BT)",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "s_2",
+      "name": "Filter slope 2",
+      "type": "enum",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "default": "x1",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "f_2",
+      "name": "Frequency 2",
+      "type": "float",
+      "min": 10.0,
+      "max": 24000.0,
+      "default": 100.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "g_2",
+      "name": "Gain 2",
+      "type": "float",
+      "min": -36.0,
+      "max": 36.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "q_2",
+      "name": "Quality factor 2",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "w_2",
+      "name": "Filter width 2",
+      "type": "float",
+      "min": 0.0,
+      "max": 12.0,
+      "default": 4.0,
+      "unit": "octaves"
+    },
+    {
+      "upstream_id": "ft_3",
+      "name": "Filter type 3",
+      "type": "enum",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch",
+        "Resonance",
+        "Allpass",
+        "Bandpass",
+        "Ladder-pass",
+        "Ladder-rej"
+      ],
+      "default": "Off",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "fm_3",
+      "name": "Filter mode 3",
+      "type": "enum",
+      "options": [
+        "RLC (BT)",
+        "RLC (MT)",
+        "BWC (BT)",
+        "BWC (MT)",
+        "LRX (BT)",
+        "LRX (MT)",
+        "APO (DR)"
+      ],
+      "default": "RLC (BT)",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "s_3",
+      "name": "Filter slope 3",
+      "type": "enum",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "default": "x1",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "f_3",
+      "name": "Frequency 3",
+      "type": "float",
+      "min": 10.0,
+      "max": 24000.0,
+      "default": 250.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "g_3",
+      "name": "Gain 3",
+      "type": "float",
+      "min": -36.0,
+      "max": 36.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "q_3",
+      "name": "Quality factor 3",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "w_3",
+      "name": "Filter width 3",
+      "type": "float",
+      "min": 0.0,
+      "max": 12.0,
+      "default": 4.0,
+      "unit": "octaves"
+    },
+    {
+      "upstream_id": "ft_4",
+      "name": "Filter type 4",
+      "type": "enum",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch",
+        "Resonance",
+        "Allpass",
+        "Bandpass",
+        "Ladder-pass",
+        "Ladder-rej"
+      ],
+      "default": "Off",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "fm_4",
+      "name": "Filter mode 4",
+      "type": "enum",
+      "options": [
+        "RLC (BT)",
+        "RLC (MT)",
+        "BWC (BT)",
+        "BWC (MT)",
+        "LRX (BT)",
+        "LRX (MT)",
+        "APO (DR)"
+      ],
+      "default": "RLC (BT)",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "s_4",
+      "name": "Filter slope 4",
+      "type": "enum",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "default": "x1",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "f_4",
+      "name": "Frequency 4",
+      "type": "float",
+      "min": 10.0,
+      "max": 24000.0,
+      "default": 630.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "g_4",
+      "name": "Gain 4",
+      "type": "float",
+      "min": -36.0,
+      "max": 36.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "q_4",
+      "name": "Quality factor 4",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "w_4",
+      "name": "Filter width 4",
+      "type": "float",
+      "min": 0.0,
+      "max": 12.0,
+      "default": 4.0,
+      "unit": "octaves"
+    },
+    {
+      "upstream_id": "ft_5",
+      "name": "Filter type 5",
+      "type": "enum",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch",
+        "Resonance",
+        "Allpass",
+        "Bandpass",
+        "Ladder-pass",
+        "Ladder-rej"
+      ],
+      "default": "Off",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "fm_5",
+      "name": "Filter mode 5",
+      "type": "enum",
+      "options": [
+        "RLC (BT)",
+        "RLC (MT)",
+        "BWC (BT)",
+        "BWC (MT)",
+        "LRX (BT)",
+        "LRX (MT)",
+        "APO (DR)"
+      ],
+      "default": "RLC (BT)",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "s_5",
+      "name": "Filter slope 5",
+      "type": "enum",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "default": "x1",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "f_5",
+      "name": "Frequency 5",
+      "type": "float",
+      "min": 10.0,
+      "max": 24000.0,
+      "default": 1600.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "g_5",
+      "name": "Gain 5",
+      "type": "float",
+      "min": -36.0,
+      "max": 36.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "q_5",
+      "name": "Quality factor 5",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "w_5",
+      "name": "Filter width 5",
+      "type": "float",
+      "min": 0.0,
+      "max": 12.0,
+      "default": 4.0,
+      "unit": "octaves"
+    },
+    {
+      "upstream_id": "ft_6",
+      "name": "Filter type 6",
+      "type": "enum",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch",
+        "Resonance",
+        "Allpass",
+        "Bandpass",
+        "Ladder-pass",
+        "Ladder-rej"
+      ],
+      "default": "Off",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "fm_6",
+      "name": "Filter mode 6",
+      "type": "enum",
+      "options": [
+        "RLC (BT)",
+        "RLC (MT)",
+        "BWC (BT)",
+        "BWC (MT)",
+        "LRX (BT)",
+        "LRX (MT)",
+        "APO (DR)"
+      ],
+      "default": "RLC (BT)",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "s_6",
+      "name": "Filter slope 6",
+      "type": "enum",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "default": "x1",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "f_6",
+      "name": "Frequency 6",
+      "type": "float",
+      "min": 10.0,
+      "max": 24000.0,
+      "default": 4000.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "g_6",
+      "name": "Gain 6",
+      "type": "float",
+      "min": -36.0,
+      "max": 36.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "q_6",
+      "name": "Quality factor 6",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "w_6",
+      "name": "Filter width 6",
+      "type": "float",
+      "min": 0.0,
+      "max": 12.0,
+      "default": 4.0,
+      "unit": "octaves"
+    },
+    {
+      "upstream_id": "ft_7",
+      "name": "Filter type 7",
+      "type": "enum",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch",
+        "Resonance",
+        "Allpass",
+        "Bandpass",
+        "Ladder-pass",
+        "Ladder-rej"
+      ],
+      "default": "Off",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "fm_7",
+      "name": "Filter mode 7",
+      "type": "enum",
+      "options": [
+        "RLC (BT)",
+        "RLC (MT)",
+        "BWC (BT)",
+        "BWC (MT)",
+        "LRX (BT)",
+        "LRX (MT)",
+        "APO (DR)"
+      ],
+      "default": "RLC (BT)",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "s_7",
+      "name": "Filter slope 7",
+      "type": "enum",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "default": "x1",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "f_7",
+      "name": "Frequency 7",
+      "type": "float",
+      "min": 10.0,
+      "max": 24000.0,
+      "default": 10000.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "g_7",
+      "name": "Gain 7",
+      "type": "float",
+      "min": -36.0,
+      "max": 36.0,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp"
+    },
+    {
+      "upstream_id": "q_7",
+      "name": "Quality factor 7",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "w_7",
+      "name": "Filter width 7",
+      "type": "float",
+      "min": 0.0,
+      "max": 12.0,
+      "default": 4.0,
+      "unit": "octaves"
+    }
+  ],
+  "bands": 8
+}

@@ -1,0 +1,72 @@
+{
+  "_comment": "Pinned upstream sources. Every catalogue module points at one of these. Bump a commit deliberately, re-run tools/extract_all.py, and review the diff in catalogue/raw/ before merging.",
+  "sources": {
+    "dusk-audio": {
+      "repo": "https://github.com/dusk-audio/dusk-audio-plugins",
+      "commit": "e0991c57cac4f8f666b5749dcb90dcbd9081cd30",
+      "commit_date": "2026-10-26",
+      "license": "GPL-3.0-or-later",
+      "license_file": "LICENSE",
+      "authors": "Dusk Audio"
+    },
+    "dragonfly-reverb": {
+      "repo": "https://github.com/michaelwillis/dragonfly-reverb",
+      "commit": "440ec7b3b3db2fec34b9f80cf4890102ca14d1c3",
+      "commit_date": "2026-05-21",
+      "license": "GPL-3.0",
+      "license_file": "LICENSE",
+      "authors": "Michael Willis and contributors"
+    },
+    "x42-dpl": {
+      "repo": "https://github.com/x42/dpl.lv2",
+      "commit": "8bcd25deaf673fc93c66c4637fdc52bfdfe8ed6a",
+      "commit_date": "2026-09-08",
+      "license": "GPL-3.0-or-later",
+      "license_file": "COPYING",
+      "authors": "Robin Gareus"
+    },
+    "lsp-para-equalizer": {
+      "repo": "https://github.com/lsp-plugins/lsp-plugins-para-equalizer",
+      "commit": "8e256db4e77154c9cecb207ebf769a3e1e49f878",
+      "commit_date": "2026-08-20",
+      "license": "LGPL-3.0-or-later",
+      "license_file": "COPYING.LESSER",
+      "authors": "Linux Studio Plugins Project (Vladimir Sadovnikov)"
+    },
+    "lsp-plugin-fw": {
+      "repo": "https://github.com/lsp-plugins/lsp-plugin-fw",
+      "commit": "45f2e23ba809c9661a425484db37367239f57556",
+      "commit_date": "2026-08-20",
+      "license": "LGPL-3.0-or-later",
+      "license_file": "COPYING.LESSER",
+      "authors": "Linux Studio Plugins Project",
+      "note": "Constants only (frequency limits); needed to resolve lsp-para-equalizer ranges."
+    },
+    "lsp-dsp-units": {
+      "repo": "https://github.com/lsp-plugins/lsp-dsp-units",
+      "commit": "8dd2a6905ca7ccefd2c3624560235680cb8761e2",
+      "commit_date": "2026-08-20",
+      "license": "LGPL-3.0-or-later",
+      "license_file": "COPYING.LESSER",
+      "authors": "Linux Studio Plugins Project",
+      "note": "Constants only (SPEC_FREQ_MIN/MAX, gain constants)."
+    },
+    "airwindows": {
+      "repo": "https://github.com/airwindows/airwindows",
+      "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+      "commit_date": "2026-10-24",
+      "license": "MIT",
+      "license_file": "LICENSE",
+      "authors": "Chris Johnson (airwindows)",
+      "sparse_paths": ["/LICENSE", "/Airwindopedia.txt", "/plugins/LinuxVST/src/"]
+    },
+    "sfizz": {
+      "repo": "https://github.com/sfztools/sfizz",
+      "commit": "f5c6e29f23b8057867c08e88f5f6ac6738baa30b",
+      "commit_date": "2025-03-17",
+      "license": "BSD-2-Clause",
+      "license_file": "LICENSE",
+      "authors": "sfizz contributors"
+    }
+  }
+}

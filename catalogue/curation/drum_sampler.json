@@ -1,0 +1,29 @@
+{
+  "id": "drum_sampler",
+  "name": "Drum Sampler",
+  "kind": "instrument",
+  "category": "drums",
+  "source": {
+    "source_key": "sfizz",
+    "path": "src/sfizz.h",
+    "upstream_name": "sfizz SFZ engine"
+  },
+  "extractor": { "type": "manual" },
+  "purpose": "SFZ sample player that turns MIDI from the DAW into drum sounds from a chosen kit; the sound source for the software drums chain.",
+  "good_for": ["software drums"],
+  "tags": ["instrument", "sampler", "drums", "sfz"],
+  "cpu_points": null,
+  "latency": { "type": "none" },
+  "tracking_safe": true,
+  "channels": ["stereo"],
+  "params": [
+    { "upstream_id": "volume", "id": "volume", "name": "Volume", "type": "float", "min": -60, "max": 6, "default": 0, "unit": "dB", "ai_hint": "Overall kit level; set so peaks sit around -10 dBFS before processing." },
+    { "upstream_id": "sample_quality", "id": "sample_quality", "name": "Sample quality", "type": "int", "min": 0, "max": 10, "default": 2, "unit": "", "ai_hint": "Interpolation quality. Higher costs more CPU; 2 is fine for tracking." }
+  ],
+  "notes": [
+    "Parameters map to sfizz C API calls (sfizz_set_volume, sfizz_set_sample_quality), not plugin ports, so they are written by hand.",
+    "Volume is in dB: sfizz's own bounds are -144 to +48 dB (src/sfizz/Defaults.cpp); narrowed here to -60 to +6 dB.",
+    "Kit selection is handled by Plugsalot's kit library (a separate catalogue of SFZ kits and their licences), not by this module's parameters.",
+    "sfizz's oversampling setter is an inactive stub as of 1.0, so it is not exposed."
+  ]
+}

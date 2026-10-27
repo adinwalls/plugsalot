@@ -1,0 +1,215 @@
+{
+  "module": "plate",
+  "source_key": "dragonfly-reverb",
+  "commit": "440ec7b3b3db2fec34b9f80cf4890102ca14d1c3",
+  "extractor": {
+    "type": "dpf_param_table",
+    "file": "plugins/dragonfly-plate-reverb/DistrhoPluginInfo.h",
+    "enum_params": {
+      "algorithm": [
+        "Algorithms",
+        "algorithmNames"
+      ]
+    }
+  },
+  "params": [
+    {
+      "upstream_id": "dry_level",
+      "name": "Dry Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "unit": "%",
+      "default": 80.0
+    },
+    {
+      "upstream_id": "early_level",
+      "name": "Wet Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "unit": "%",
+      "default": 20.0
+    },
+    {
+      "upstream_id": "algorithm",
+      "name": "Algorithm",
+      "type": "enum",
+      "options": [
+        "Simple",
+        "Nested",
+        "Tank"
+      ],
+      "default": "Nested"
+    },
+    {
+      "upstream_id": "width",
+      "name": "Width",
+      "type": "float",
+      "min": 50.0,
+      "max": 150.0,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "upstream_id": "predelay",
+      "name": "Predelay",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "unit": "ms",
+      "default": 0.0
+    },
+    {
+      "upstream_id": "decay",
+      "name": "Decay",
+      "type": "float",
+      "min": 0.1,
+      "max": 10.0,
+      "unit": "s",
+      "default": 0.4
+    },
+    {
+      "upstream_id": "low_cut",
+      "name": "Low Cut",
+      "type": "float",
+      "min": 0.0,
+      "max": 200.0,
+      "unit": "Hz",
+      "default": 200
+    },
+    {
+      "upstream_id": "high_cut",
+      "name": "High Cut",
+      "type": "float",
+      "min": 1000.0,
+      "max": 16000.0,
+      "unit": "Hz",
+      "default": 16000
+    },
+    {
+      "upstream_id": "early_damp",
+      "name": "Dampen",
+      "type": "float",
+      "min": 1000.0,
+      "max": 16000.0,
+      "unit": "Hz",
+      "default": 13000
+    }
+  ],
+  "presets": [
+    {
+      "name": "Abrupt Plate",
+      "params": {
+        "dry_level": 80.0,
+        "early_level": 20.0,
+        "algorithm": "Nested",
+        "width": 100,
+        "predelay": 20.0,
+        "decay": 0.2,
+        "low_cut": 50,
+        "high_cut": 10000,
+        "early_damp": 7000
+      }
+    },
+    {
+      "name": "Bright Plate",
+      "params": {
+        "dry_level": 80.0,
+        "early_level": 20.0,
+        "algorithm": "Nested",
+        "width": 100,
+        "predelay": 0.0,
+        "decay": 0.4,
+        "low_cut": 200,
+        "high_cut": 16000,
+        "early_damp": 13000
+      }
+    },
+    {
+      "name": "Clear Plate",
+      "params": {
+        "dry_level": 80.0,
+        "early_level": 20.0,
+        "algorithm": "Nested",
+        "width": 100,
+        "predelay": 0.0,
+        "decay": 0.6,
+        "low_cut": 100,
+        "high_cut": 13000,
+        "early_damp": 7000
+      }
+    },
+    {
+      "name": "Dark Plate",
+      "params": {
+        "dry_level": 80.0,
+        "early_level": 20.0,
+        "algorithm": "Nested",
+        "width": 100,
+        "predelay": 0.0,
+        "decay": 0.8,
+        "low_cut": 50,
+        "high_cut": 7000,
+        "early_damp": 4000
+      }
+    },
+    {
+      "name": "Foil Tray",
+      "params": {
+        "dry_level": 80.0,
+        "early_level": 20.0,
+        "algorithm": "Simple",
+        "width": 50,
+        "predelay": 0.0,
+        "decay": 0.3,
+        "low_cut": 200,
+        "high_cut": 16000,
+        "early_damp": 13000
+      }
+    },
+    {
+      "name": "Metal Roof",
+      "params": {
+        "dry_level": 80.0,
+        "early_level": 20.0,
+        "algorithm": "Simple",
+        "width": 120,
+        "predelay": 20.0,
+        "decay": 0.5,
+        "low_cut": 100,
+        "high_cut": 13000,
+        "early_damp": 10000
+      }
+    },
+    {
+      "name": "Narrow Tank",
+      "params": {
+        "dry_level": 80.0,
+        "early_level": 20.0,
+        "algorithm": "Tank",
+        "width": 60,
+        "predelay": 10.0,
+        "decay": 0.6,
+        "low_cut": 50,
+        "high_cut": 10000,
+        "early_damp": 7000
+      }
+    },
+    {
+      "name": "Phat Tank",
+      "params": {
+        "dry_level": 80.0,
+        "early_level": 20.0,
+        "algorithm": "Tank",
+        "width": 150,
+        "predelay": 10.0,
+        "decay": 1.0,
+        "low_cut": 50,
+        "high_cut": 10000,
+        "early_damp": 4000
+      }
+    }
+  ],
+  "default_preset": "Bright Plate"
+}

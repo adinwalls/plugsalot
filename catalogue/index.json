@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "modules": [
+    {
+      "id": "tape",
+      "name": "TapeMachine 2",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Analog tape emulation adding saturation, head bump, gentle compression and optional wow and flutter; Swiss deck for tracking and mix colour, American deck for mastering.",
+      "good_for": [
+        "bass",
+        "full kit",
+        "software drums",
+        "kick",
+        "snare",
+        "electric guitar",
+        "lead vocal",
+        "synth",
+        "bus",
+        "master"
+      ],
+      "cpu_points": null,
+      "tracking_safe": false
+    },
+    {
+      "id": "drum_sampler",
+      "name": "Drum Sampler",
+      "kind": "instrument",
+      "category": "drums",
+      "purpose": "SFZ sample player that turns MIDI from the DAW into drum sounds from a chosen kit; the sound source for the software drums chain.",
+      "good_for": [
+        "software drums"
+      ],
+      "cpu_points": null,
+      "tracking_safe": true
+    },
+    {
+      "id": "deess",
+      "name": "DeBess",
+      "kind": "effect",
+      "category": "dynamics",
+      "purpose": "De-esser that detects 's' sounds by their waveform rather than a frequency band, so it reduces sibilance while leaving the rest of the treble untouched.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal"
+      ],
+      "cpu_points": null,
+      "tracking_safe": true
+    },
+    {
+      "id": "multicomp",
+      "name": "Multi-Comp",
+      "kind": "effect",
+      "category": "dynamics",
+      "purpose": "Compressor with seven hardware-style modes (opto, FET, VCA, bus, studio, digital) for levelling vocals, adding punch to drums and gluing buses.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "bass",
+        "kick",
+        "snare",
+        "full kit",
+        "software drums",
+        "acoustic guitar",
+        "electric guitar",
+        "bus"
+      ],
+      "cpu_points": null,
+      "tracking_safe": true
+    },
+    {
+      "id": "para_eq",
+      "name": "Parametric EQ (8-band)",
+      "kind": "effect",
+      "category": "eq",
+      "purpose": "Eight-band parametric EQ for high-pass and low-pass filtering, corrective cuts (mud, boxiness, harshness) and broad tonal shaping.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "electric guitar",
+        "bass",
+        "kick",
+        "snare",
+        "full kit",
+        "software drums",
+        "synth",
+        "keys",
+        "bus",
+        "master"
+      ],
+      "cpu_points": null,
+      "tracking_safe": true
+    },
+    {
+      "id": "limiter",
+      "name": "Peak Limiter",
+      "kind": "effect",
+      "category": "limiting",
+      "purpose": "Transparent lookahead peak limiter with true-peak detection; the final safety stage that holds the output under the ceiling.",
+      "good_for": [
+        "bus",
+        "master"
+      ],
+      "cpu_points": null,
+      "tracking_safe": false
+    },
+    {
+      "id": "plate",
+      "name": "Plate Reverb",
+      "kind": "effect",
+      "category": "reverb",
+      "purpose": "Plate reverb for bright, dense ambience; the classic choice for lead vocals and snare.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "snare",
+        "acoustic guitar",
+        "keys",
+        "synth"
+      ],
+      "cpu_points": null,
+      "tracking_safe": true
+    }
+  ]
+}

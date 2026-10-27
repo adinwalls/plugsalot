@@ -1,0 +1,632 @@
+{
+  "schema_version": 1,
+  "id": "para_eq",
+  "name": "Parametric EQ (8-band)",
+  "kind": "effect",
+  "category": "eq",
+  "source": {
+    "source_key": "lsp-para-equalizer",
+    "repo": "https://github.com/lsp-plugins/lsp-plugins-para-equalizer",
+    "commit": "8e256db4e77154c9cecb207ebf769a3e1e49f878",
+    "path": "src/main/meta/para_equalizer.cpp",
+    "upstream_name": "LSP Parametric Equalizer x8 Stereo",
+    "license": "LGPL-3.0-or-later",
+    "authors": "Linux Studio Plugins Project (Vladimir Sadovnikov)",
+    "extractor": "lsp_para_eq"
+  },
+  "purpose": "Eight-band parametric EQ for high-pass and low-pass filtering, corrective cuts (mud, boxiness, harshness) and broad tonal shaping.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "acoustic guitar",
+    "electric guitar",
+    "bass",
+    "kick",
+    "snare",
+    "full kit",
+    "software drums",
+    "synth",
+    "keys",
+    "bus",
+    "master"
+  ],
+  "tags": [
+    "corrective",
+    "tonal",
+    "high-pass",
+    "low-pass",
+    "transparent"
+  ],
+  "cpu_points": null,
+  "cpu_measured": false,
+  "latency": {
+    "type": "variable",
+    "note": "IIR mode has zero latency; FIR, FFT and SPM modes add latency (linear phase)."
+  },
+  "tracking_safe": true,
+  "tracking_overrides": {
+    "mode": "IIR"
+  },
+  "channels": [
+    "stereo"
+  ],
+  "params": [
+    {
+      "id": "mode",
+      "upstream_id": "mode",
+      "name": "Equalizer mode",
+      "type": "enum",
+      "default": "IIR",
+      "options": [
+        "IIR",
+        "FIR"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "IIR for tracking and nearly all mixing. FIR (linear phase) only on a master or bus where phase shift matters."
+    },
+    {
+      "id": "output_gain",
+      "upstream_id": "g_out",
+      "name": "Output gain",
+      "type": "float",
+      "min": -24,
+      "max": 12,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp",
+      "ai_hint": "Compensate for large boosts or cuts so the module's output level matches its input."
+    },
+    {
+      "id": "band0_type",
+      "upstream_id": "ft_0",
+      "name": "Filter type 0",
+      "type": "enum",
+      "default": "Off",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Leave unused bands Off. Use Hi-pass on band 0 to remove rumble below the source's lowest useful note."
+    },
+    {
+      "id": "band0_freq",
+      "upstream_id": "f_0",
+      "name": "Frequency 0",
+      "type": "float",
+      "min": 10,
+      "max": 20000,
+      "default": 16.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Centre or corner frequency in Hz."
+    },
+    {
+      "id": "band0_gain",
+      "upstream_id": "g_0",
+      "name": "Gain 0",
+      "type": "float",
+      "min": -18,
+      "max": 18,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp",
+      "ai_hint": "Prefer cuts to boosts. Corrective cuts are usually 2-6 dB; boosts rarely above 4 dB."
+    },
+    {
+      "id": "band0_q",
+      "upstream_id": "q_0",
+      "name": "Quality factor 0",
+      "type": "float",
+      "min": 0.1,
+      "max": 20,
+      "default": 0.7,
+      "unit": "",
+      "ai_hint": "Bell width. 0.7 broad and musical, 2-4 for targeted cuts, 8+ for notching resonances."
+    },
+    {
+      "id": "band0_slope",
+      "upstream_id": "s_0",
+      "name": "Filter slope 0",
+      "type": "enum",
+      "default": "x1",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Steepness for pass and shelf filters: x1 gentle (12 dB/oct) to x4 steep."
+    },
+    {
+      "id": "band1_type",
+      "upstream_id": "ft_1",
+      "name": "Filter type 1",
+      "type": "enum",
+      "default": "Off",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Leave unused bands Off. Use Hi-pass on band 0 to remove rumble below the source's lowest useful note."
+    },
+    {
+      "id": "band1_freq",
+      "upstream_id": "f_1",
+      "name": "Frequency 1",
+      "type": "float",
+      "min": 10,
+      "max": 20000,
+      "default": 40.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Centre or corner frequency in Hz."
+    },
+    {
+      "id": "band1_gain",
+      "upstream_id": "g_1",
+      "name": "Gain 1",
+      "type": "float",
+      "min": -18,
+      "max": 18,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp",
+      "ai_hint": "Prefer cuts to boosts. Corrective cuts are usually 2-6 dB; boosts rarely above 4 dB."
+    },
+    {
+      "id": "band1_q",
+      "upstream_id": "q_1",
+      "name": "Quality factor 1",
+      "type": "float",
+      "min": 0.1,
+      "max": 20,
+      "default": 0.7,
+      "unit": "",
+      "ai_hint": "Bell width. 0.7 broad and musical, 2-4 for targeted cuts, 8+ for notching resonances."
+    },
+    {
+      "id": "band1_slope",
+      "upstream_id": "s_1",
+      "name": "Filter slope 1",
+      "type": "enum",
+      "default": "x1",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Steepness for pass and shelf filters: x1 gentle (12 dB/oct) to x4 steep."
+    },
+    {
+      "id": "band2_type",
+      "upstream_id": "ft_2",
+      "name": "Filter type 2",
+      "type": "enum",
+      "default": "Off",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Leave unused bands Off. Use Hi-pass on band 0 to remove rumble below the source's lowest useful note."
+    },
+    {
+      "id": "band2_freq",
+      "upstream_id": "f_2",
+      "name": "Frequency 2",
+      "type": "float",
+      "min": 10,
+      "max": 20000,
+      "default": 100.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Centre or corner frequency in Hz."
+    },
+    {
+      "id": "band2_gain",
+      "upstream_id": "g_2",
+      "name": "Gain 2",
+      "type": "float",
+      "min": -18,
+      "max": 18,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp",
+      "ai_hint": "Prefer cuts to boosts. Corrective cuts are usually 2-6 dB; boosts rarely above 4 dB."
+    },
+    {
+      "id": "band2_q",
+      "upstream_id": "q_2",
+      "name": "Quality factor 2",
+      "type": "float",
+      "min": 0.1,
+      "max": 20,
+      "default": 0.7,
+      "unit": "",
+      "ai_hint": "Bell width. 0.7 broad and musical, 2-4 for targeted cuts, 8+ for notching resonances."
+    },
+    {
+      "id": "band2_slope",
+      "upstream_id": "s_2",
+      "name": "Filter slope 2",
+      "type": "enum",
+      "default": "x1",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Steepness for pass and shelf filters: x1 gentle (12 dB/oct) to x4 steep."
+    },
+    {
+      "id": "band3_type",
+      "upstream_id": "ft_3",
+      "name": "Filter type 3",
+      "type": "enum",
+      "default": "Off",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Leave unused bands Off. Use Hi-pass on band 0 to remove rumble below the source's lowest useful note."
+    },
+    {
+      "id": "band3_freq",
+      "upstream_id": "f_3",
+      "name": "Frequency 3",
+      "type": "float",
+      "min": 10,
+      "max": 20000,
+      "default": 250.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Centre or corner frequency in Hz."
+    },
+    {
+      "id": "band3_gain",
+      "upstream_id": "g_3",
+      "name": "Gain 3",
+      "type": "float",
+      "min": -18,
+      "max": 18,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp",
+      "ai_hint": "Prefer cuts to boosts. Corrective cuts are usually 2-6 dB; boosts rarely above 4 dB."
+    },
+    {
+      "id": "band3_q",
+      "upstream_id": "q_3",
+      "name": "Quality factor 3",
+      "type": "float",
+      "min": 0.1,
+      "max": 20,
+      "default": 0.7,
+      "unit": "",
+      "ai_hint": "Bell width. 0.7 broad and musical, 2-4 for targeted cuts, 8+ for notching resonances."
+    },
+    {
+      "id": "band3_slope",
+      "upstream_id": "s_3",
+      "name": "Filter slope 3",
+      "type": "enum",
+      "default": "x1",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Steepness for pass and shelf filters: x1 gentle (12 dB/oct) to x4 steep."
+    },
+    {
+      "id": "band4_type",
+      "upstream_id": "ft_4",
+      "name": "Filter type 4",
+      "type": "enum",
+      "default": "Off",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Leave unused bands Off. Use Hi-pass on band 0 to remove rumble below the source's lowest useful note."
+    },
+    {
+      "id": "band4_freq",
+      "upstream_id": "f_4",
+      "name": "Frequency 4",
+      "type": "float",
+      "min": 10,
+      "max": 20000,
+      "default": 630.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Centre or corner frequency in Hz."
+    },
+    {
+      "id": "band4_gain",
+      "upstream_id": "g_4",
+      "name": "Gain 4",
+      "type": "float",
+      "min": -18,
+      "max": 18,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp",
+      "ai_hint": "Prefer cuts to boosts. Corrective cuts are usually 2-6 dB; boosts rarely above 4 dB."
+    },
+    {
+      "id": "band4_q",
+      "upstream_id": "q_4",
+      "name": "Quality factor 4",
+      "type": "float",
+      "min": 0.1,
+      "max": 20,
+      "default": 0.7,
+      "unit": "",
+      "ai_hint": "Bell width. 0.7 broad and musical, 2-4 for targeted cuts, 8+ for notching resonances."
+    },
+    {
+      "id": "band4_slope",
+      "upstream_id": "s_4",
+      "name": "Filter slope 4",
+      "type": "enum",
+      "default": "x1",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Steepness for pass and shelf filters: x1 gentle (12 dB/oct) to x4 steep."
+    },
+    {
+      "id": "band5_type",
+      "upstream_id": "ft_5",
+      "name": "Filter type 5",
+      "type": "enum",
+      "default": "Off",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Leave unused bands Off. Use Hi-pass on band 0 to remove rumble below the source's lowest useful note."
+    },
+    {
+      "id": "band5_freq",
+      "upstream_id": "f_5",
+      "name": "Frequency 5",
+      "type": "float",
+      "min": 10,
+      "max": 20000,
+      "default": 1600.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Centre or corner frequency in Hz."
+    },
+    {
+      "id": "band5_gain",
+      "upstream_id": "g_5",
+      "name": "Gain 5",
+      "type": "float",
+      "min": -18,
+      "max": 18,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp",
+      "ai_hint": "Prefer cuts to boosts. Corrective cuts are usually 2-6 dB; boosts rarely above 4 dB."
+    },
+    {
+      "id": "band5_q",
+      "upstream_id": "q_5",
+      "name": "Quality factor 5",
+      "type": "float",
+      "min": 0.1,
+      "max": 20,
+      "default": 0.7,
+      "unit": "",
+      "ai_hint": "Bell width. 0.7 broad and musical, 2-4 for targeted cuts, 8+ for notching resonances."
+    },
+    {
+      "id": "band5_slope",
+      "upstream_id": "s_5",
+      "name": "Filter slope 5",
+      "type": "enum",
+      "default": "x1",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Steepness for pass and shelf filters: x1 gentle (12 dB/oct) to x4 steep."
+    },
+    {
+      "id": "band6_type",
+      "upstream_id": "ft_6",
+      "name": "Filter type 6",
+      "type": "enum",
+      "default": "Off",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Leave unused bands Off. Use Hi-pass on band 0 to remove rumble below the source's lowest useful note."
+    },
+    {
+      "id": "band6_freq",
+      "upstream_id": "f_6",
+      "name": "Frequency 6",
+      "type": "float",
+      "min": 10,
+      "max": 20000,
+      "default": 4000.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Centre or corner frequency in Hz."
+    },
+    {
+      "id": "band6_gain",
+      "upstream_id": "g_6",
+      "name": "Gain 6",
+      "type": "float",
+      "min": -18,
+      "max": 18,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp",
+      "ai_hint": "Prefer cuts to boosts. Corrective cuts are usually 2-6 dB; boosts rarely above 4 dB."
+    },
+    {
+      "id": "band6_q",
+      "upstream_id": "q_6",
+      "name": "Quality factor 6",
+      "type": "float",
+      "min": 0.1,
+      "max": 20,
+      "default": 0.7,
+      "unit": "",
+      "ai_hint": "Bell width. 0.7 broad and musical, 2-4 for targeted cuts, 8+ for notching resonances."
+    },
+    {
+      "id": "band6_slope",
+      "upstream_id": "s_6",
+      "name": "Filter slope 6",
+      "type": "enum",
+      "default": "x1",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Steepness for pass and shelf filters: x1 gentle (12 dB/oct) to x4 steep."
+    },
+    {
+      "id": "band7_type",
+      "upstream_id": "ft_7",
+      "name": "Filter type 7",
+      "type": "enum",
+      "default": "Off",
+      "options": [
+        "Off",
+        "Bell",
+        "Hi-pass",
+        "Hi-shelf",
+        "Lo-pass",
+        "Lo-shelf",
+        "Notch"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Leave unused bands Off. Use Hi-pass on band 0 to remove rumble below the source's lowest useful note."
+    },
+    {
+      "id": "band7_freq",
+      "upstream_id": "f_7",
+      "name": "Frequency 7",
+      "type": "float",
+      "min": 10,
+      "max": 20000,
+      "default": 10000.0,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Centre or corner frequency in Hz."
+    },
+    {
+      "id": "band7_gain",
+      "upstream_id": "g_7",
+      "name": "Gain 7",
+      "type": "float",
+      "min": -18,
+      "max": 18,
+      "default": 0.0,
+      "unit": "dB",
+      "convert": "db_to_amp",
+      "ai_hint": "Prefer cuts to boosts. Corrective cuts are usually 2-6 dB; boosts rarely above 4 dB."
+    },
+    {
+      "id": "band7_q",
+      "upstream_id": "q_7",
+      "name": "Quality factor 7",
+      "type": "float",
+      "min": 0.1,
+      "max": 20,
+      "default": 0.7,
+      "unit": "",
+      "ai_hint": "Bell width. 0.7 broad and musical, 2-4 for targeted cuts, 8+ for notching resonances."
+    },
+    {
+      "id": "band7_slope",
+      "upstream_id": "s_7",
+      "name": "Filter slope 7",
+      "type": "enum",
+      "default": "x1",
+      "options": [
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ],
+      "convert": "enum_index",
+      "ai_hint": "Steepness for pass and shelf filters: x1 gentle (12 dB/oct) to x4 steep."
+    }
+  ],
+  "hidden_params": {
+    "count": 17,
+    "reason": "Per-band filter mode, width, solo/mute, input gain and analyser controls stay at defaults; they are display or expert controls."
+  },
+  "notes": [
+    "LSP stores gains as linear amplitude; Plugsalot converts from dB (convert = db_to_amp).",
+    "Upstream Q default is 0. Confirm how LSP treats Q = 0 for each filter mode before relying on the upstream default; Plugsalot always sends an explicit Q."
+  ]
+}

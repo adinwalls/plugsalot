@@ -1,0 +1,18 @@
+{
+  "expect": "invalid",
+  "expect_error_contains": "cannot be used while tracking",
+  "reply": {
+    "schema_version": 1,
+    "source": "bass",
+    "stage": "tracking",
+    "chain": [
+      {
+        "module": "tape",
+        "params": {
+          "drive": 3
+        }
+      }
+    ],
+    "explanation": "High-pass at 90 Hz, small mud cut at 300 Hz, opto levelling, gentle de-essing and a short plate."
+  }
+}

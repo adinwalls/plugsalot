@@ -1,0 +1,30 @@
+{
+  "id": "limiter",
+  "name": "Peak Limiter",
+  "kind": "effect",
+  "category": "limiting",
+  "source": {
+    "source_key": "x42-dpl",
+    "path": "lv2ttl/dpl.ports.ttl.in",
+    "upstream_name": "x42-dpl Digital Peak Limiter"
+  },
+  "extractor": { "type": "lv2_ttl", "file": "lv2ttl/dpl.ports.ttl.in" },
+  "purpose": "Transparent lookahead peak limiter with true-peak detection; the final safety stage that holds the output under the ceiling.",
+  "good_for": ["bus", "master"],
+  "tags": ["limiting", "loudness", "true peak", "safety"],
+  "cpu_points": null,
+  "latency": { "type": "variable", "note": "Lookahead latency reported to the host through the 'latency' output port." },
+  "tracking_safe": false,
+  "channels": ["mono", "stereo"],
+  "expose": [
+    { "upstream_id": "gain", "id": "input_gain", "max": 12, "ai_hint": "Drives the signal into the limiter. Keep at 0-3 dB unless loudness is requested; upstream allows +30 dB." },
+    { "upstream_id": "threshold", "id": "ceiling", "max": -1, "default": -1, "ai_hint": "Output ceiling. Plugsalot never allows above -1 dB." },
+    { "upstream_id": "release", "unit": "s", "ai_hint": "Release time in seconds; 0.01 s default, longer for smoother limiting." },
+    { "upstream_id": "truepeak", "id": "true_peak", "default": true, "ai_hint": "Keep on so inter-sample peaks are caught." }
+  ],
+  "hidden_reason": "The enable port is driven by Plugsalot's own bypass.",
+  "notes": [
+    "The validator places this module last in any chain and allows only one.",
+    "Release has no unit in the Turtle file; x42 documents it in seconds."
+  ]
+}

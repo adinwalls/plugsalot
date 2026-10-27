@@ -1,0 +1,16 @@
+{
+  "expect": "invalid",
+  "expect_error_contains": "unknown module",
+  "reply": {
+    "schema_version": 1,
+    "source": "lead vocal",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "autotune",
+        "params": {}
+      }
+    ],
+    "explanation": "High-pass at 90 Hz, small mud cut at 300 Hz, opto levelling, gentle de-essing and a short plate."
+  }
+}

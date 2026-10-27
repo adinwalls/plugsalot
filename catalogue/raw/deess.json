@@ -1,0 +1,66 @@
+{
+  "module": "deess",
+  "source_key": "airwindows",
+  "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+  "extractor": {
+    "type": "airwindows",
+    "effect": "DeBess"
+  },
+  "params": [
+    {
+      "upstream_id": "A",
+      "name": "Intense",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": "",
+      "display_expr": "float2string(A)"
+    },
+    {
+      "upstream_id": "B",
+      "name": "Sharp",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string(B)"
+    },
+    {
+      "upstream_id": "C",
+      "name": "Depth",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string(C)"
+    },
+    {
+      "upstream_id": "D",
+      "name": "Filter",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string(D)"
+    },
+    {
+      "upstream_id": "E",
+      "name": "Sense",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": "",
+      "display_expr": "float2string(E)",
+      "display_labels": [
+        "Vox",
+        "Ess"
+      ]
+    }
+  ],
+  "description": "DeBess is an improved DeEss, with perfect rejection of non-ess audio."
+}

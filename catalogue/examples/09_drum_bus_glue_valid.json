@@ -1,0 +1,30 @@
+{
+  "expect": "valid",
+  "reply": {
+    "schema_version": 1,
+    "source": "full kit",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "multicomp",
+        "params": {
+          "mode": "Vintage VCA (Bus)",
+          "bus_threshold": -6,
+          "bus_ratio": "4:1",
+          "bus_attack": "30ms",
+          "bus_release": "Auto",
+          "sidechain_hp": 90
+        }
+      },
+      {
+        "module": "tape",
+        "params": {
+          "deck": "Swiss",
+          "speed": "15 IPS",
+          "drive": 2
+        }
+      }
+    ],
+    "explanation": "Bus compression for glue with a touch of tape saturation."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "expect": "invalid",
+  "expect_error_contains": "too long",
+  "reply": {
+    "schema_version": 1,
+    "source": "lead vocal",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "para_eq",
+        "params": {}
+      },
+      {
+        "module": "para_eq",
+        "params": {}
+      },
+      {
+        "module": "para_eq",
+        "params": {}
+      },
+      {
+        "module": "para_eq",
+        "params": {}
+      },
+      {
+        "module": "para_eq",
+        "params": {}
+      },
+      {
+        "module": "para_eq",
+        "params": {}
+      },
+      {
+        "module": "para_eq",
+        "params": {}
+      },
+      {
+        "module": "para_eq",
+        "params": {}
+      },
+      {
+        "module": "para_eq",
+        "params": {}
+      }
+    ],
+    "explanation": "High-pass at 90 Hz, small mud cut at 300 Hz, opto levelling, gentle de-essing and a short plate."
+  }
+}

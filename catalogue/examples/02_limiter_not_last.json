@@ -1,0 +1,22 @@
+{
+  "expect": "invalid",
+  "expect_error_contains": "must be the last",
+  "reply": {
+    "schema_version": 1,
+    "source": "bus",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "limiter",
+        "params": {
+          "ceiling": -1
+        }
+      },
+      {
+        "module": "para_eq",
+        "params": {}
+      }
+    ],
+    "explanation": "High-pass at 90 Hz, small mud cut at 300 Hz, opto levelling, gentle de-essing and a short plate."
+  }
+}

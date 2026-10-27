@@ -1,0 +1,37 @@
+{
+  "id": "tape",
+  "name": "TapeMachine 2",
+  "kind": "effect",
+  "category": "character",
+  "source": {
+    "source_key": "dusk-audio",
+    "path": "plugins/TapeMachine/daf-plugin",
+    "upstream_name": "Dusk Audio TapeMachine 2"
+  },
+  "extractor": { "type": "dusk_daf", "file": "plugins/TapeMachine/daf-plugin/TapeMachineParams.hpp", "table": "kTmParams" },
+  "purpose": "Analog tape emulation adding saturation, head bump, gentle compression and optional wow and flutter; Swiss deck for tracking and mix colour, American deck for mastering.",
+  "good_for": ["bass", "full kit", "software drums", "kick", "snare", "electric guitar", "lead vocal", "synth", "bus", "master"],
+  "tags": ["saturation", "warmth", "vintage", "glue"],
+  "cpu_points": null,
+  "latency": { "type": "variable", "note": "Uses a 2x oversampled nonlinear core; latency not yet measured." },
+  "tracking_safe": false,
+  "channels": ["stereo"],
+  "expose": [
+    { "upstream_id": "tapeMachine", "id": "deck", "ai_hint": "Swiss for tracks and mix buses; American for mastering." },
+    { "upstream_id": "tapeSpeed", "id": "speed", "options": ["7.5 IPS", "15 IPS", "30 IPS"], "ai_hint": "15 IPS is the all-round default. 7.5 IPS = more head bump and lo-fi; 30 IPS = cleaner, tighter low end." },
+    { "upstream_id": "tapeType", "id": "formulation", "ai_hint": "456 classic warm saturation; GP9 cleaner with more headroom." },
+    { "upstream_id": "inputGain", "id": "drive", "ai_hint": "The main saturation control. 0 to +3 dB subtle; +6 dB and above clearly driven." },
+    { "upstream_id": "highpassFreq", "id": "highpass", "ai_hint": "Cleans up low rumble; leave at 20 Hz unless needed." },
+    { "upstream_id": "lowpassFreq", "id": "lowpass", "ai_hint": "Rolls off the top end for a darker, vintage sound." },
+    { "upstream_id": "wowAmount", "id": "wow", "ai_hint": "Slow pitch drift. Keep low (under 10%) unless a lo-fi effect is wanted." },
+    { "upstream_id": "flutterAmount", "id": "flutter", "ai_hint": "Fast pitch wobble. Keep low unless a lo-fi effect is wanted." },
+    { "upstream_id": "outputGain", "id": "output", "ai_hint": "Output trim after Auto Compensation." },
+    { "upstream_id": "autoComp", "id": "auto_comp", "ai_hint": "Keep on so output level follows drive changes." }
+  ],
+  "hidden_reason": "Signal path, EQ standard, bias, calibration, noise, oversampling, American-only switches, advanced repro EQ and the hidden factory-preset calibration trims stay at defaults.",
+  "notes": [
+    "3.75 IPS is American-only, so it is excluded from the speed options.",
+    "TapeMachine 2 ships 20 calibrated factory presets (TapeMachinePresets.hpp); a preset extractor is a follow-up task.",
+    "Marked not tracking-safe until its latency is measured."
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "multicomp",
+  "name": "Multi-Comp",
+  "kind": "effect",
+  "category": "dynamics",
+  "source": {
+    "source_key": "dusk-audio",
+    "path": "plugins/multi-comp/multicomp.cpp",
+    "upstream_name": "Dusk Audio Multi-Comp"
+  },
+  "extractor": {
+    "type": "juce_apvts",
+    "file": "plugins/multi-comp/multicomp.cpp",
+    "function": "UniversalCompressor::createParameterLayout",
+    "bool_classes": ["SnappingBoolParameter"]
+  },
+  "purpose": "Compressor with seven hardware-style modes (opto, FET, VCA, bus, studio, digital) for levelling vocals, adding punch to drums and gluing buses.",
+  "good_for": ["lead vocal", "backing vocal", "bass", "kick", "snare", "full kit", "software drums", "acoustic guitar", "electric guitar", "bus"],
+  "tags": ["compression", "glue", "punch", "levelling", "saturation"],
+  "cpu_points": null,
+  "latency": { "type": "variable", "note": "Oversampling and lookahead add latency." },
+  "tracking_safe": true,
+  "tracking_overrides": { "oversampling": "Off" },
+  "channels": ["mono", "stereo"],
+  "expose": [
+    { "upstream_id": "mode", "options": ["Vintage Opto", "Vintage FET", "Classic VCA", "Vintage VCA (Bus)", "Studio FET", "Studio VCA", "Digital"], "ai_hint": "Opto: smooth vocal levelling. Vintage FET: aggressive, forward vocals and drums. Bus: drum and mix glue. Studio modes: cleaner. Digital: precise. Set only the parameters of the chosen mode." },
+    { "upstream_id": "mix", "ai_hint": "Below 100% for parallel compression." },
+    { "upstream_id": "sidechain_hp", "ai_hint": "60-100 Hz stops low end from pumping the compressor; 0 = off." },
+    { "upstream_id": "auto_makeup", "ai_hint": "On to keep output level matched while adjusting compression." },
+    { "upstream_id": "oversampling", "ai_hint": "2x default. Off when tracking. 4x only on a final bus." },
+
+    { "upstream_id": "opto_peak_reduction", "unit": "%", "ai_hint": "Vintage Opto only. Compression amount; 50% gives roughly 4-6 dB reduction on a typical lead vocal." },
+    { "upstream_id": "opto_gain", "unit": "%", "ai_hint": "Vintage Opto only. Output gain; 50% is unity." },
+
+    { "upstream_id": "fet_input", "unit": "dB", "ai_hint": "Vintage/Studio FET. Drive into the compressor." },
+    { "upstream_id": "fet_threshold", "unit": "dB", "ai_hint": "Vintage/Studio FET. Where compression starts." },
+    { "upstream_id": "fet_ratio", "ai_hint": "Vintage/Studio FET. 4:1 for vocals; All for extreme room-mic smash only." },
+    { "upstream_id": "fet_attack", "unit": "ms", "ai_hint": "Vintage/Studio FET. Fast (under 1 ms) for presence; slower to keep transients." },
+    { "upstream_id": "fet_release", "unit": "ms", "ai_hint": "Vintage/Studio FET." },
+    { "upstream_id": "fet_output", "unit": "dB", "ai_hint": "Vintage/Studio FET. Output trim." },
+    { "upstream_id": "fet_transient", "ai_hint": "Vintage/Studio FET. Blends raw transients past the compressor." },
+
+    { "upstream_id": "vca_threshold", "unit": "dB", "ai_hint": "Classic VCA only." },
+    { "upstream_id": "vca_ratio", "unit": ":1", "max": 20, "ai_hint": "Classic VCA only. Upstream allows up to 120:1 (limiting); capped at 20:1 here." },
+    { "upstream_id": "vca_attack", "unit": "ms", "ai_hint": "Classic VCA only." },
+    { "upstream_id": "vca_release", "unit": "ms", "ai_hint": "Classic VCA only." },
+    { "upstream_id": "vca_output", "unit": "dB", "ai_hint": "Classic VCA only." },
+
+    { "upstream_id": "bus_threshold", "unit": "dB", "ai_hint": "Vintage VCA (Bus) only. Aim for 1-4 dB of gain reduction for glue." },
+    { "upstream_id": "bus_ratio", "ai_hint": "Vintage VCA (Bus) only. 2:1 subtle, 4:1 classic drum glue." },
+    { "upstream_id": "bus_attack", "ai_hint": "Vintage VCA (Bus) only. 30ms lets drum transients punch through." },
+    { "upstream_id": "bus_release", "ai_hint": "Vintage VCA (Bus) only. Auto is the classic glue setting." },
+    { "upstream_id": "bus_makeup", "unit": "dB", "ai_hint": "Vintage VCA (Bus) only." },
+
+    { "upstream_id": "studio_vca_threshold", "unit": "dB", "ai_hint": "Studio VCA only." },
+    { "upstream_id": "studio_vca_ratio", "unit": ":1", "ai_hint": "Studio VCA only." },
+    { "upstream_id": "studio_vca_attack", "unit": "ms", "ai_hint": "Studio VCA only." },
+    { "upstream_id": "studio_vca_release", "unit": "ms", "ai_hint": "Studio VCA only." },
+    { "upstream_id": "studio_vca_output", "unit": "dB", "ai_hint": "Studio VCA only." },
+
+    { "upstream_id": "digital_threshold", "unit": "dB", "ai_hint": "Digital only." },
+    { "upstream_id": "digital_ratio", "unit": ":1", "max": 20, "ai_hint": "Digital only. Capped at 20:1 here." },
+    { "upstream_id": "digital_knee", "unit": "dB", "ai_hint": "Digital only. 6 dB is a soft, musical knee." },
+    { "upstream_id": "digital_attack", "unit": "ms", "ai_hint": "Digital only." },
+    { "upstream_id": "digital_release", "unit": "ms", "ai_hint": "Digital only." },
+    { "upstream_id": "digital_output", "unit": "dB", "ai_hint": "Digital only." }
+  ],
+  "hidden_reason": "Multiband mode, sidechain EQ, external sidechain, lookahead, distortion, link modes and meters stay at defaults for now; multiband needs its own catalogue entry.",
+  "notes": [
+    "Starting points and hints are drawn from the Dusk Audio Multi-Comp manual (manuals/multi-comp.md).",
+    "Several thresholds and times have no unit label in code; units here follow the manual.",
+    "Each mode has its own threshold scale, so switching mode means re-setting the compression amount."
+  ]
+}

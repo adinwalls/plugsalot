@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "deess",
+  "name": "DeBess",
+  "kind": "effect",
+  "category": "dynamics",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/DeBess",
+    "upstream_name": "Airwindows DeBess",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "airwindows"
+  },
+  "purpose": "De-esser that detects 's' sounds by their waveform rather than a frequency band, so it reduces sibilance while leaving the rest of the treble untouched.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal"
+  ],
+  "avoid_for": [
+    "dynamic (moving-coil) mic recordings with dull top end",
+    "low-sample-quality vocals"
+  ],
+  "tags": [
+    "sibilance",
+    "de-essing",
+    "transparent"
+  ],
+  "cpu_points": null,
+  "cpu_measured": false,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "params": [
+    {
+      "id": "intensity",
+      "upstream_id": "A",
+      "name": "Intense",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": "",
+      "ai_hint": "Amount of de-essing. 0 is off; raise until harsh esses soften."
+    },
+    {
+      "id": "sharpness",
+      "upstream_id": "B",
+      "name": "Sharp",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Width of the ess-detection window; higher isolates esses more strictly."
+    },
+    {
+      "id": "depth",
+      "upstream_id": "C",
+      "name": "Depth",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "How far detected esses are reduced."
+    },
+    {
+      "id": "filter",
+      "upstream_id": "D",
+      "name": "Filter",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Tone of the detection filter."
+    }
+  ],
+  "hidden_params": {
+    "count": 1,
+    "reason": "Control E (Sense) is a monitor switch: 0.5 and above outputs only the removed esses (DeBessProc.cpp). Kept at 0, normal output."
+  },
+  "notes": [
+    "Upstream description: DeBess is an improved DeEss, with perfect rejection of non-ess audio.",
+    "All Airwindows parameters are 0..1. Hints are first drafts and need refining in listening tests.",
+    "Airwindopedia notes DeBess may not engage on prosumer interfaces or moving-coil mics whose top end is dull. Add a conventional frequency-band de-esser as a fallback for those recordings."
+  ]
+}

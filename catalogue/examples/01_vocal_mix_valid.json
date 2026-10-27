@@ -1,0 +1,47 @@
+{
+  "expect": "valid",
+  "reply": {
+    "schema_version": 1,
+    "source": "lead vocal",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "para_eq",
+        "params": {
+          "band0_type": "Hi-pass",
+          "band0_freq": 90,
+          "band0_slope": "x2",
+          "band1_type": "Bell",
+          "band1_freq": 300,
+          "band1_gain": -2.5,
+          "band1_q": 1.4
+        }
+      },
+      {
+        "module": "multicomp",
+        "params": {
+          "mode": "Vintage Opto",
+          "opto_peak_reduction": 45,
+          "opto_gain": 55,
+          "sidechain_hp": 80
+        }
+      },
+      {
+        "module": "deess",
+        "params": {
+          "intensity": 0.4
+        }
+      },
+      {
+        "module": "plate",
+        "params": {
+          "wet": 15,
+          "predelay": 30,
+          "decay": 0.9,
+          "low_cut": 200
+        }
+      }
+    ],
+    "explanation": "High-pass at 90 Hz, small mud cut at 300 Hz, opto levelling, gentle de-essing and a short plate."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "expect": "invalid",
+  "expect_error_contains": "outside",
+  "reply": {
+    "schema_version": 1,
+    "source": "lead vocal",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "para_eq",
+        "params": {
+          "band1_type": "Bell",
+          "band1_gain": 24
+        }
+      }
+    ],
+    "explanation": "High-pass at 90 Hz, small mud cut at 300 Hz, opto levelling, gentle de-essing and a short plate."
+  }
+}

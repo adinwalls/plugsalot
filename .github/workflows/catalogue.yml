@@ -1,0 +1,26 @@
+name: Catalogue
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Fetch pinned upstream sources
+        run: python3 tools/fetch_sources.py
+      - name: Extract parameters
+        run: python3 tools/extract_all.py
+      - name: Build catalogue
+        run: python3 tools/build_catalogue.py
+      - name: Fail if committed catalogue is out of date
+        run: git diff --exit-code -- catalogue THIRD_PARTY.md
+      - name: Validate
+        run: python3 tools/validate.py

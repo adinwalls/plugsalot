@@ -1,0 +1,39 @@
+{
+  "id": "para_eq",
+  "name": "Parametric EQ (8-band)",
+  "kind": "effect",
+  "category": "eq",
+  "source": {
+    "source_key": "lsp-para-equalizer",
+    "path": "src/main/meta/para_equalizer.cpp",
+    "upstream_name": "LSP Parametric Equalizer x8 Stereo"
+  },
+  "extractor": { "type": "lsp_para_eq", "ports_array": "para_equalizer_x8_stereo_ports" },
+  "purpose": "Eight-band parametric EQ for high-pass and low-pass filtering, corrective cuts (mud, boxiness, harshness) and broad tonal shaping.",
+  "good_for": ["lead vocal", "backing vocal", "acoustic guitar", "electric guitar", "bass", "kick", "snare", "full kit", "software drums", "synth", "keys", "bus", "master"],
+  "tags": ["corrective", "tonal", "high-pass", "low-pass", "transparent"],
+  "cpu_points": null,
+  "latency": { "type": "variable", "note": "IIR mode has zero latency; FIR, FFT and SPM modes add latency (linear phase)." },
+  "tracking_safe": true,
+  "tracking_overrides": { "mode": "IIR" },
+  "channels": ["stereo"],
+  "expose": [
+    { "upstream_id": "mode", "id": "mode", "options": ["IIR", "FIR"], "ai_hint": "IIR for tracking and nearly all mixing. FIR (linear phase) only on a master or bus where phase shift matters." },
+    { "upstream_id": "g_out", "id": "output_gain", "min": -24, "max": 12, "ai_hint": "Compensate for large boosts or cuts so the module's output level matches its input." },
+    {
+      "repeat": [0, 1, 2, 3, 4, 5, 6, 7],
+      "items": [
+        { "upstream_id": "ft_{i}", "id": "band{i}_type", "options": ["Off", "Bell", "Hi-pass", "Hi-shelf", "Lo-pass", "Lo-shelf", "Notch"], "ai_hint": "Leave unused bands Off. Use Hi-pass on band 0 to remove rumble below the source's lowest useful note." },
+        { "upstream_id": "f_{i}", "id": "band{i}_freq", "min": 10, "max": 20000, "ai_hint": "Centre or corner frequency in Hz." },
+        { "upstream_id": "g_{i}", "id": "band{i}_gain", "min": -18, "max": 18, "ai_hint": "Prefer cuts to boosts. Corrective cuts are usually 2-6 dB; boosts rarely above 4 dB." },
+        { "upstream_id": "q_{i}", "id": "band{i}_q", "min": 0.1, "max": 20, "default": 0.7, "ai_hint": "Bell width. 0.7 broad and musical, 2-4 for targeted cuts, 8+ for notching resonances." },
+        { "upstream_id": "s_{i}", "id": "band{i}_slope", "ai_hint": "Steepness for pass and shelf filters: x1 gentle (12 dB/oct) to x4 steep." }
+      ]
+    }
+  ],
+  "hidden_reason": "Per-band filter mode, width, solo/mute, input gain and analyser controls stay at defaults; they are display or expert controls.",
+  "notes": [
+    "LSP stores gains as linear amplitude; Plugsalot converts from dB (convert = db_to_amp).",
+    "Upstream Q default is 0. Confirm how LSP treats Q = 0 for each filter mode before relying on the upstream default; Plugsalot always sends an explicit Q."
+  ]
+}

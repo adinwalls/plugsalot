@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/adinwalls/plugsalot/catalogue/schema/chain.schema.json",
+  "title": "Plugsalot chain reply",
+  "description": "What the LLM returns for a new chain. Shape only; module ids, parameter names and ranges are checked against the catalogue by the validator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source", "stage", "chain", "explanation"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "source": { "type": "string" },
+    "stage": { "enum": ["tracking", "mixing", "mastering"] },
+    "chain": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["module", "params"],
+        "properties": {
+          "module": { "type": "string" },
+          "params": { "type": "object" },
+          "bypass": { "type": "boolean" }
+        }
+      }
+    },
+    "explanation": { "type": "string", "maxLength": 800 }
+  }
+}

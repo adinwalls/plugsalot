@@ -1,0 +1,344 @@
+{
+  "module": "tape",
+  "source_key": "dusk-audio",
+  "commit": "e0991c57cac4f8f666b5749dcb90dcbd9081cd30",
+  "extractor": {
+    "type": "dusk_daf",
+    "file": "plugins/TapeMachine/daf-plugin/TapeMachineParams.hpp",
+    "table": "kTmParams"
+  },
+  "params": [
+    {
+      "upstream_id": "tapeMachine",
+      "name": "Tape Machine",
+      "type": "enum",
+      "options": [
+        "Swiss",
+        "American"
+      ],
+      "default": "Swiss"
+    },
+    {
+      "upstream_id": "tapeSpeed",
+      "name": "Tape Speed",
+      "type": "enum",
+      "options": [
+        "7.5 IPS",
+        "15 IPS",
+        "30 IPS",
+        "3.75 IPS"
+      ],
+      "default": "15 IPS"
+    },
+    {
+      "upstream_id": "tapeType",
+      "name": "Tape Type",
+      "type": "enum",
+      "options": [
+        "456",
+        "GP9",
+        "900",
+        "250"
+      ],
+      "default": "456"
+    },
+    {
+      "upstream_id": "signalPath",
+      "name": "Signal Path",
+      "type": "enum",
+      "options": [
+        "Repro",
+        "Sync",
+        "Input",
+        "Thru"
+      ],
+      "default": "Repro"
+    },
+    {
+      "upstream_id": "eqStandard",
+      "name": "EQ Standard",
+      "type": "enum",
+      "options": [
+        "NAB",
+        "CCIR"
+      ],
+      "default": "NAB"
+    },
+    {
+      "upstream_id": "inputGain",
+      "name": "Input Gain",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "bias",
+      "name": "Bias",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 50.0,
+      "unit": "%"
+    },
+    {
+      "upstream_id": "calibration",
+      "name": "Calibration",
+      "type": "enum",
+      "options": [
+        "+3dB",
+        "+6dB",
+        "+7.5dB",
+        "+9dB"
+      ],
+      "default": "+3dB"
+    },
+    {
+      "upstream_id": "autoCal",
+      "name": "Auto Calibration",
+      "type": "bool",
+      "default": true,
+      "convert_hint": "enum_index"
+    },
+    {
+      "upstream_id": "highpassFreq",
+      "name": "Highpass Freq",
+      "type": "float",
+      "min": 20.0,
+      "max": 500.0,
+      "default": 20.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "lowpassFreq",
+      "name": "Lowpass Freq",
+      "type": "float",
+      "min": 3000.0,
+      "max": 20000.0,
+      "default": 20000.0,
+      "unit": "Hz",
+      "scale": "log"
+    },
+    {
+      "upstream_id": "noiseAmount",
+      "name": "Noise Amount",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": "%"
+    },
+    {
+      "upstream_id": "noiseEnabled",
+      "name": "Noise Enabled",
+      "type": "bool",
+      "default": false,
+      "convert_hint": "enum_index"
+    },
+    {
+      "upstream_id": "wowAmount",
+      "name": "Wow",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 7.0,
+      "unit": "%"
+    },
+    {
+      "upstream_id": "flutterAmount",
+      "name": "Flutter",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 3.0,
+      "unit": "%"
+    },
+    {
+      "upstream_id": "outputGain",
+      "name": "Output Gain",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "autoComp",
+      "name": "Auto Compensation",
+      "type": "bool",
+      "default": true,
+      "convert_hint": "enum_index"
+    },
+    {
+      "upstream_id": "oversampling",
+      "name": "Oversampling",
+      "type": "enum",
+      "options": [
+        "1x",
+        "2x",
+        "4x"
+      ],
+      "default": "2x"
+    },
+    {
+      "upstream_id": "headWidth",
+      "name": "Head Width",
+      "type": "enum",
+      "options": [
+        "1/4″",
+        "1/2″",
+        "1″"
+      ],
+      "default": "1/2″"
+    },
+    {
+      "upstream_id": "crosstalk",
+      "name": "Crosstalk",
+      "type": "bool",
+      "default": true,
+      "convert_hint": "enum_index"
+    },
+    {
+      "upstream_id": "wowFlutterOn",
+      "name": "Wow & Flutter",
+      "type": "bool",
+      "default": true,
+      "convert_hint": "enum_index"
+    },
+    {
+      "upstream_id": "transformer",
+      "name": "Transformer",
+      "type": "bool",
+      "default": true,
+      "convert_hint": "enum_index"
+    },
+    {
+      "upstream_id": "bypass",
+      "name": "Bypass",
+      "type": "bool",
+      "default": false,
+      "role": "bypass"
+    },
+    {
+      "upstream_id": "reproLF",
+      "name": "Repro LF",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "reproLMF",
+      "name": "Repro LMF",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "reproHMF",
+      "name": "Repro HMF",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "reproHF",
+      "name": "Repro HF",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "levelHmfTrim",
+      "name": "Level HMF Trim",
+      "type": "float",
+      "min": -24.0,
+      "max": 24.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "levelHfTrim",
+      "name": "Level HF Trim",
+      "type": "float",
+      "min": -24.0,
+      "max": 24.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "lpQ",
+      "name": "Lowpass Q",
+      "type": "float",
+      "min": 0.5,
+      "max": 2.5,
+      "default": 0.707,
+      "unit": ""
+    },
+    {
+      "upstream_id": "progHmfTrim",
+      "name": "Prog HMF Trim",
+      "type": "float",
+      "min": -24.0,
+      "max": 24.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "progHfTrim",
+      "name": "Prog HF Trim",
+      "type": "float",
+      "min": -24.0,
+      "max": 24.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "reproSubBell",
+      "name": "Repro Sub Bell",
+      "type": "float",
+      "min": -12.0,
+      "max": 12.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "progLfTrim",
+      "name": "Prog LF Trim",
+      "type": "float",
+      "min": -24.0,
+      "max": 24.0,
+      "default": 0.0,
+      "unit": "dB"
+    },
+    {
+      "upstream_id": "vuL",
+      "name": "VU L",
+      "type": "float",
+      "role": "meter",
+      "min": 0.0,
+      "max": 2.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "vuR",
+      "name": "VU R",
+      "type": "float",
+      "role": "meter",
+      "min": 0.0,
+      "max": 2.0,
+      "default": 0.0,
+      "unit": ""
+    }
+  ]
+}

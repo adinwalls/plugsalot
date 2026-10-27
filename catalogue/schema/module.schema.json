@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/adinwalls/plugsalot/catalogue/schema/module.schema.json",
+  "title": "Plugsalot catalogue module",
+  "description": "One processing module the AI can place in a chain. Built by tools/build_catalogue.py from raw extracted parameters plus a hand-written curation file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "name", "kind", "category", "source", "purpose", "good_for", "cpu_points", "cpu_measured", "latency", "tracking_safe", "channels", "params"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,40}$" },
+    "name": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["effect", "instrument"] },
+    "category": {
+      "enum": ["eq", "dynamics", "limiting", "character", "reverb", "delay_modulation", "amp", "drums", "cleanup", "tuning", "metering", "utility"]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_key", "repo", "commit", "path", "license"],
+      "properties": {
+        "source_key": { "type": "string" },
+        "repo": { "type": "string", "format": "uri" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "path": { "type": "string" },
+        "upstream_name": { "type": "string" },
+        "license": { "type": "string" },
+        "authors": { "type": "string" },
+        "extractor": { "type": "string" }
+      }
+    },
+    "purpose": { "type": "string", "minLength": 10, "maxLength": 300 },
+    "good_for": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "avoid_for": { "type": "array", "items": { "type": "string" } },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "cpu_points": { "type": ["integer", "null"], "minimum": 1, "maximum": 10 },
+    "cpu_measured": { "type": "boolean" },
+    "latency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["none", "fixed", "variable"] },
+        "samples": { "type": "integer", "minimum": 0 },
+        "note": { "type": "string" }
+      }
+    },
+    "tracking_safe": { "type": "boolean" },
+    "tracking_overrides": {
+      "description": "Parameter values forced by the validator when stage = tracking, to keep latency at zero.",
+      "type": "object"
+    },
+    "channels": { "type": "array", "items": { "enum": ["mono", "stereo"] }, "minItems": 1, "uniqueItems": true },
+    "params": { "type": "array", "items": { "$ref": "#/$defs/param" }, "minItems": 1 },
+    "hidden_params": {
+      "type": "object",
+      "description": "Upstream parameters deliberately not shown to the AI, kept at their default.",
+      "additionalProperties": false,
+      "properties": {
+        "count": { "type": "integer", "minimum": 0 },
+        "reason": { "type": "string" }
+      }
+    },
+    "presets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "params"],
+        "properties": {
+          "name": { "type": "string" },
+          "params": { "type": "object" }
+        }
+      }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "param": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "upstream_id", "name", "type", "default"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "upstream_id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "enum": ["float", "int", "enum", "bool"] },
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "default": {},
+        "unit": { "type": "string" },
+        "scale": { "enum": ["linear", "log"] },
+        "options": { "type": "array", "items": { "type": "string" }, "minItems": 2 },
+        "option_values": {
+          "description": "Upstream index for each option, present only when curation narrowed the list so positions no longer match.",
+          "type": "array", "items": { "type": "integer", "minimum": 0 }
+        },
+        "convert": {
+          "description": "How Plugsalot maps the AI-facing value to the upstream value.",
+          "enum": ["none", "db_to_amp", "enum_index", "percent_to_unit", "airwindows_display"]
+        },
+        "ai_hint": { "type": "string", "maxLength": 200 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "enum": ["float", "int"] } } },
+          "then": {
+            "required": ["min", "max", "unit"],
+            "properties": { "default": { "type": "number" } }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "enum" } } },
+          "then": {
+            "required": ["options"],
+            "properties": { "default": { "type": "string" } }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "bool" } } },
+          "then": { "properties": { "default": { "type": "boolean" } } }
+        }
+      ]
+    }
+  }
+}
