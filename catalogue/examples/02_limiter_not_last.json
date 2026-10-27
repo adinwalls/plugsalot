@@ -13,7 +13,7 @@
         }
       },
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       }
     ],

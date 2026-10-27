@@ -3,13 +3,19 @@
   "expect_error_contains": "cannot be used while tracking",
   "reply": {
     "schema_version": 1,
-    "source": "bass",
+    "source": "lead vocal",
     "stage": "tracking",
     "chain": [
       {
-        "module": "tape",
+        "module": "console_eq",
         "params": {
-          "drive": 3
+          "hpf_enabled": true
+        }
+      },
+      {
+        "module": "limiter",
+        "params": {
+          "ceiling": -1
         }
       }
     ],

@@ -6,15 +6,13 @@
     "stage": "mixing",
     "chain": [
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {
-          "band0_type": "Hi-pass",
-          "band0_freq": 90,
-          "band0_slope": "x2",
-          "band1_type": "Bell",
-          "band1_freq": 300,
-          "band1_gain": -2.5,
-          "band1_q": 1.4
+          "hpf_enabled": true,
+          "hpf_hz": 90,
+          "lm_hz": 300,
+          "lm_gain": -2.5,
+          "lm_q": 1.4
         }
       },
       {
@@ -22,7 +20,7 @@
         "params": {
           "mode": "Opto",
           "opto_peak_reduction": 45,
-          "opto_gain": 55,
+          "opto_gain": 26,
           "sidechain_hp": 80
         }
       },

@@ -117,7 +117,7 @@ def build_module(cur: dict, raw: dict | None, sources: dict) -> dict:
     for k in COPY_KEYS:
         if k in cur:
             out[k] = cur[k]
-    out["cpu_measured"] = False
+    out["cpu_measured"] = bool(cur.get("cpu_measured", False))
     out["source"] = {
         "source_key": src_key,
         "repo": spec["repo"],

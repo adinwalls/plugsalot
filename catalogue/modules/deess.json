@@ -28,8 +28,8 @@
     "de-essing",
     "transparent"
   ],
-  "cpu_points": null,
-  "cpu_measured": false,
+  "cpu_points": 1,
+  "cpu_measured": true,
   "latency": {
     "type": "none"
   },
@@ -90,6 +90,7 @@
   "notes": [
     "Upstream description: DeBess is an improved DeEss, with perfect rejection of non-ess audio.",
     "All Airwindows parameters are 0..1. Hints are first drafts and need refining in listening tests.",
-    "Airwindopedia notes DeBess may not engage on prosumer interfaces or moving-coil mics whose top end is dull. Add a conventional frequency-band de-esser as a fallback for those recordings."
+    "Airwindopedia notes DeBess may not engage on prosumer interfaces or moving-coil mics whose top end is dull. Add a conventional frequency-band de-esser as a fallback for those recordings.",
+    "CPU: 0.95% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ]
 }

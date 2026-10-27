@@ -7,10 +7,9 @@
     "stage": "mixing",
     "chain": [
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {
-          "band1_type": "Bell",
-          "band1_gain": 24
+          "lm_gain": 24
         }
       }
     ],

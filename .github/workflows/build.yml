@@ -1,0 +1,74 @@
+name: Build plugin
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux
+            os: ubuntu-22.04        # older glibc so the build runs on Ubuntu/Pop!_OS 22.04 and newer
+          - name: windows
+            os: windows-latest
+          - name: macos
+            os: macos-14
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libjack-jackd2-dev libx11-dev libxrandr-dev libxinerama-dev \
+            libxcursor-dev libxext-dev libfreetype6-dev libfontconfig1-dev libcurl4-openssl-dev libgl1-mesa-dev ninja-build
+
+      - name: Configure
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            cmake -S . -B build -G Xcode -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          else
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          fi
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+
+      - name: Test
+        shell: bash
+        run: |
+          T=$(find build -type f \( -name PlugsalotTests -o -name PlugsalotTests.exe \) -perm -u+x 2>/dev/null | head -1)
+          [ -z "$T" ] && T=$(find build -type f -name PlugsalotTests.exe | head -1)
+          echo "Running $T"
+          "$T" "$GITHUB_WORKSPACE/catalogue/examples"
+
+      - name: Package
+        shell: bash
+        run: |
+          OUT=Plugsalot-${{ matrix.name }}
+          mkdir -p "$OUT"
+          A=build/plugin/Plugsalot_artefacts/Release
+          [ -d "$A/VST3" ] && cp -R "$A/VST3/." "$OUT/"
+          [ -d "$A/LV2" ] && cp -R "$A/LV2/." "$OUT/"
+          [ -d "$A/AU" ] && cp -R "$A/AU/." "$OUT/"
+          if [ -d "$A/Standalone" ]; then cp -R "$A/Standalone/." "$OUT/"; fi
+          cp LICENSE THIRD_PARTY.md docs/TESTING.md "$OUT/"
+          ls -la "$OUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Plugsalot-${{ matrix.name }}
+          path: Plugsalot-${{ matrix.name }}
+          retention-days: 30

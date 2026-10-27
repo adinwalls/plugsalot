@@ -33,8 +33,8 @@
     "plate",
     "vocal reverb"
   ],
-  "cpu_points": null,
-  "cpu_measured": false,
+  "cpu_points": 1,
+  "cpu_measured": true,
   "latency": {
     "type": "none"
   },
@@ -265,6 +265,7 @@
   ],
   "notes": [
     "Upstream symbol for wet level is 'early_level'; exposed here as 'wet'.",
-    "Defaults come from the upstream default preset, Bright Plate."
+    "Defaults come from the upstream default preset, Bright Plate.",
+    "CPU: 0.43% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ]
 }

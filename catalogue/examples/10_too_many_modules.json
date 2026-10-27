@@ -7,39 +7,39 @@
     "stage": "mixing",
     "chain": [
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       },
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       },
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       },
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       },
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       },
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       },
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       },
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       },
       {
-        "module": "para_eq",
+        "module": "console_eq",
         "params": {}
       }
     ],

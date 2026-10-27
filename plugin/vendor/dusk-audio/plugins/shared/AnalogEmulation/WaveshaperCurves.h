@@ -1,0 +1,432 @@
+// WaveshaperCurves.h — Lookup table waveshapers for hardware saturation curves
+
+#pragma once
+
+#include <array>
+#include <cmath>
+#include <algorithm>
+
+namespace AnalogEmulation {
+
+class WaveshaperCurves
+{
+public:
+    static constexpr int TABLE_SIZE = 4096;
+    static constexpr float TABLE_RANGE = 4.0f;  // Input range: -2 to +2
+
+    enum class CurveType
+    {
+        Opto_Tube,      // Asymmetric tube saturation
+        FET,       // FET transistor clipping
+        Classic_VCA,        // Clean VCA saturation
+        Console_Bus,    // Console bus character
+        Transformer,    // Generic transformer saturation
+        Tape,           // Tape saturation (similar to opto tube but smoother)
+        Triode,         // Generic triode tube saturation
+        Pentode,        // Pentode tube saturation (more aggressive)
+        EL84,           // EL84 power tube (chimey breakup, between Triode and Pentode)
+        Linear          // Bypass (no saturation)
+    };
+
+    WaveshaperCurves()
+    {
+        initialize();
+    }
+
+    void initialize()
+    {
+        initializeOptoCurve();
+        initializeFETCurve();
+        initializeVCACurve();
+        initializeConsoleCurve();
+        initializeTransformerCurve();
+        initializeTapeCurve();
+        initializeTriodeCurve();
+        initializePentodeCurve();
+        initializeEL84Curve();
+        initializeLinearCurve();
+    }
+
+    // Process a single sample through the waveshaper
+    // Input should be normalized (-2 to +2 range for full curve access)
+    float process(float input, CurveType curve) const
+    {
+        // NaN/Inf guard — clamp won't catch NaN (NaN comparisons are always false)
+        if (!std::isfinite(input))
+            return 0.0f;
+
+        // Map input to table index
+        float normalized = (input + TABLE_RANGE / 2.0f) / TABLE_RANGE;
+        normalized = std::clamp(normalized, 0.0f, 0.9999f);
+
+        float indexFloat = normalized * (TABLE_SIZE - 1);
+        int index0 = static_cast<int>(indexFloat);
+        int index1 = std::min(index0 + 1, TABLE_SIZE - 1);
+        float frac = indexFloat - static_cast<float>(index0);
+
+        const auto& table = getTable(curve);
+        return table[index0] * (1.0f - frac) + table[index1] * frac;
+    }
+
+    // Process with drive amount (0 = bypass, 1 = full saturation)
+    float processWithDrive(float input, CurveType curve, float drive) const
+    {
+        drive = std::clamp(drive, 0.0f, 1.0f);
+        if (drive <= 0.0f)
+            return input;
+
+        float saturated = process(input, curve);
+        return input + (saturated - input) * drive;
+    }
+
+    // Get raw table for direct access (advanced use)
+    const std::array<float, TABLE_SIZE>& getTable(CurveType curve) const
+    {
+        switch (curve)
+        {
+            case CurveType::Opto_Tube:   return optoCurve;
+            case CurveType::FET:    return fetCurve;
+            case CurveType::Classic_VCA:     return vcaCurve;
+            case CurveType::Console_Bus: return consoleCurve;
+            case CurveType::Transformer: return transformerCurve;
+            case CurveType::Tape:        return tapeCurve;
+            case CurveType::Triode:      return triodeCurve;
+            case CurveType::Pentode:     return pentodeCurve;
+            case CurveType::EL84:        return el84Curve;
+            case CurveType::Linear:
+            default:                     return linearCurve;
+        }
+    }
+
+private:
+    std::array<float, TABLE_SIZE> optoCurve;
+    std::array<float, TABLE_SIZE> fetCurve;
+    std::array<float, TABLE_SIZE> vcaCurve;
+    std::array<float, TABLE_SIZE> consoleCurve;
+    std::array<float, TABLE_SIZE> transformerCurve;
+    std::array<float, TABLE_SIZE> tapeCurve;
+    std::array<float, TABLE_SIZE> triodeCurve;
+    std::array<float, TABLE_SIZE> pentodeCurve;
+    std::array<float, TABLE_SIZE> el84Curve;
+    std::array<float, TABLE_SIZE> linearCurve;
+
+    // Convert table index to input value (-2 to +2)
+    static float indexToInput(int index)
+    {
+        return (static_cast<float>(index) / (TABLE_SIZE - 1)) * TABLE_RANGE - TABLE_RANGE / 2.0f;
+    }
+
+    // Solve for the self-consistent quiescent plate voltage Vp_q given the
+    // grid-bias point Vgk_bias and supply / reflected impedance. The Koren
+    // model has Ip = f(Vp, Vgk) and Vp = Vb - Ip*Rp; with Ip and Vp both
+    // depending on each other, the operating point is the fixed point of
+    // that system.
+    //
+    // Why this matters: previously each tube curve hardcoded Ip_q (e.g.
+    // 0.035 for the 12AX7 Triode) and computed Vp_q = Vb - Ip_q * Rp. If
+    // the hardcoded Ip didn't match what Koren actually predicts at the
+    // bias point, the curve's "zero crossing" sat far from f(0) — for the
+    // 12AX7 the bias-point output clamped to the negative rail at -1.35.
+    // A single-ended path masks this because the downstream DC blocker
+    // strips the constant offset. Push-pull modelling cannot mask it: both
+    // halves of the swing sit on the same DC clamp for small inputs, so
+    // 0.5*(f(x) - f(-x)) cancels everything and the output collapses.
+    //
+    // Computing Vp_q via fixed-point iteration ensures f(0) = 0 by
+    // construction, restoring the curve's full ±range and making both
+    // single-ended and push-pull paths behave correctly.
+    static float solveQuiescentVp(float Vb, float Rp,
+                                   float Vgk_bias,
+                                   float mu, float Kp, float Kvb,
+                                   float Ex, float Kg1)
+    {
+        float Vp = Vb * 0.5f;   // mid-rail starting guess
+        for (int it = 0; it < 30; ++it)
+        {
+            float inner = Kp * (1.0f / mu + Vgk_bias / std::sqrt(Kvb + Vp * Vp));
+            inner = std::clamp(inner, -20.0f, 20.0f);
+            float E1 = (Vp / Kp) * std::log(1.0f + std::exp(inner));
+            E1 = std::max(0.0f, E1);
+            float Ip = (std::pow(E1, Ex) / Kg1) * std::atan(Vp / std::sqrt(Kvb));
+            Ip = std::max(0.0f, Ip);
+            float newVp = Vb - Ip * Rp;
+            if (std::abs(newVp - Vp) < 0.01f) { Vp = newVp; break; }
+            // Damped update to avoid oscillation
+            Vp = 0.5f * Vp + 0.5f * newVp;
+        }
+        return Vp;
+    }
+
+    // Opto tube saturation (asymmetric, 2nd harmonic dominant)
+    void initializeOptoCurve()
+    {
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            float x = indexToInput(i);
+
+            if (x >= 0.0f)
+            {
+                float softClip = x / (1.0f + x * 0.12f);
+                float harmonic2 = softClip * softClip * 0.025f;
+                optoCurve[i] = softClip - harmonic2;
+            }
+            else
+            {
+                float absX = std::abs(x);
+                float hardClip = -absX / (1.0f + absX * 0.08f);
+                optoCurve[i] = hardClip;
+            }
+        }
+    }
+
+    // FET saturation (symmetric, odd harmonics)
+    void initializeFETCurve()
+    {
+        constexpr float threshold = 1.0f;
+        constexpr float h3Coeff = 0.18f;
+        constexpr float h5Coeff = 0.04f;
+        constexpr float shapedAtThreshold = threshold + (threshold * threshold * threshold) * h3Coeff
+                                          + (threshold * threshold * threshold * threshold * threshold) * h5Coeff;
+
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            float x = indexToInput(i);
+            float absX = std::abs(x);
+            float sign = (x >= 0.0f) ? 1.0f : -1.0f;
+
+            float x3 = x * x * x;
+            float x5 = x3 * x * x;
+            float harmonic3 = x3 * h3Coeff;
+            float harmonic5 = x5 * h5Coeff;
+
+            float shaped = x + harmonic3 + harmonic5;
+
+            if (absX > threshold)
+            {
+                float excess = absX - threshold;
+                float limit = shapedAtThreshold + std::tanh(excess * 1.5f) * 0.15f;
+                shaped = sign * limit;
+            }
+
+            fetCurve[i] = shaped;
+        }
+    }
+
+    // Classic VCA saturation (nearly linear)
+    void initializeVCACurve()
+    {
+        constexpr float threshold = 1.5f;
+        constexpr float h3Coeff = 0.018f;
+        constexpr float shapedAtThreshold = threshold + (threshold * threshold * threshold) * h3Coeff;
+
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            float x = indexToInput(i);
+            float absX = std::abs(x);
+            float sign = (x >= 0.0f) ? 1.0f : -1.0f;
+
+            if (absX < threshold)
+            {
+                float harmonic3 = x * x * x * h3Coeff;
+                vcaCurve[i] = x + harmonic3;
+            }
+            else
+            {
+                float excess = absX - threshold;
+                float sat = shapedAtThreshold + std::tanh(excess * 0.3f) * 0.14f;
+                vcaCurve[i] = sign * sat;
+            }
+        }
+    }
+
+    // Console bus saturation (asymmetric thresholds)
+    void initializeConsoleCurve()
+    {
+        constexpr float thresholdPos = 0.92f;
+        constexpr float thresholdNeg = 0.88f;
+        constexpr float h3Coeff = 0.02f;
+
+        constexpr float shapedAtThresholdPos = thresholdPos + (thresholdPos * thresholdPos * thresholdPos) * h3Coeff;
+        constexpr float shapedAtThresholdNeg = thresholdNeg + (thresholdNeg * thresholdNeg * thresholdNeg) * h3Coeff;
+
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            float x = indexToInput(i);
+            float absX = std::abs(x);
+            float sign = (x >= 0.0f) ? 1.0f : -1.0f;
+
+            float threshold = (x >= 0.0f) ? thresholdPos : thresholdNeg;
+            float shapedAtThreshold = (x >= 0.0f) ? shapedAtThresholdPos : shapedAtThresholdNeg;
+
+            if (absX < threshold)
+            {
+                float subtle = x + x * x * x * h3Coeff;
+                consoleCurve[i] = subtle;
+            }
+            else
+            {
+                float excess = absX - threshold;
+                float sat = shapedAtThreshold + std::tanh(excess * 3.5f) * 0.18f;
+                consoleCurve[i] = sign * sat;
+            }
+        }
+    }
+
+    // Transformer saturation (progressive compression, 2nd harmonic)
+    void initializeTransformerCurve()
+    {
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            float x = indexToInput(i);
+            float absX = std::abs(x);
+            float sign = (x >= 0.0f) ? 1.0f : -1.0f;
+
+            if (absX < 0.7f)
+            {
+                float harmonic2 = x * absX * 0.05f;
+                transformerCurve[i] = x + harmonic2;
+            }
+            else if (absX < 1.2f)
+            {
+                float excess = absX - 0.7f;
+                float compressed = 0.7f + excess * (1.0f - excess * 0.25f);
+                float harmonic2 = (sign * compressed) * compressed * 0.08f;
+                transformerCurve[i] = sign * compressed + harmonic2;
+            }
+            else
+            {
+                float excess = absX - 1.2f;
+                float hard = 1.05f + std::tanh(excess * 1.5f) * 0.15f;
+                transformerCurve[i] = sign * hard;
+            }
+        }
+    }
+
+    // Tape saturation (smooth, asymmetric)
+    void initializeTapeCurve()
+    {
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            float x = indexToInput(i);
+            float absX = std::abs(x);
+            float sign = (x >= 0.0f) ? 1.0f : -1.0f;
+
+            if (x >= 0.0f)
+            {
+                float softClip = x / (1.0f + x * 0.15f);
+                float harmonic2 = softClip * softClip * 0.02f;
+                tapeCurve[i] = softClip + harmonic2;
+            }
+            else
+            {
+                float softClip = x / (1.0f + absX * 0.12f);
+                tapeCurve[i] = softClip;
+            }
+        }
+    }
+
+    // Triode tube saturation — derived from Koren model for 6V6GT
+    // Parameters: mu=8.7, Kp=48, Kvb=12, Ex=1.35, Kg1=1460
+    // American clean amp (6V6 push-pull): Vb=417V, Rp=8kΩ (OT reflected impedance)
+    void initializeTriodeCurve()
+    {
+        float mu = 8.7f, Kp = 48.0f, Kvb = 12.0f, Ex = 1.35f, Kg1 = 1460.0f;
+        float Vb = 417.0f, Rp = 8000.0f;
+        float Vgk_bias = -14.0f;
+        float Vp_q = solveQuiescentVp(Vb, Rp, Vgk_bias, mu, Kp, Kvb, Ex, Kg1);
+
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            float x = indexToInput(i);
+            float Vgk = Vgk_bias + x * 18.0f; // ±36V grid swing
+
+            float Vp = Vp_q;
+            float E1inner = Kp * (1.0f / mu + Vgk / std::sqrt(Kvb + Vp * Vp));
+            E1inner = std::clamp(E1inner, -20.0f, 20.0f);
+            float E1 = (Vp / Kp) * std::log(1.0f + std::exp(E1inner));
+            E1 = std::max(0.0f, E1);
+
+            float Ip = (std::pow(E1, Ex) / Kg1) * std::atan(Vp / std::sqrt(Kvb));
+            Ip = std::max(0.0f, Ip);
+
+            float Vout = Vb - Ip * Rp;
+            triodeCurve[i] = std::clamp((Vp_q - Vout) / (Vp_q * 0.5f), -1.35f, 1.35f);
+        }
+    }
+
+    // Pentode tube saturation — derived from Koren model for EL34
+    // Parameters: mu=11.5, Kp=60, Kvb=24.5, Ex=1.35, Kg1=650
+    // British crunch amp (EL34 push-pull): Vb=490V, Rp=4kΩ (OT primary impedance)
+    void initializePentodeCurve()
+    {
+        float mu = 11.5f, Kp = 60.0f, Kvb = 24.5f, Ex = 1.35f, Kg1 = 650.0f;
+        float Vb = 490.0f, Rp = 4000.0f;
+        float Vgk_bias = -35.0f;
+        float Vp_q = solveQuiescentVp(Vb, Rp, Vgk_bias, mu, Kp, Kvb, Ex, Kg1);
+
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            float x = indexToInput(i);
+            float Vgk = Vgk_bias + x * 40.0f; // ±80V grid swing (EL34 has wide range)
+
+            float Vp = Vp_q;
+            float E1inner = Kp * (1.0f / mu + Vgk / std::sqrt(Kvb + Vp * Vp));
+            E1inner = std::clamp(E1inner, -20.0f, 20.0f);
+            float E1 = (Vp / Kp) * std::log(1.0f + std::exp(E1inner));
+            E1 = std::max(0.0f, E1);
+
+            float Ip = (std::pow(E1, Ex) / Kg1) * std::atan(Vp / std::sqrt(Kvb));
+            Ip = std::max(0.0f, Ip);
+
+            float Vout = Vb - Ip * Rp;
+            pentodeCurve[i] = std::clamp((Vp_q - Vout) / (Vp_q * 0.5f), -1.35f, 1.35f);
+        }
+    }
+
+    // EL84 power tube saturation — derived from Koren tube model
+    // Parameters: mu=19.1, Kp=84, Kvb=25.3, Ex=1.35, Kg1=820
+    // British class-A chime amp: Vb=320V, Rp=4kΩ (8kΩ effective, 2 pairs parallel → 4kΩ per pair)
+    void initializeEL84Curve()
+    {
+        float mu = 19.1f, Kp = 84.0f, Kvb = 25.3f, Ex = 1.35f, Kg1 = 820.0f;
+        float Vb = 320.0f, Rp = 4000.0f;
+        float Vgk_bias = -8.0f;   // typical EL84 Class A bias
+        float Vp_q = solveQuiescentVp(Vb, Rp, Vgk_bias, mu, Kp, Kvb, Ex, Kg1);
+
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            float x = indexToInput(i);
+            float Vgk = Vgk_bias + x * 10.0f; // ±20V grid swing
+
+            float Vp = Vp_q; // approximate (load line)
+            float E1inner = Kp * (1.0f / mu + Vgk / std::sqrt(Kvb + Vp * Vp));
+            E1inner = std::clamp(E1inner, -20.0f, 20.0f);
+            float E1 = (Vp / Kp) * std::log(1.0f + std::exp(E1inner));
+            E1 = std::max(0.0f, E1);
+
+            float Ip = (std::pow(E1, Ex) / Kg1) * std::atan(Vp / std::sqrt(Kvb));
+            Ip = std::max(0.0f, Ip);
+
+            float Vout = Vb - Ip * Rp;
+            el84Curve[i] = std::clamp((Vp_q - Vout) / (Vp_q * 0.5f), -1.35f, 1.35f);
+        }
+    }
+
+    // Linear (bypass)
+    void initializeLinearCurve()
+    {
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            linearCurve[i] = indexToInput(i);
+        }
+    }
+};
+
+// Singleton accessor — call once during init to build tables off the RT thread
+inline WaveshaperCurves& getWaveshaperCurves()
+{
+    static WaveshaperCurves instance;
+    return instance;
+}
+
+} // namespace AnalogEmulation

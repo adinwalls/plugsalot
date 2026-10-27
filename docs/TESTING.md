@@ -1,0 +1,63 @@
+# Testing Plugsalot 0.1 (first prototype)
+
+This build is about whether the idea works: you describe a sound, the AI builds a chain from real open-source DSP, and it sounds right. The interface is deliberately plain; its design is the next step.
+
+## 1. Get the build
+
+GitHub builds every version automatically for Linux, Windows and macOS:
+
+1. Open the repo on GitHub, go to **Actions**, and click the latest green **Build plugin** run.
+2. Under **Artifacts**, download `Plugsalot-linux`, `Plugsalot-windows` or `Plugsalot-macos`.
+
+## 2. Install
+
+Each download contains the VST3 plugin, a standalone app, and on Linux an LV2 plugin.
+
+| System | VST3 goes in | Other |
+| --- | --- | --- |
+| Linux (Pop!_OS) | `~/.vst3/` | LV2: `~/.lv2/`. Standalone: run `Plugsalot` directly (`chmod +x Plugsalot` first). |
+| Windows | `C:\Program Files\Common Files\VST3\` | Standalone: `Plugsalot.exe`. Windows may warn that it's from an unknown publisher; choose "More info", then "Run anyway". |
+| macOS | `~/Library/Audio/Plug-Ins/VST3/` | AU: `~/Library/Audio/Plug-Ins/Components/`. Not notarized yet: right-click the app and choose Open the first time. |
+
+Then rescan plugins in your DAW. The **standalone app** is the quickest test: pick your audio interface under Options > Audio settings and play or sing into it. The app starts with input muted (a yellow bar says so) to avoid feedback: put headphones on, click **Settings...** in that bar and untick the mute.
+
+To look around without an API key, start the standalone app with `PLUGSALOT_DEMO=1` set (Linux/macOS: `PLUGSALOT_DEMO=1 ./Plugsalot`); it opens with a sample vocal chain.
+
+## 3. Turn on the AI
+
+The first time you open Plugsalot, the setup card appears:
+
+1. Click **Open Google AI Studio** and sign in with a Google account.
+2. Click **Get API key**, then **Create API key**, and copy it.
+3. Paste it into Plugsalot and click **Connect**. A green tick shows which Gemini model it picked.
+
+To compare with Claude, choose **Claude: your own API key** in Settings and paste a key from the Claude Console. The default is `claude-haiku-5-5`; type `claude-sonnet-5-5` in the Model box for more detailed advice.
+
+## 4. Things to try
+
+1. **First chain:** Source = Lead vocal, Stage = Mixing, Style = Pop. Play a vocal through it for a few seconds (so the AI gets the level and tone analysis), then press **Send** with the box empty.
+2. **Describe a sound:** "warm, intimate, a little vintage" or "big modern pop vocal".
+3. **Follow-ups:** press **Brighter**, **Less muddy** or **More space**. These should make small changes, not rebuild the chain.
+4. **Check it:** click a module to see its settings, nudge a slider, switch a module off and on, and try **Undo**.
+5. **Other sources:** bass DI, full kit / drum bus, acoustic guitar, master.
+6. **Limits:** set CPU to Light and ask for "lots of tape character". The chain should stay within budget. Set Stage to Tracking: no limiter should appear.
+7. **Save and reload:** save your DAW project, close and reopen it. The chain and chat should come back.
+
+## 5. What to look out for
+
+- Does each first chain sound like a sensible starting point for that source?
+- Do the explanations make sense to you as a musician?
+- Any clicks, dropouts or level jumps when the chain changes?
+- Any reply where nothing happened and a note appeared instead? Copy the note text.
+- How long does a reply take on the free Gemini key?
+
+## Known limits in 0.1
+
+- Modules: Console EQ (Dusk 4K EQ 2), Multi-Comp (Dusk), DeBess (Airwindows), TapeMachine 2 (Dusk), Plate Reverb (Dragonfly), Peak Limiter (x42). The LSP 8-band EQ and the sfizz drum sampler are in the catalogue but not in the plugin yet.
+- Your API key is saved in a plain settings file in your user folder (not yet the system keychain).
+- Reverb is an insert with a dry/wet mix, not a send.
+- Bypassing a module that has latency briefly shifts timing; a latency-matched bypass is planned.
+- No hosted AI yet; the Patreon tier comes later.
+- Builds are unsigned, so operating systems warn on first launch.
+- Multi-Comp's settings panel shows every mode's controls at once; only the chosen mode's controls have an effect.
+- The Gemini connection could not be tested live during development (Google's API was unreachable from the build machine); the Claude connection was. If Gemini fails, the note in the chat will say why.

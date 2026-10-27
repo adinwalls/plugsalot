@@ -34,11 +34,11 @@
     "levelling",
     "saturation"
   ],
-  "cpu_points": null,
-  "cpu_measured": false,
+  "cpu_points": 2,
+  "cpu_measured": true,
   "latency": {
     "type": "variable",
-    "note": "Oversampling and lookahead add latency; the core reports it."
+    "note": "About 1.5 ms of anti-aliasing delay in every mode (kept constant so hosts don't re-sync when the mode changes); lookahead adds more. Acceptable for tracking."
   },
   "tracking_safe": true,
   "tracking_overrides": {
@@ -452,6 +452,7 @@
     "Parameters come from the DAF build's descriptor table, which drives the framework-free MultiCompDSP core Plugsalot embeds. The older JUCE layout differs (e.g. Opto gain unity point, VCA controls).",
     "VCA attack, release, over-easy and detector are inert in the current core and are excluded.",
     "Starting points and hints are drawn from the Dusk Audio Multi-Comp manual (manuals/multi-comp.md) and core source comments.",
-    "Each mode has its own threshold scale, so switching mode means re-setting the compression amount."
+    "Each mode has its own threshold scale, so switching mode means re-setting the compression amount.",
+    "CPU: 3.70% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ]
 }

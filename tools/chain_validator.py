@@ -83,7 +83,7 @@ def validate_chain(reply: dict, catalogue: dict[str, dict], cpu_mode: str = "nor
             errors += check_param(mod, pid, value, where)
         if stage == "tracking":
             if not mod["tracking_safe"]:
-                errors.append(f"{where}: '{mod['id']}' adds latency and cannot be used while tracking.")
+                errors.append(f"{where}: '{mod['id']}' cannot be used while tracking (too much latency, or not suited to recording).")
             for pid, forced in mod.get("tracking_overrides", {}).items():
                 slot["params"][pid] = forced
 

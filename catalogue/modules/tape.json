@@ -33,13 +33,13 @@
     "vintage",
     "glue"
   ],
-  "cpu_points": null,
-  "cpu_measured": false,
+  "cpu_points": 7,
+  "cpu_measured": true,
   "latency": {
     "type": "variable",
-    "note": "Uses a 2x oversampled nonlinear core; latency not yet measured."
+    "note": "Fixed 2x oversampled core: 56 samples (1.2 ms) at 48 kHz, measured by plugin/tests/TestMain.cpp."
   },
-  "tracking_safe": false,
+  "tracking_safe": true,
   "channels": [
     "stereo"
   ],
@@ -171,6 +171,6 @@
   "notes": [
     "3.75 IPS is American-only, so it is excluded from the speed options.",
     "TapeMachine 2 ships 20 calibrated factory presets (TapeMachinePresets.hpp); a preset extractor is a follow-up task.",
-    "Marked not tracking-safe until its latency is measured."
+    "CPU: 14.48% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ]
 }

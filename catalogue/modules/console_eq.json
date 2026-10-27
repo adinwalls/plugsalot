@@ -37,11 +37,11 @@
     "high-pass",
     "musical"
   ],
-  "cpu_points": null,
-  "cpu_measured": false,
+  "cpu_points": 1,
+  "cpu_measured": true,
   "latency": {
     "type": "variable",
-    "note": "Oversampling adds latency; 1x has none."
+    "note": "Oversampling adds latency; at 1x it has none."
   },
   "tracking_safe": true,
   "tracking_overrides": {
@@ -267,6 +267,7 @@
   },
   "notes": [
     "Embeds Dusk's framework-free FourKEQDSP core. Frequencies are set through the core's Hz setters, which take precedence over the legacy dial positions.",
-    "Used as the prototype EQ while the LSP Parametric EQ port is pending."
+    "Used as the prototype EQ while the LSP Parametric EQ port is pending.",
+    "CPU: 1.27% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ]
 }

@@ -4,7 +4,37 @@ An open-source, cross-platform audio plugin with a built-in AI chat that builds 
 
 Plugsalot is **GPL-3.0-or-later**. Its processing modules are ported from high-quality open-source projects; see [THIRD_PARTY.md](THIRD_PARTY.md).
 
-> Status: early. This repo currently holds the **module catalogue**, the database the AI reads, and the tools that build it. The plugin itself comes next.
+> Status: **0.1 prototype.** A working plugin (VST3, AU, LV2, standalone) with the AI chat, six modules ported from open-source DSP, and the module catalogue it reads. The interface is a functional placeholder. To try it, see [docs/TESTING.md](docs/TESTING.md).
+
+## The plugin
+
+```
+plugin/
+  src/core/        catalogue loader, chain data, validator (C++ port of tools/chain_validator.py)
+  src/dsp/         chain engine (lock-free chain swaps), module wrappers, input analyser
+  src/ai/          system prompt, Gemini and Claude clients, validated exchange with one retry
+  src/ui/          prototype interface
+  resources/       guidelines.md: the AI's instructions (layer 3 of the AI design)
+  vendor/          upstream DSP copied unmodified by tools/vendor_sources.py
+  shims/           tiny stand-ins for the frameworks upstream code expects (DPF, VST2 SDK)
+  tests/           headless tests: validator parity, every module on test audio, engine swaps
+```
+
+How a request flows: dropdowns + your words + the input analysis -> system prompt (guidelines + catalogue) -> Gemini or Claude -> reply JSON -> validator (hard limits; one retry with the errors) -> chain engine swaps the chain in without stopping audio. Follow-ups come back as small change lists, and every change can be undone.
+
+AI providers: a free Google Gemini key (default; the plugin picks the newest Flash model automatically) or your own Claude API key. The hosted Patreon tier is designed in the AI Service Design doc but not built yet.
+
+### Building
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
+build/plugin/PlugsalotTests_artefacts/Release/PlugsalotTests   # headless tests
+```
+
+Linux needs: `libasound2-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxext-dev libfreetype-dev libfontconfig1-dev libcurl4-openssl-dev libgl1-mesa-dev`. GitHub Actions builds Linux, Windows and macOS on every push (`.github/workflows/build.yml`).
+
+JUCE 8 is used under the AGPLv3, which GPLv3 explicitly allows combining with (GPLv3 section 13).
 
 ## How the catalogue works
 
@@ -51,6 +81,7 @@ python3 tools/fetch_sources.py     # clone upstreams at their pinned commits
 python3 tools/extract_all.py       # extract raw parameters
 python3 tools/build_catalogue.py   # merge with curation
 python3 tools/validate.py          # schema + example chains
+python3 tools/vendor_sources.py    # refresh the DSP copied into plugin/vendor
 ```
 
 ## Adding a module
@@ -64,18 +95,19 @@ python3 tools/validate.py          # schema + example chains
 
 | Module | Upstream | Licence |
 | --- | --- | --- |
-| `para_eq` | LSP Parametric Equalizer | LGPL-3.0 |
+| `console_eq` | Dusk Audio 4K EQ 2 | GPL-3.0 |
+| `para_eq` | LSP Parametric Equalizer (catalogue only) | LGPL-3.0 |
 | `multicomp` | Dusk Audio Multi-Comp | GPL-3.0 |
 | `deess` | Airwindows DeBess | MIT |
 | `tape` | Dusk Audio TapeMachine 2 | GPL-3.0 |
 | `plate` | Dragonfly Plate Reverb | GPL-3.0 |
 | `limiter` | x42 Digital Peak Limiter | GPL-3.0 |
-| `drum_sampler` | sfizz | BSD-2-Clause |
+| `drum_sampler` | sfizz (catalogue only) | BSD-2-Clause |
 
 ## Not done yet
 
-- CPU cost per module (`cpu_points` is `null` until a benchmark harness measures it; the validator assumes 2 points each meanwhile).
-- Latency measurement for TapeMachine 2.
+- The LSP Parametric EQ and sfizz drum sampler in the plugin (they are catalogued; `console_eq` is the prototype's EQ).
 - Preset extraction for TapeMachine 2 and Multi-Comp's factory presets.
 - Multiband mode of Multi-Comp as its own entry.
-- The plugin, the AI chat, and the C++ port of `tools/chain_validator.py`.
+- Hosted AI for Patreon supporters, API keys in the system keychain, latency-matched bypass, reverb on a send.
+- The real interface design.

@@ -11,30 +11,86 @@
   "extractor": {
     "type": "dpf_param_table",
     "file": "plugins/dragonfly-plate-reverb/DistrhoPluginInfo.h",
-    "enum_params": { "algorithm": ["Algorithms", "algorithmNames"] }
+    "enum_params": {
+      "algorithm": [
+        "Algorithms",
+        "algorithmNames"
+      ]
+    }
   },
   "purpose": "Plate reverb for bright, dense ambience; the classic choice for lead vocals and snare.",
-  "good_for": ["lead vocal", "backing vocal", "snare", "acoustic guitar", "keys", "synth"],
-  "avoid_for": ["bass", "kick"],
-  "tags": ["ambience", "space", "plate", "vocal reverb"],
-  "cpu_points": null,
-  "latency": { "type": "none" },
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "snare",
+    "acoustic guitar",
+    "keys",
+    "synth"
+  ],
+  "avoid_for": [
+    "bass",
+    "kick"
+  ],
+  "tags": [
+    "ambience",
+    "space",
+    "plate",
+    "vocal reverb"
+  ],
+  "cpu_points": 1,
+  "latency": {
+    "type": "none"
+  },
   "tracking_safe": true,
-  "channels": ["stereo"],
+  "channels": [
+    "stereo"
+  ],
   "expose": [
-    { "upstream_id": "dry_level", "id": "dry", "ai_hint": "Dry signal level. Keep at 100% when used as an insert; Plugsalot later moves reverbs to sends." },
-    { "upstream_id": "early_level", "id": "wet", "ai_hint": "Reverb level. 10-20% for a subtle vocal plate." },
-    { "upstream_id": "algorithm", "ai_hint": "Simple, Nested (default, smooth) or Tank (bigger, thicker)." },
-    { "upstream_id": "width", "ai_hint": "Stereo width of the tail." },
-    { "upstream_id": "predelay", "ai_hint": "20-40 ms keeps a vocal clear in front of its reverb." },
-    { "upstream_id": "decay", "ai_hint": "Tail length in seconds; 0.6-1.2 s for vocals at mid tempos." },
-    { "upstream_id": "low_cut", "ai_hint": "Raise to 150-300 Hz to stop the reverb muddying the low mids." },
-    { "upstream_id": "high_cut", "ai_hint": "Lower to darken the tail and reduce sibilant splash." },
-    { "upstream_id": "early_damp", "id": "damping", "ai_hint": "High-frequency damping of the tail." }
+    {
+      "upstream_id": "dry_level",
+      "id": "dry",
+      "ai_hint": "Dry signal level. Keep at 100% when used as an insert; Plugsalot later moves reverbs to sends."
+    },
+    {
+      "upstream_id": "early_level",
+      "id": "wet",
+      "ai_hint": "Reverb level. 10-20% for a subtle vocal plate."
+    },
+    {
+      "upstream_id": "algorithm",
+      "ai_hint": "Simple, Nested (default, smooth) or Tank (bigger, thicker)."
+    },
+    {
+      "upstream_id": "width",
+      "ai_hint": "Stereo width of the tail."
+    },
+    {
+      "upstream_id": "predelay",
+      "ai_hint": "20-40 ms keeps a vocal clear in front of its reverb."
+    },
+    {
+      "upstream_id": "decay",
+      "ai_hint": "Tail length in seconds; 0.6-1.2 s for vocals at mid tempos."
+    },
+    {
+      "upstream_id": "low_cut",
+      "ai_hint": "Raise to 150-300 Hz to stop the reverb muddying the low mids."
+    },
+    {
+      "upstream_id": "high_cut",
+      "ai_hint": "Lower to darken the tail and reduce sibilant splash."
+    },
+    {
+      "upstream_id": "early_damp",
+      "id": "damping",
+      "ai_hint": "High-frequency damping of the tail."
+    }
   ],
   "presets": "from_raw",
   "notes": [
     "Upstream symbol for wet level is 'early_level'; exposed here as 'wet'.",
-    "Defaults come from the upstream default preset, Bright Plate."
-  ]
+    "Defaults come from the upstream default preset, Bright Plate.",
+    "CPU: 0.43% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ],
+  "cpu_measured": true
 }

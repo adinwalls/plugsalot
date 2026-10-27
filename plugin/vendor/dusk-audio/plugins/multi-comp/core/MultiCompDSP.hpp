@@ -1,0 +1,354 @@
+// Copyright (C) 2026 Dusk Audio , GNU GPL v3.0 or later (see repository LICENSE).
+// MultiCompDSP , framework-free C++17 DSP core (zero JUCE/DAF includes).
+#pragma once
+
+#include "MultiCompModes.hpp"
+#include "MultiCompBusMeter.hpp"
+#include "MultiCompParams.hpp"
+#include "MultiCompVcaLaw.hpp"
+#include "MultiCompAutoGain.hpp"
+#include "MultiCompHelpers.hpp"
+#include "MultiCompLatencyPad.hpp"
+#include "../../shared-daf/dsp/DuskCrossover.hpp"
+#include "../../shared-daf/dsp/DuskDenormals.hpp"
+#include "../../shared-daf/dsp/DuskFilters.hpp"
+#include "../../shared-daf/dsp/DuskOversampler.hpp"
+#include "../../shared-daf/dsp/DuskSmoothed.hpp"
+
+#include <algorithm>
+#include <array>
+#include <atomic>
+#include <cstdint>
+#include <vector>
+
+namespace duskaudio
+{
+
+struct MultiCompDSPTestAccess;
+
+class MultiCompDSP
+{
+public:
+    static constexpr float kMinPublishedGainReductionDb = -60.0f;
+    static constexpr float kMaxPublishedGainReductionDb = 0.0f;
+
+    enum class Parameter
+    {
+        Mode, Bypass, StereoLink, Mix, SidechainHP, TruePeakEnable, TruePeakQuality, ExternalSidechain, AutoMakeup, Distortion, DistortionAmount,
+        Oversampling, GlobalLookahead, OptoPeakReduction, OptoGain, OptoLimit,
+        FetInput, FetOutput, FetAttack, FetRelease, FetRatio, FetCurve, FetTransient, FetThreshold,
+        VcaThreshold, VcaRatio, VcaAttack, VcaRelease, VcaOutput, VcaOverEasy, VcaClassicDetector,
+        BusThreshold, BusRatio, BusAttack, BusRelease, BusMakeup, BusMix,
+        StudioVcaThreshold, StudioVcaRatio, StudioVcaAttack, StudioVcaRelease, StudioVcaOutput,
+        DigitalThreshold, DigitalRatio, DigitalKnee, DigitalAttack, DigitalRelease, DigitalLookahead, DigitalMix, DigitalOutput, DigitalAdaptive,
+        Crossover1, Crossover2, Crossover3, EnvelopeCurve, GlobalSidechainListen,
+        MbMix, MbOutput, NoiseEnable, SaturationMode, ScLowFreq, ScLowGain,
+        ScHighFreq, ScHighGain, StereoLinkMode,
+        BusHeadroom, BusFadeRate, BusFade,
+        StudioVcaInput, StudioVcaAutoRelease,
+        None // Host-persisted display controls have no audio parameter binding.
+    };
+    enum class MultibandParameter { Threshold, Ratio, Attack, Release, Makeup, Bypass, Solo, Enabled };
+
+    void prepare(double sampleRate, int maxBlockSize);
+    void reset();
+
+    void processBlock(const float* const* in, float* const* out, int numChannels, int numSamples);
+    void processBlockExternal(const float* const* in, const float* const* sidechain,
+                              float* const* out, int numChannels, int numSamples);
+
+    void setParameter(Parameter parameter, float value) noexcept;
+    void setMultibandParameter(int band, MultibandParameter parameter, float value) noexcept;
+    void setMode(int value) noexcept { setParameter(Parameter::Mode, static_cast<float>(value)); }
+    void setBypass(bool value) noexcept { params.bypass.store(value, std::memory_order_relaxed); }
+    void setMix(float value) noexcept { setParameter(Parameter::Mix, value); }
+    void setStereoLink(float value) noexcept { setParameter(Parameter::StereoLink, value); }
+    void setExternalSidechain(bool value) noexcept { params.externalSidechain.store(value, std::memory_order_relaxed); }
+    void setOversampling(int value) noexcept { params.oversampling.store(value, std::memory_order_relaxed); }
+
+    MultiCompParameterState& parameterState() noexcept { return params; }
+    const MultiCompParameterState& parameterState() const noexcept { return params; }
+    float getBusMeterReading() const noexcept { return busMeterReading.load(std::memory_order_relaxed); }
+    float getBusFadePosition() const noexcept { return busFadeMeter.load(std::memory_order_relaxed); }
+
+    float getBandGainReduction(int band) const noexcept
+    {
+        return band >= 0 && band < kMultiCompBands
+            ? std::clamp(bandGR[static_cast<size_t>(band)].load(std::memory_order_relaxed),
+                         kMinPublishedGainReductionDb, kMaxPublishedGainReductionDb)
+            : 0.0f;
+    }
+    float getGainReduction() const noexcept
+    {
+        return std::clamp(masterGR.load(std::memory_order_relaxed),
+                          kMinPublishedGainReductionDb, kMaxPublishedGainReductionDb);
+    }
+    float getInputLevel() const noexcept { return inputLevel.load(std::memory_order_relaxed); }
+    float getOutputLevel() const noexcept { return outputLevel.load(std::memory_order_relaxed); }
+
+    // The JUCE product reports the maximum oversampling latency so PDC remains
+    // constant while the quality selector changes. Multiband is native-rate.
+    int getLatencySamples() const noexcept;
+
+    // The latency still differs between modes (Opto's output stage adds a
+    // little, Multiband adds none), and a report that moves with the mode makes
+    // VST3 and CLAP hosts restart the plugin while AU hosts never hear of it.
+    // A plugin holds its report at getHostLatencySamples() with host latency
+    // padding on: the dry, bypass and listen paths are delayed straight to the
+    // host latency, which every mode shares, so a mode switch never moves them
+    // (Multiband's split-band dry is padded like its wet path), and each
+    // part's wet path is delayed by getLatencyPaddingSamples(), the
+    // deepest mode's latency minus that of the mode the part ran in, ahead of
+    // Mix; a ducked switch keeps the old padding until its mute has covered the
+    // change. Only the lookaheads move the report. Off by default: the core
+    // tests read each mode's own latency.
+    void setHostLatencyPadding(bool enabled) noexcept { hostLatencyPadding = enabled; }
+    int getHostLatencySamples() const noexcept;
+    int getLatencyPaddingSamples() const noexcept;
+    int getMaximumLatencyPaddingSamples() const noexcept;
+
+private:
+    friend struct MultiCompDSPTestAccess;
+
+    static constexpr int kMaxChannels = 2;
+    static constexpr int kBypassRampMs = 30;
+    static constexpr int kSidechainListenRampMs = 30;
+    static constexpr int kAutoGainTransitionMs = 50;
+    static constexpr int kAutoGainMeasurementWindow = 64;
+    static constexpr int kCrossoverRampMs = 20;
+    static constexpr int kCrossoverCoefficientInterval = 8;
+    // The mode-switch duck (switchDuck*): the fades, and the mute that covers the anti-alias path realigning on its
+    // new factor (the longest disturbance measured over every factor-changing switch, 88.2-192 kHz, plus margin;
+    // the switches into and out of Studio VCA and Opto at 44.1 / 48 kHz stay inside it too).
+    static constexpr double kSwitchDuckFadeMs = 1.0;
+    static constexpr int kSwitchDuckMuteSamples = 128;
+
+    // Replaces any non-finite sample with silence, into `scratch`, and returns
+    // the channel pointers to use downstream. Returns `source` untouched when
+    // the block is clean, so normal audio is processed through the host's own
+    // buffers and is not merely copied bit-exactly -- it is not copied at all.
+    const float* const* sanitizeChannels(
+        const float* const* source,
+        std::array<std::vector<float>, kMaxChannels>& scratch,
+        const float* (&pointers)[kMaxChannels], int nCh, int nSamples) noexcept;
+
+    void processRange(const float* const* in, const float* const* sidechain,
+                      float* const* out, int nCh, int nSamples,
+                      bool externalSidechain, bool autoMakeup,
+                      MultiCompMode mode, int linkMode, int actualOversampling,
+                      float digitalLookaheadMs);
+    void processVcaRange(const float* const* in, const float* const* sidechain,
+                         float* const* out, int nCh, int nSamples, float linkAmount, int linkMode,
+                         int hostSidechainDelay, float manualOutputDb,
+                         DistortionType distortionType, float distortionAmount) noexcept;
+    void processOptoRange(const float* const* in, const float* const* sidechain,
+                          float* const* out, int nCh, int nSamples, bool external, float linkAmount,
+                          int linkMode, int hostSidechainDelay, float manualOutputDb,
+                          DistortionType distortionType, float distortionAmount) noexcept;
+    void processFetRange(const float* const* in, const float* const* sidechain,
+                         float* const* out, int nCh, int nSamples, bool external, float linkAmount,
+                         int linkMode, int factor, int hostSidechainDelay, float manualOutputDb,
+                         DistortionType distortionType, float distortionAmount) noexcept;
+    void processStudioVcaRange(const float* const* in, const float* const* sidechain,
+                               float* const* out, int nCh, int nSamples, bool external, float linkAmount,
+                               int linkMode, int hostSidechainDelay, float manualOutputDb,
+                               DistortionType distortionType, float distortionAmount) noexcept;
+    void processBusRange(const float* const* in, const float* const* sidechain,
+                         float* const* out, int nSamples, bool external, float linkAmount, int factor,
+                         int hostSidechainDelay, float manualOutputDb,
+                         DistortionType distortionType, float distortionAmount) noexcept;
+    void idleHostRateFeeds(const float* sc0, const float* sc1, int nSamples, int hostSidechainDelay,
+                           bool midSideDetector, bool idleBusFeed = true) noexcept;
+    void syncModeParameters(MultiCompMode mode, float digitalLookaheadMs) noexcept;
+    void prepareLookahead(const float* const* in, const float* (&processingIn)[kMaxChannels],
+                          int nCh, int nSamples, int delay);
+    void processMultiband(const float* const* input, const float* const* sidechain,
+                          float* const* output, int nCh, int nSamples);
+    std::array<float, 3> crossoverTargets() const noexcept;
+    void prepareCrossovers() noexcept;
+    void resetCrossovers() noexcept;
+    void updateCrossoverTargets() noexcept;
+    void rebuildMultibandTopology(std::uint8_t mask) noexcept;
+    DuskCrossover& crossoverForBoundary(int boundary, int channel, bool sidechain) noexcept;
+    void updateMeters(float inPeak, float* const* out, int nCh, int nSamples);
+    // Advances the raw-input history and leaves the latency-aligned dry in
+    // `bypassDry`. Never writes the output: `out` may alias `in`, and the
+    // stages that follow still have to read the untouched input.
+    void processLatencyHistory(const float* const* in, int nCh,
+                               int nSamples, int delay) noexcept;
+    void processSidechainListenHistory(const float* const* sidechain, int nCh,
+                                       int nSamples, int delay) noexcept;
+    void resetAutoGainMeasurement() noexcept;
+    MultiCompMode currentMode() const noexcept;
+    float globalMixTarget(MultiCompMode mode) const noexcept;
+    bool switchChangesAudioPath(int fromMode, int toMode) const noexcept;
+    void resetSwitchDuck() noexcept;
+    bool advanceSwitchDuck(int nSamples) noexcept;
+    void padWetPath(float* const* out, int nCh, int nSamples) noexcept;
+    void holdPaddingThroughSwitch(int previousMode) noexcept;
+    int paddingForMode(int mode) const noexcept;
+    static float advanceFetStartupBlend(int& activeSamples,
+                                        int fullCorrectionSamples,
+                                        int correctionEndSamples) noexcept;
+    int latencySamplesForMode(MultiCompMode mode, float globalLookaheadMs,
+                              float digitalLookaheadMs) const noexcept;
+    // The part of a mode's latency its controls cannot change.
+    int baseLatencyForMode(MultiCompMode mode) const noexcept;
+    // A lookahead in samples. The latency, the delays and the delay lines' sizes all round it here.
+    int lookaheadSamples(float milliseconds) const noexcept;
+
+    MultiCompParameterState params;
+    float busFadeControl = 0.0f;
+    std::atomic<float> busFadeMeter{0.0f};
+    MultiCompParameterState modeParams;
+    MultiCompModes modes;
+    double sampleRate = 48000.0;
+    int maxBlock = 512;
+    std::array<MultiCompAntiAliasing, kMaxChannels> oversamplers;
+    // OPTO detector feeds use the classic 47-tap upsampler on the host-rate
+    // sidechain (delayed by kHostSidechainAlignmentSamples): the cell's onset
+    // and silence laws were measured through that reconstruction, and its
+    // gain is applied to the wide-FIR audio path pre-gain (feed-forward), so
+    // this keeps every OPTO dynamic bit-identical while the audio path is flat.
+    // Detector feeds read only in OPTO (the first two) or BUS (the third);
+    // other modes leave them idle (LazyUpsampler).
+    LazyUpsampler<MultiCompOversampler> optoLinkedDetectorUpsampler;
+    std::array<LazyUpsampler<MultiCompOversampler>, kMaxChannels> optoOwnDetectorUpsamplers;
+    std::array<LazyUpsampler<MultiCompAntiAliasing>, kMaxChannels> busExternalOversamplers;
+    MultiCompTruePeakDetector truePeakDetector;
+    std::array<MultiCompSidechainFilter, kMaxChannels> sidechainFilters;
+    std::array<vcaLaw::SidechainTilt, kMaxChannels> sidechainTilt;
+    bool lastVcaSidechainTilt = false;   // which sidechain filter ran last block
+    // Used only by the disabled SC-response identity control.
+    bool lastVcaSidechainTiltEngaged = false;
+    std::array<vcaLaw::OutputVoicing, kMaxChannels> vcaOutputVoicing;
+    bool vcaVoicingActive = false;
+    std::array<vcaLaw::LowFrequencyHighPass, kMaxChannels> vcaAudioCoupling;
+    bool vcaAudioCouplingActive = false;
+    std::array<vcaLaw::LowFrequencyHighPass, kMaxChannels> vcaDetectorCoupling;
+    bool vcaDetectorCouplingActive = false;
+    std::array<vcaLaw::SidechainResponse, kMaxChannels> vcaScResponse;
+    bool vcaScResponseActive = false;
+    int vcaLifecycleChannels = 0;
+    std::array<MultiCompSidechainEQ, kMaxChannels> sidechainEQ;
+
+    std::array<DuskCrossover, kMaxChannels> crossover1, crossover2, crossover3;
+    std::array<DuskCrossover, kMaxChannels> scCrossover1, scCrossover2, scCrossover3;
+    std::array<LinearRamp, 3> crossoverRamps;
+    std::array<std::vector<float>, 3> crossoverCurves;
+    std::array<std::array<std::vector<float>, kMaxChannels>, kMultiCompBands> bands, sidechainBands;
+    std::array<std::vector<float>, kMaxChannels> processedSidechain;
+    std::array<std::vector<float>, kMaxChannels> modeInput;
+    // VCA block path (processVcaRange): each channel's detector feed, the
+    // output knob per host sample, and the cell gain per oversampled phase.
+    std::array<std::vector<float>, kMaxChannels> vcaSidechain;
+    std::vector<float> vcaOutputDbCurve, vcaEnvelopes, vcaLawScratch, vcaOutputGains, vcaPhases;
+    // The block paths' host-rate feeds (VCA, OPTO, FET): the aligned host
+    // sidechains, then scratch.
+    std::array<std::vector<float>, 3> vcaFeedScratch;
+    // The OPTO and FET block paths' audio and output per oversampled phase
+    // (one mode runs per block).
+    std::array<std::vector<float>, kMaxChannels> audioPhaseBlock, outputPhaseBlock;
+    // OPTO block path (processOptoRange): the detector feeds per oversampled
+    // phase, what the pre-stage hands the stage, and the Gain knob per host
+    // sample.
+    std::array<std::vector<float>, kMaxChannels> optoOwnPhaseBlock, optoOwnFeed;
+    std::vector<float> optoLinkedPhaseBlock, optoGainKnob;
+    std::array<std::vector<MultiCompModes::OptoStageFeed>, kMaxChannels> optoStageFeeds;
+    // FET block path (processFetRange): each channel's detector feed, the
+    // Output knob per host sample, and for the C6 loop each channel's detector
+    // feed and linked partner per oversampled phase.
+    std::array<std::vector<float>, kMaxChannels> fetSidechain, fetScPhases, fetPartnerPhases;
+    std::vector<float> fetOutputDbCurve;
+    // BUS block path (processBusRange): the external-detector feed per
+    // oversampled phase, and the makeup and Mix ramps per host sample.
+    std::array<std::vector<float>, kMaxChannels> busScPhases;
+    std::vector<float> busOutputDbCurve, busMixCurve;
+    // Studio VCA block path (processStudioVcaRange): each channel's detector level and gain per host sample, and the
+    // makeup per host sample (dB, then linear).
+    std::array<std::vector<float>, kMaxChannels> studioVcaLevels, studioVcaGainCurves;
+    std::vector<float> studioVcaMakeupDb, studioVcaMakeupGain;
+    // Scratch for the input guard. Written only when a block actually carries
+    // a non-finite or above-ceiling sample; see sanitizeChannels.
+    std::array<std::vector<float>, kMaxChannels> sanitizedInput, sanitizedSidechain;
+    std::vector<float> dry, bypassDry, fetStartupInput;
+    std::vector<float> mixCurve, bypassCurve, autoGainCurve, listenCurve, fadeCurve, listenSource, switchDuckCurve;
+    std::array<std::vector<float>, kMaxChannels> dryPathDelay;
+    std::array<int, kMaxChannels> dryPathWrite{{0, 0}};
+    std::array<std::vector<float>, kMaxChannels> bypassDelay;
+    int bypassWrite = 0;
+    std::array<std::vector<float>, kMaxChannels> sidechainListenDelay;
+    std::array<int, kMaxChannels> sidechainListenWrite{{0, 0}};
+    std::array<std::vector<float>, kMaxChannels> delayedInput;
+    std::array<std::vector<float>, kMaxChannels> globalLookahead;
+    std::array<int, kMaxChannels> globalLookaheadWrite{{0, 0}};
+    std::array<float, kMaxChannels> previousOversampledSidechain{{0.0f, 0.0f}};
+    std::array<bool, kMaxChannels> previousOversampledSidechainValid{{false, false}};
+    std::array<float, kMaxChannels> previousOptoOwnSidechain{{0.0f, 0.0f}};
+    std::array<bool, kMaxChannels> previousOptoOwnSidechainValid{{false, false}};
+    // Host-rate sidechain delay that keeps the calibrated detector-to-audio
+    // timing of the OPTO feeds and the FET link control under the wide audio
+    // FIR (MultiCompAntiAliasing::kHostSidechainAlignmentSamples).
+    static constexpr int kHostSidechainRing = 32;
+    static_assert(MultiCompAntiAliasing::kHostSidechainAlignmentSamples < kHostSidechainRing,
+                  "host sidechain ring must cover the alignment delay");
+    std::array<std::array<float, kHostSidechainRing>, kMaxChannels> hostSidechainHistory{};
+    int hostSidechainWrite = 0;
+    float delayHostSidechain(int channel, float value, int delay) noexcept;
+    std::array<float, kMultiCompBands * kMaxChannels> multibandEnvelopes{};
+    std::array<float, kMaxChannels> fetStartupInputPeak{{0.0f, 0.0f}};
+    std::array<int, kMaxChannels> fetStartupActiveSamples{{0, 0}};
+    std::array<int, kMaxChannels> fetStartupSilentSamples{{0, 0}};
+    std::uint8_t activeBandMask = 0x0f;
+    std::array<int, kMultiCompBands> enabledBandIndices{{0, 1, 2, 3}};
+    std::array<int, kMultiCompBands - 1> stageBoundaryIndices{{0, 1, 2}};
+    int numEnabledBands = kMultiCompBands;
+    int numActiveStages = kMultiCompBands - 1;
+    int topBandIndex = kMultiCompBands - 1;
+
+    LinearRamp busMixRamp;
+    LinearRamp digitalMixRamp;
+    SmoothedValue globalMixSmoother;
+    LinearRamp bypassRamp;
+    LinearRamp sidechainListenRamp;
+    LinearRamp manualMakeupScaleRamp;
+    MultiCompAutoGainMatcher autoGainMatcher;
+    SmoothedValue autoGainSmoother;
+    bool bypassSettled = false;
+    bool lastBypass = false;
+    bool lastExternalSidechain = false;
+    bool lastAutoMakeup = false;
+    bool firstBlock = true;
+    int lastMode = -1;
+    // A mode switch that changes the audio path (switchChangesAudioPath(): the anti-alias oversampler's factor, as
+    // Studio VCA against the oversampled modes or Opto and vintage FET against the others at 88.2 kHz and up, or
+    // Opto's output stage) would replay that oversampler's delay line from the old factor or step the latency: the
+    // old mode is held while its wet path fades out, the switch happens at silence, the realignment stays muted
+    // and the new mode fades in (processBlockExternal). Every other switch is instant.
+    int switchDuckHeldMode = -1;   // the old mode, processed while the wet path fades out; -1: none held
+    int switchDuckPosition = 1;    // fade position in samples: 0 silent .. switchDuckFadeSamples full
+    int switchDuckMuted = 0;       // samples still muted after the switch
+    int switchDuckFadeSamples = 1;
+    // Host latency padding (setHostLatencyPadding): the wet path delayed to the
+    // deepest mode's latency, part by part. Multiband's dry is its split-band
+    // sum, built after the dry delay line, so it takes the same padding in a
+    // pad of its own, which the other modes keep fed with their dry input.
+    bool hostLatencyPadding = false;
+    LatencyPad latencyPad;
+    LatencyPad multibandDryPad;
+    int paddingHoldMode = -1;      // the mode whose padding a ducked switch keeps (holdPaddingThroughSwitch)
+    int paddingHoldSamples = 0;    // samples it keeps it for
+    int autoGainHoldSamples = 0;
+    double autoGainInputPower = 0.0;
+    double autoGainOutputPower = 0.0;
+    int autoGainMeasurementCount = 0;
+    int antiAliasLatency = 0;
+
+    std::array<std::atomic<float>, kMultiCompBands> bandGR{{0.0f, 0.0f, 0.0f, 0.0f}};
+    busLaw::CompressionMeter busCompressionMeter;
+    std::atomic<float> busMeterReading{0.0f};
+    std::atomic<float> masterGR{0.0f}, inputLevel{-60.0f}, outputLevel{-60.0f};
+    std::uint32_t noiseState = 0x6d2b79f5u;
+};
+
+} // namespace duskaudio
