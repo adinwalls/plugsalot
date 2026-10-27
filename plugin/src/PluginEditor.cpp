@@ -38,9 +38,10 @@ PlugsalotEditor::~PlugsalotEditor()
 void PlugsalotEditor::showSettings()
 {
     settings = std::make_unique<SettingsDialog>(proc);
-    settings->onClose = [this]
+    juce::Component::SafePointer<PlugsalotEditor> safeThis(this);
+    settings->onClose = [safeThis]
     {
-        juce::MessageManager::callAsync([sp = juce::Component::SafePointer<PlugsalotEditor>(this)]
+        juce::MessageManager::callAsync([sp = safeThis]
         {
             if (sp == nullptr) return;
             sp->settings.reset();
