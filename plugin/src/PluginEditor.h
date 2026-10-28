@@ -29,7 +29,7 @@ private:
 
     PlugsalotProcessor& proc;
     theme::LookAndFeel lnf;
-    juce::TooltipWindow tooltips { this, 600 };
+    juce::TooltipWindow tooltips { this, 2000 };   // module descriptions appear after a 2 s hover
     ContextBar contextBar;
     ChainPanel chainPanel;
     ModuleEditor moduleEditor;
