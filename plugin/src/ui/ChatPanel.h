@@ -46,10 +46,9 @@ private:
     juce::OwnedArray<juce::TextButton> quick;
     juce::Label busy, chatLabel;
     std::unique_ptr<TypingWindow> typingWindow;
-    // Linux plugin hosts (Ardour on Wayland, for one) may never pass typing to an
-    // embedded plugin window, so there a click on the chat box opens the typing
-    // window right on top of it instead.
-    bool typeInOwnWindow = false;
+    // Linux plugin hosts (Ardour, for one) keep the keyboard on their own window;
+    // there a click on the chat box asks the system for the keyboard directly.
+    bool takeFocusFromHost = false;
     int dots = 0;
 };
 

@@ -1,5 +1,6 @@
 // Plugsalot - GPL-3.0-or-later
 #include "ChatPanel.h"
+#include "LinuxFocus.h"
 
 namespace plugsalot
 {
@@ -143,11 +144,10 @@ ChatPanel::ChatPanel(PlugsalotProcessor& p) : proc(p)
     typingWindowButton.onClick = [this] { openTypingWindow(); };
     addAndMakeVisible(typingWindowButton);
    #if JUCE_LINUX || JUCE_BSD
-    typeInOwnWindow = proc.wrapperType != juce::AudioProcessor::wrapperType_Standalone;
+    takeFocusFromHost = proc.wrapperType != juce::AudioProcessor::wrapperType_Standalone;
    #endif
-    // Hidden in the standalone app (it always gets typing) and where clicking the
-    // box already opens the typing window.
-    typingWindowButton.setVisible(proc.wrapperType != juce::AudioProcessor::wrapperType_Standalone && ! typeInOwnWindow);
+    // Hidden in the standalone app, which always gets typing.
+    typingWindowButton.setVisible(proc.wrapperType != juce::AudioProcessor::wrapperType_Standalone);
     input.addMouseListener(this, true);
 
     for (auto label : { "Set up a chain", "Brighter", "Warmer", "Less muddy", "More punch", "More space", "Explain the chain" })
@@ -198,8 +198,19 @@ void ChatPanel::openTypingWindow()
 
 void ChatPanel::mouseDown(const juce::MouseEvent& e)
 {
-    if (typeInOwnWindow && (e.eventComponent == &input || input.isParentOf(e.eventComponent)))
-        openTypingWindow();
+    if (! takeFocusFromHost || ! (e.eventComponent == &input || input.isParentOf(e.eventComponent)))
+        return;
+    // Ask the system for the keyboard, then focus the box once the request has landed.
+    if (takeSystemKeyboardFocus(input))
+    {
+        juce::Component::SafePointer<juce::TextEditor> box(&input);
+        for (int ms : { 30, 120, 300 })
+            juce::Timer::callAfterDelay(ms, [box]
+            {
+                if (box != nullptr && ! box->hasKeyboardFocus(false))
+                    box->grabKeyboardFocus();
+            });
+    }
 }
 
 void ChatPanel::send(const juce::String& text)

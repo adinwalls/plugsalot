@@ -35,7 +35,7 @@ The first time you open Plugsalot, the setup card appears:
 
 **Your key saves as soon as you paste it.** Connect only checks that it works, so a busy model or closing the card can't lose it. The key is shared by every Plugsalot instance and the standalone app.
 
-**Typing in a Linux DAW:** clicking the chat box opens a typing window right on top of it, because some Linux DAWs (Ardour on Pop!_OS, for one) never pass typing to a plugin. Enter or Send sends; closing it keeps your text in the chat box. On Windows, macOS and in the standalone app you type in the chat box directly.
+**Typing in a Linux DAW:** click the chat box and type; Enter sends. Some Linux DAWs (Ardour, for one) keep the keyboard for their own shortcuts, so clicking the chat box asks the system to send your typing to Plugsalot instead; click back in the DAW to get its shortcuts again. If typing still doesn't arrive, click **Can't type? Open a typing window** under the chat box.
 
 To compare with Claude, choose **Claude: your own API key** in Settings and paste a key from the Claude Console. Automatic uses `claude-haiku-5-5`; pick Sonnet from the Model list for more detailed advice.
 
