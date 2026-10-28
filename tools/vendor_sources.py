@@ -56,6 +56,39 @@ FILES = {
         "LICENSE",
         "plugins/LinuxVST/src/DeBess/*",
     ],
+    "nam-core": [
+        "LICENSE",
+        "NAM/*.h",
+        "NAM/*.cpp",
+        "NAM/wavenet/*",
+        "Dependencies/nlohmann/*",
+        "example_models/wavenet_a1_standard.nam",
+        "example_models/A2.nam",
+    ],
+    "nam-plugin": [
+        "LICENSE",
+        "NeuralAmpModeler/ToneStack.h",
+        "NeuralAmpModeler/ToneStack.cpp",
+    ],
+    "audiodsptools": [
+        "LICENSE",
+        "dsp/dsp.h",
+        "dsp/dsp.cpp",
+        "dsp/wav.h",
+        "dsp/wav.cpp",
+        "dsp/NoiseGate.h",
+        "dsp/NoiseGate.cpp",
+        "dsp/RecursiveLinearFilter.h",
+        "dsp/RecursiveLinearFilter.cpp",
+        "dsp/ImpulseResponse.h",
+        "dsp/ImpulseResponse.cpp",
+        "dsp/Resample.h",
+    ],
+    "eigen": [
+        "COPYING.*",
+        "Eigen/*",
+        "Eigen/src/**/*",
+    ],
 }
 
 

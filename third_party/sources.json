@@ -73,6 +73,51 @@
       "license": "BSD-2-Clause",
       "license_file": "LICENSE",
       "authors": "sfizz contributors"
+    },
+    "nam-core": {
+      "repo": "https://github.com/sdatkinson/NeuralAmpModelerCore",
+      "commit": "0b3d3c97b0859a3a8c92a8628c4dd89a25eb5842",
+      "commit_date": "2026-09-18",
+      "license": "MIT",
+      "license_file": "LICENSE",
+      "authors": "Steven Atkinson",
+      "includes": "Neural Amp Modeler Core v0.6.0 (NAM model playback); nlohmann/json (MIT) in Dependencies/nlohmann"
+    },
+    "nam-plugin": {
+      "repo": "https://github.com/sdatkinson/NeuralAmpModelerPlugin",
+      "commit": "16be869746b8915885c7a35bafdcc0061faeb50e",
+      "commit_date": "2026-08-10",
+      "license": "MIT",
+      "license_file": "LICENSE",
+      "authors": "Steven Atkinson",
+      "includes": "Only the tone stack (NeuralAmpModeler/ToneStack.*) and the parameter table in NeuralAmpModeler.cpp, which the catalogue reads.",
+      "sparse_paths": [
+        "NeuralAmpModeler/*.h",
+        "NeuralAmpModeler/*.cpp",
+        "LICENSE"
+      ]
+    },
+    "audiodsptools": {
+      "repo": "https://github.com/sdatkinson/AudioDSPTools",
+      "commit": "844680d118f0317565132c3c5e3aca5f5c976e7a",
+      "commit_date": "2026-09-16",
+      "license": "MIT",
+      "license_file": "LICENSE",
+      "authors": "Steven Atkinson",
+      "includes": "Noise gate, filters, WAV loading and impulse responses used by the NAM plugin"
+    },
+    "eigen": {
+      "repo": "https://github.com/eigen-mirror/eigen",
+      "commit": "bc3b39870ecb690a623a3f49149a358b95c5781d",
+      "commit_date": "2025-11-08",
+      "license": "MPL-2.0",
+      "license_file": "COPYING.MPL2",
+      "authors": "Eigen contributors",
+      "includes": "Header-only linear algebra library NAM depends on; the commit NeuralAmpModelerCore pins (upstream gitlab.com/libeigen/eigen, fetched from its GitHub mirror)",
+      "sparse_paths": [
+        "Eigen/*",
+        "COPYING.*"
+      ]
     }
   }
 }
