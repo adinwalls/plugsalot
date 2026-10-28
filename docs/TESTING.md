@@ -31,11 +31,11 @@ The first time you open Plugsalot, the setup card appears:
 2. Click **Create API key**, and copy it.
 3. Paste it into Plugsalot (Ctrl+V, or right-click > Paste) and click **Connect**. A green tick shows which model answered.
 
-**Model:** leave it on **Automatic** to use the best free Flash model; if Google says that model is busy, Plugsalot moves on to the next one by itself. You can also pick a specific model from the list, which shows the models your key can use. Pro models usually need billing turned on in Google AI Studio.
+**Model:** leave it on **Automatic** to use the best free Flash model. Google's free tier is often busy for a few seconds at a time, so if a model answers "busy", Plugsalot tries the other Flash and Flash-Lite models, then waits and goes round again (three rounds over about 15 seconds) before it gives up. A model you pick yourself is tried first, with the others as backup. You can also pick a specific model from the list, which shows the models your key can use. Pro models usually need billing turned on in Google AI Studio.
 
 **Your key saves as soon as you paste it.** Connect only checks that it works, so a busy model or closing the card can't lose it. The key is shared by every Plugsalot instance and the standalone app.
 
-**Typing in Ardour:** click the chat box and type; Enter sends. Tested in Ardour 8 with its keyboard button both on and off. If a DAW still won't pass typing through, click **Can't type? Open a typing window** under the chat box: it opens a small window of its own that takes typing directly.
+**Typing in a Linux DAW:** clicking the chat box opens a typing window right on top of it, because some Linux DAWs (Ardour on Pop!_OS, for one) never pass typing to a plugin. Enter or Send sends; closing it keeps your text in the chat box. On Windows, macOS and in the standalone app you type in the chat box directly.
 
 To compare with Claude, choose **Claude: your own API key** in Settings and paste a key from the Claude Console. Automatic uses `claude-haiku-5-5`; pick Sonnet from the Model list for more detailed advice.
 

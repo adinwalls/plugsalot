@@ -1,6 +1,10 @@
 """Stand-in for the Gemini API used by CI: lists Flash models; the newest answers 503 (busy),
-so the test proves Plugsalot falls back to the next model. Run: python3 plugin/tests/mock_gemini.py"""
+so the test proves Plugsalot falls back to the next model. Run: python3 plugin/tests/mock_gemini.py
+MOCK_BUSY_FIRST=N makes every model answer 503 for the first N chat requests (a flaky Google)."""
 import json
+import os
+
+busy_left = int(os.environ.get("MOCK_BUSY_FIRST", "0"))
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 CHAIN = {"schema_version": 1, "source": "Lead vocal", "stage": "mixing",
@@ -33,7 +37,11 @@ class H(BaseHTTPRequestHandler):
 
     def do_POST(self):
         self.rfile.read(int(self.headers.get("content-length", 0)))
+        global busy_left
         print("POST", self.path, flush=True)
+        if busy_left > 0:
+            busy_left -= 1
+            return self._send(503, {"error": {"message": "The model is overloaded. Please try again later."}})
         if "gemini-3.8-flash" in self.path:
             return self._send(503, {"error": {"message": "This model is currently experiencing high demand."}})
         text = json.dumps(CHAIN) if "Test" not in self.path else '{"ok": true}'

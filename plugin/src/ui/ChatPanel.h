@@ -13,12 +13,15 @@ namespace plugsalot
 class TypingWindow final : public juce::DocumentWindow
 {
 public:
-    TypingWindow(const juce::String& initialText, std::function<void(const juce::String&)> onSend);
+    // `over` is the screen area to cover (the chat box), so typing feels in place.
+    TypingWindow(const juce::String& initialText, std::function<void(const juce::String&)> onSend,
+                 std::function<void(const juce::String&)> onCloseWithText, juce::Rectangle<int> over);
     void closeButtonPressed() override;
     void activeWindowStatusChanged() override;
 
 private:
     struct Content;
+    std::function<void(const juce::String&)> onCloseWithText;
 };
 
 class ChatPanel final : public juce::Component, private juce::Timer
@@ -33,6 +36,7 @@ public:
 private:
     void send(const juce::String& text);
     void openTypingWindow();
+    void mouseDown(const juce::MouseEvent&) override;
     void timerCallback() override;
 
     PlugsalotProcessor& proc;
@@ -42,6 +46,10 @@ private:
     juce::OwnedArray<juce::TextButton> quick;
     juce::Label busy, chatLabel;
     std::unique_ptr<TypingWindow> typingWindow;
+    // Linux plugin hosts (Ardour on Wayland, for one) may never pass typing to an
+    // embedded plugin window, so there a click on the chat box opens the typing
+    // window right on top of it instead.
+    bool typeInOwnWindow = false;
     int dots = 0;
 };
 

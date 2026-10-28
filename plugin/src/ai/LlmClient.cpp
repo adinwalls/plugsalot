@@ -294,29 +294,31 @@ LlmResult LlmClient::complete(const ProviderSettings& s, const juce::String& sys
     juce::StringArray candidates;
     if (s.model.isNotEmpty())
         candidates.add(s.model);
-    else if (s.provider == ProviderSettings::Provider::Claude)
-        candidates.add(defaultClaudeModel);
+    if (s.provider == ProviderSettings::Provider::Claude)
+        candidates.addIfNotAlreadyThere(defaultClaudeModel);
     else
-        candidates = geminiAutoCandidates(s.apiKey.trim());
+        for (auto& m : geminiAutoCandidates(s.apiKey.trim()))   // a chosen model falls back to these
+            candidates.addIfNotAlreadyThere(m);
 
+    // Google's free tier often answers "busy" (503) or "slow down" (429) for a
+    // few seconds at a time. Try every model, then wait and go round again,
+    // up to three rounds, before giving up.
     LlmResult last;
-    for (int i = 0; i < candidates.size(); ++i)
+    const int waitsMs[] = { 0, 4000, 10000 };
+    for (int round = 0; round < 3; ++round)
     {
-        last = completeOnce(s, candidates[i], system, turns);
-        if (last.ok || ! last.isTemporary())
-            return last;
-        // A model the user picked gets one more try after a short pause;
-        // automatic mode moves on to the next model instead.
-        if (candidates.size() == 1)
+        if (waitsMs[round] > 0)
+            juce::Thread::sleep(waitsMs[round]);
+        for (auto& model : candidates)
         {
-            juce::Thread::sleep(2000);
-            last = completeOnce(s, candidates[i], system, turns);
+            last = completeOnce(s, model, system, turns);
             if (last.ok || ! last.isTemporary())
                 return last;
         }
     }
-    last.error << (s.model.isNotEmpty() ? " Try again in a minute, or choose another model in Settings."
-                                        : " Every model Plugsalot tried was busy; try again in a minute.");
+    last.error << " Plugsalot tried " << candidates.size() << (candidates.size() == 1 ? " model" : " models")
+               << " three times over about 15 seconds. Try again in a minute"
+               << (s.provider == ProviderSettings::Provider::Gemini ? ", or switch to Claude in Settings." : ".");
     return last;
 }
 

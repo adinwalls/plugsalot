@@ -62,14 +62,19 @@ struct TypingWindow::Content final : public juce::Component
     juce::TextButton sendButton { "Send" };
 };
 
-TypingWindow::TypingWindow(const juce::String& initialText, std::function<void(const juce::String&)> onSend)
-    : juce::DocumentWindow("Plugsalot: type your message", theme::panel, juce::DocumentWindow::closeButton)
+TypingWindow::TypingWindow(const juce::String& initialText, std::function<void(const juce::String&)> onSend,
+                           std::function<void(const juce::String&)> onClose, juce::Rectangle<int> over)
+    : juce::DocumentWindow("Plugsalot: type your message", theme::panel, juce::DocumentWindow::closeButton),
+      onCloseWithText(std::move(onClose))
 {
     setUsingNativeTitleBar(true);
     setContentOwned(new Content(initialText, std::move(onSend)), true);
     setResizable(true, false);
     setAlwaysOnTop(true);
-    centreWithSize(getWidth(), getHeight());
+    if (over.getWidth() > 100 && over.getHeight() > 40)
+        setBounds(over.withSizeKeepingCentre(juce::jmax(420, over.getWidth()), juce::jmax(170, over.getHeight() + 70)));
+    else
+        centreWithSize(getWidth(), getHeight());
     setVisible(true);
     toFront(true);
     if (auto* c = dynamic_cast<Content*>(getContentComponent()))
@@ -87,6 +92,9 @@ void TypingWindow::activeWindowStatusChanged()
 
 void TypingWindow::closeButtonPressed()
 {
+    if (auto* c = dynamic_cast<Content*>(getContentComponent()))
+        if (onCloseWithText)
+            onCloseWithText(c->editor.getText());
     setVisible(false);
 }
 
@@ -104,8 +112,9 @@ ChatPanel::ChatPanel(PlugsalotProcessor& p) : proc(p)
     history.setColour(juce::TextEditor::outlineColourId, theme::outline);
     addAndMakeVisible(history);
 
-    chatLabel.setText("CHAT HERE", juce::dontSendNotification);
-    chatLabel.setFont(juce::FontOptions(12.5f, juce::Font::bold));
+    chatLabel.setText("Tell Plugsalot a bit more about what you're recording and how you want it to sound", juce::dontSendNotification);
+    chatLabel.setFont(juce::FontOptions(13.0f, juce::Font::bold));
+    chatLabel.setMinimumHorizontalScale(0.75f);
     chatLabel.setColour(juce::Label::textColourId, theme::accent);
     addAndMakeVisible(chatLabel);
 
@@ -133,7 +142,13 @@ ChatPanel::ChatPanel(PlugsalotProcessor& p) : proc(p)
                                   "In Ardour you can also click the keyboard button at the top right of the plugin window.");
     typingWindowButton.onClick = [this] { openTypingWindow(); };
     addAndMakeVisible(typingWindowButton);
-    typingWindowButton.setVisible(proc.wrapperType != juce::AudioProcessor::wrapperType_Standalone);
+   #if JUCE_LINUX || JUCE_BSD
+    typeInOwnWindow = proc.wrapperType != juce::AudioProcessor::wrapperType_Standalone;
+   #endif
+    // Hidden in the standalone app (it always gets typing) and where clicking the
+    // box already opens the typing window.
+    typingWindowButton.setVisible(proc.wrapperType != juce::AudioProcessor::wrapperType_Standalone && ! typeInOwnWindow);
+    input.addMouseListener(this, true);
 
     for (auto label : { "Set up a chain", "Brighter", "Warmer", "Less muddy", "More punch", "More space", "Explain the chain" })
     {
@@ -156,15 +171,35 @@ ChatPanel::~ChatPanel() = default;
 
 void ChatPanel::openTypingWindow()
 {
-    juce::Component::SafePointer<ChatPanel> safeThis(this);
-    typingWindow = std::make_unique<TypingWindow>(input.getText(), [safeThis](const juce::String& text)
+    if (typingWindow != nullptr && typingWindow->isVisible())
     {
-        if (safeThis == nullptr)
-            return;
-        safeThis->send(text);
-        if (safeThis->typingWindow != nullptr)
-            safeThis->typingWindow->setVisible(false);
-    });
+        typingWindow->toFront(true);
+        return;
+    }
+    juce::Component::SafePointer<ChatPanel> safeThis(this);
+    typingWindow = std::make_unique<TypingWindow>(
+        input.getText(),
+        [safeThis](const juce::String& text)
+        {
+            if (safeThis == nullptr)
+                return;
+            safeThis->send(text);
+            if (safeThis->typingWindow != nullptr)
+                safeThis->typingWindow->setVisible(false);
+        },
+        [safeThis](const juce::String& text)
+        {
+            // Closed without sending: keep what was typed in the chat box.
+            if (safeThis != nullptr)
+                safeThis->input.setText(text, false);
+        },
+        input.getScreenBounds());
+}
+
+void ChatPanel::mouseDown(const juce::MouseEvent& e)
+{
+    if (typeInOwnWindow && (e.eventComponent == &input || input.isParentOf(e.eventComponent)))
+        openTypingWindow();
 }
 
 void ChatPanel::send(const juce::String& text)
