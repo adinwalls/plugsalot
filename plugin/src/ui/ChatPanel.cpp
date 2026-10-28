@@ -4,6 +4,87 @@
 namespace plugsalot
 {
 
+static constexpr const char* placeholder = "CHAT HERE: e.g. warm, intimate vocal with a little space";
+
+// ---------------------------------------------------------------------------
+// Typing window
+// ---------------------------------------------------------------------------
+
+struct TypingWindow::Content final : public juce::Component
+{
+    Content(const juce::String& initial, std::function<void(const juce::String&)> send)
+        : onSend(std::move(send))
+    {
+        label.setText("Type your message, then press Enter or click Send.", juce::dontSendNotification);
+        label.setColour(juce::Label::textColourId, theme::muted);
+        addAndMakeVisible(label);
+
+        editor.setMultiLine(true, true);
+        editor.setReturnKeyStartsNewLine(false);
+        editor.setFont(juce::FontOptions(16.0f));
+        editor.setText(initial, false);
+        editor.setTextToShowWhenEmpty(placeholder, theme::muted);
+        editor.setColour(juce::TextEditor::outlineColourId, theme::accent.withAlpha(0.6f));
+        editor.onReturnKey = [this] { submit(); };
+        addAndMakeVisible(editor);
+
+        sendButton.setColour(juce::TextButton::buttonColourId, theme::accent.darker(0.3f));
+        sendButton.onClick = [this] { submit(); };
+        addAndMakeVisible(sendButton);
+        setSize(560, 190);
+    }
+
+    void submit()
+    {
+        auto text = editor.getText();
+        juce::MessageManager::callAsync([cb = onSend, text] { cb(text); });
+    }
+
+    void paint(juce::Graphics& g) override { g.fillAll(theme::panel); }
+    void resized() override
+    {
+        auto r = getLocalBounds().reduced(12);
+        label.setBounds(r.removeFromTop(22));
+        auto bottom = r.removeFromBottom(34);
+        sendButton.setBounds(bottom.removeFromRight(100));
+        r.removeFromBottom(8);
+        editor.setBounds(r);
+    }
+    void visibilityChanged() override
+    {
+        if (isShowing())
+            editor.grabKeyboardFocus();
+    }
+
+    std::function<void(const juce::String&)> onSend;
+    juce::Label label;
+    juce::TextEditor editor;
+    juce::TextButton sendButton { "Send" };
+};
+
+TypingWindow::TypingWindow(const juce::String& initialText, std::function<void(const juce::String&)> onSend)
+    : juce::DocumentWindow("Plugsalot: type your message", theme::panel, juce::DocumentWindow::closeButton)
+{
+    setUsingNativeTitleBar(true);
+    setContentOwned(new Content(initialText, std::move(onSend)), true);
+    setResizable(true, false);
+    setAlwaysOnTop(true);
+    centreWithSize(getWidth(), getHeight());
+    setVisible(true);
+    toFront(true);
+    if (auto* c = dynamic_cast<Content*>(getContentComponent()))
+        c->editor.grabKeyboardFocus();
+}
+
+void TypingWindow::closeButtonPressed()
+{
+    setVisible(false);
+}
+
+// ---------------------------------------------------------------------------
+// Chat panel
+// ---------------------------------------------------------------------------
+
 ChatPanel::ChatPanel(PlugsalotProcessor& p) : proc(p)
 {
     history.setMultiLine(true, true);
@@ -14,16 +95,36 @@ ChatPanel::ChatPanel(PlugsalotProcessor& p) : proc(p)
     history.setColour(juce::TextEditor::outlineColourId, theme::outline);
     addAndMakeVisible(history);
 
-    input.setMultiLine(false);
+    chatLabel.setText("CHAT HERE", juce::dontSendNotification);
+    chatLabel.setFont(juce::FontOptions(12.5f, juce::Font::bold));
+    chatLabel.setColour(juce::Label::textColourId, theme::accent);
+    addAndMakeVisible(chatLabel);
+
+    // Multi-line so longer requests stay visible; Enter sends.
+    input.setMultiLine(true, true);
     input.setReturnKeyStartsNewLine(false);
-    input.setTextToShowWhenEmpty("e.g. warm, intimate vocal with a little space", theme::muted);
-    input.setFont(juce::FontOptions(14.0f));
+    input.setScrollbarsShown(true);
+    input.setTextToShowWhenEmpty(placeholder, theme::muted);
+    input.setFont(juce::FontOptions(16.0f));
+    input.setColour(juce::TextEditor::backgroundColourId, theme::panelHi);
+    input.setColour(juce::TextEditor::outlineColourId, theme::accent.withAlpha(0.5f));
+    input.setColour(juce::TextEditor::focusedOutlineColourId, theme::accent);
     input.onReturnKey = [this] { send(input.getText()); };
     addAndMakeVisible(input);
 
     sendButton.setColour(juce::TextButton::buttonColourId, theme::accent.darker(0.3f));
     sendButton.onClick = [this] { send(input.getText()); };
     addAndMakeVisible(sendButton);
+
+    // The typing-window fallback is for hosts that keep the keyboard; the
+    // standalone app always receives keys, so it doesn't need it.
+    typingWindowButton.setColour(juce::TextButton::buttonColourId, juce::Colours::transparentBlack);
+    typingWindowButton.setColour(juce::TextButton::textColourOffId, theme::muted);
+    typingWindowButton.setTooltip("Some DAWs (for example Ardour) keep the keyboard for their own shortcuts. "
+                                  "In Ardour you can also click the keyboard button at the top right of the plugin window.");
+    typingWindowButton.onClick = [this] { openTypingWindow(); };
+    addAndMakeVisible(typingWindowButton);
+    typingWindowButton.setVisible(proc.wrapperType != juce::AudioProcessor::wrapperType_Standalone);
 
     for (auto label : { "Set up a chain", "Brighter", "Warmer", "Less muddy", "More punch", "More space", "Explain the chain" })
     {
@@ -40,6 +141,21 @@ ChatPanel::ChatPanel(PlugsalotProcessor& p) : proc(p)
     busy.setFont(juce::FontOptions(12.5f));
     addAndMakeVisible(busy);
     refresh();
+}
+
+ChatPanel::~ChatPanel() = default;
+
+void ChatPanel::openTypingWindow()
+{
+    juce::Component::SafePointer<ChatPanel> safeThis(this);
+    typingWindow = std::make_unique<TypingWindow>(input.getText(), [safeThis](const juce::String& text)
+    {
+        if (safeThis == nullptr)
+            return;
+        safeThis->send(text);
+        if (safeThis->typingWindow != nullptr)
+            safeThis->typingWindow->setVisible(false);
+    });
 }
 
 void ChatPanel::send(const juce::String& text)
@@ -105,11 +221,16 @@ void ChatPanel::resized()
     busy.setBounds(top.removeFromRight(160));
     r.removeFromTop(4);
 
-    auto inputRow = r.removeFromBottom(34);
-    sendButton.setBounds(inputRow.removeFromRight(80));
-    inputRow.removeFromRight(6);
+    // Typing area: about a quarter of the panel, at least three lines.
+    const int inputHeight = juce::jlimit(84, 150, r.getHeight() / 4);
+    if (typingWindowButton.isVisible())
+        typingWindowButton.setBounds(r.removeFromBottom(22).removeFromLeft(260));
+    auto inputRow = r.removeFromBottom(inputHeight);
+    sendButton.setBounds(inputRow.removeFromRight(90).withTrimmedTop(inputRow.getHeight() - 40));
+    inputRow.removeFromRight(8);
     input.setBounds(inputRow);
-    r.removeFromBottom(6);
+    chatLabel.setBounds(r.removeFromBottom(20));
+    r.removeFromBottom(2);
 
     // Quick buttons wrap onto up to two rows.
     auto quickArea = r.removeFromBottom(60);

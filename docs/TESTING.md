@@ -27,9 +27,13 @@ To look around without an API key, start the standalone app with `PLUGSALOT_DEMO
 
 The first time you open Plugsalot, the setup card appears:
 
-1. Click **Open Google AI Studio** and sign in with a Google account.
-2. Click **Get API key**, then **Create API key**, and copy it.
-3. Paste it into Plugsalot and click **Connect**. A green tick shows which Gemini model it picked.
+1. Click **Open Google AI Studio** and sign in with a Google account. If your browser doesn't open (some DAWs block it), the link is already copied: paste it into your browser, or copy it from the box next to the button.
+2. Click **Create API key**, and copy it.
+3. Paste it into Plugsalot (Ctrl+V, or right-click > Paste) and click **Connect**. A green tick shows which model answered.
+
+**Model:** leave it on **Automatic** to use the best free Flash model; if Google says that model is busy, Plugsalot moves on to the next one by itself. You can also pick a specific model from the list, which shows the models your key can use. Pro models usually need billing turned on in Google AI Studio.
+
+**Typing in Ardour:** Ardour keeps the keyboard for its own shortcuts, so typing into a plugin window does nothing by default. Either click the **keyboard button** at the top right of Ardour's plugin window (it lets the plugin receive typing), or click **Can't type? Open a typing window** under the chat box, which opens a small window that always receives your typing.
 
 To compare with Claude, choose **Claude: your own API key** in Settings and paste a key from the Claude Console. The default is `claude-haiku-5-5`; type `claude-sonnet-5-5` in the Model box for more detailed advice.
 
@@ -60,4 +64,4 @@ To compare with Claude, choose **Claude: your own API key** in Settings and past
 - No hosted AI yet; the Patreon tier comes later.
 - Builds are unsigned, so operating systems warn on first launch.
 - Multi-Comp's settings panel shows every mode's controls at once; only the chosen mode's controls have an effect.
-- The Gemini connection could not be tested live during development (Google's API was unreachable from the build machine); the Claude connection was. If Gemini fails, the note in the chat will say why.
+- Google's API can't be reached from the build machine, so Gemini is tested against a stand-in server that reproduces its replies (including the "high demand" 503). Your own key is the first real test; if anything fails, the note in the chat says why.

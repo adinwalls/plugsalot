@@ -61,6 +61,11 @@ jobs:
           [ -z "$T" ] && T=$(find build -type f -name PlugsalotTests.exe | head -1)
           echo "Running $T"
           "$T" "$GITHUB_WORKSPACE/catalogue/examples"
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            echo "Busy-model fallback against a stand-in Gemini server"
+            python3 plugin/tests/mock_gemini.py & sleep 2
+            PLUGSALOT_GEMINI_BASE=http://127.0.0.1:8765 PLUGSALOT_GEMINI_KEY=good-key "$T" "$GITHUB_WORKSPACE/catalogue/examples"
+          fi
 
       - name: Package
         shell: bash
