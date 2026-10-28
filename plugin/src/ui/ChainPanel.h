@@ -20,7 +20,8 @@ public:
     int selected() const { return selectedSlot; }
 
 private:
-    class Row final : public juce::Component
+    // Hovering a row shows the module's catalogue description as a tooltip.
+    class Row final : public juce::Component, public juce::SettableTooltipClient
     {
     public:
         Row(ChainPanel& owner, int index);

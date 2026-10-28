@@ -6,6 +6,26 @@ namespace plugsalot
 
 static constexpr int rowHeight = 46;
 
+// The hover text for a module: what it does, what it suits, and where it comes from.
+static juce::String describe(const ModuleSpec& m)
+{
+    juce::String t;
+    t << m.name << "\n" << m.purpose;
+    if (! m.goodFor.isEmpty())
+        t << "\n\nGood for: " << m.goodFor.joinIntoString(", ");
+    if (! m.avoidFor.isEmpty())
+        t << "\nAvoid for: " << m.avoidFor.joinIntoString(", ");
+    const auto src = m.json.getProperty("source", {});
+    const auto authors = src.getProperty("authors", {}).toString();
+    t << "\n\nBased on " << m.upstreamName;
+    if (authors.isNotEmpty())
+        t << " by " << authors;
+    t << " (" << m.licence << ", open source)";
+    if (! m.trackingSafe)
+        t << "\nAdds latency: best kept off while recording.";
+    return t;
+}
+
 ChainPanel::Row::Row(ChainPanel& o, int i) : owner(o), index(i)
 {
     auto& slot = owner.proc.getChain().slots[(size_t) i];
@@ -14,6 +34,8 @@ ChainPanel::Row::Row(ChainPanel& o, int i) : owner(o), index(i)
     on.onClick = [this] { owner.proc.setManualBypass(index, ! on.getToggleState()); };
     remove.setTooltip("Remove from chain");
     remove.onClick = [this] { owner.proc.removeSlot(index); };
+    if (auto* spec = Catalogue::embedded().find(slot.moduleId))
+        setTooltip(describe(*spec));
     addAndMakeVisible(on);
     addAndMakeVisible(remove);
 }
