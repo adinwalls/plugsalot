@@ -33,9 +33,11 @@ The first time you open Plugsalot, the setup card appears:
 
 **Model:** leave it on **Automatic** to use the best free Flash model; if Google says that model is busy, Plugsalot moves on to the next one by itself. You can also pick a specific model from the list, which shows the models your key can use. Pro models usually need billing turned on in Google AI Studio.
 
-**Typing in Ardour:** Ardour keeps the keyboard for its own shortcuts, so typing into a plugin window does nothing by default. Either click the **keyboard button** at the top right of Ardour's plugin window (it lets the plugin receive typing), or click **Can't type? Open a typing window** under the chat box, which opens a small window that always receives your typing.
+**Your key saves as soon as you paste it.** Connect only checks that it works, so a busy model or closing the card can't lose it. The key is shared by every Plugsalot instance and the standalone app.
 
-To compare with Claude, choose **Claude: your own API key** in Settings and paste a key from the Claude Console. The default is `claude-haiku-5-5`; type `claude-sonnet-5-5` in the Model box for more detailed advice.
+**Typing in Ardour:** click the chat box and type; Enter sends. Tested in Ardour 8 with its keyboard button both on and off. If a DAW still won't pass typing through, click **Can't type? Open a typing window** under the chat box: it opens a small window of its own that takes typing directly.
+
+To compare with Claude, choose **Claude: your own API key** in Settings and paste a key from the Claude Console. Automatic uses `claude-haiku-5-5`; pick Sonnet from the Model list for more detailed advice.
 
 ## 4. Things to try
 

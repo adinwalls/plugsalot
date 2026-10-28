@@ -5,6 +5,7 @@
 #include "ui/ChainPanel.h"
 #include "ui/ChatPanel.h"
 #include "ui/ContextBar.h"
+#include "ui/KeyboardFallback.h"
 #include "ui/ModuleEditor.h"
 #include "ui/SettingsDialog.h"
 #include "ui/Theme.h"
@@ -19,6 +20,7 @@ public:
     ~PlugsalotEditor() override;
     void paint(juce::Graphics&) override;
     void resized() override;
+    void parentHierarchyChanged() override { keyboardFallback.attachToTopLevel(); }
 
 private:
     void changeListenerCallback(juce::ChangeBroadcaster*) override;
@@ -33,6 +35,7 @@ private:
     ModuleEditor moduleEditor;
     ChatPanel chatPanel;
     std::unique_ptr<SettingsDialog> settings;
+    KeyboardFallback keyboardFallback { *this };   // declared last: listens to the components above
 };
 
 } // namespace plugsalot

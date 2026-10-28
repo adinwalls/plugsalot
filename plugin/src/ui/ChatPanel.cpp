@@ -76,6 +76,15 @@ TypingWindow::TypingWindow(const juce::String& initialText, std::function<void(c
         c->editor.grabKeyboardFocus();
 }
 
+void TypingWindow::activeWindowStatusChanged()
+{
+    // The text box can only take the keyboard once the window is active, which
+    // happens a moment after it opens; grabbing earlier is silently ignored.
+    if (isActiveWindow())
+        if (auto* c = dynamic_cast<Content*>(getContentComponent()))
+            c->editor.grabKeyboardFocus();
+}
+
 void TypingWindow::closeButtonPressed()
 {
     setVisible(false);

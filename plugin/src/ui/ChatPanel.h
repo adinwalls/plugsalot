@@ -15,6 +15,7 @@ class TypingWindow final : public juce::DocumentWindow
 public:
     TypingWindow(const juce::String& initialText, std::function<void(const juce::String&)> onSend);
     void closeButtonPressed() override;
+    void activeWindowStatusChanged() override;
 
 private:
     struct Content;

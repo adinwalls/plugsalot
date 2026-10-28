@@ -44,6 +44,17 @@ SettingsDialog::SettingsDialog(PlugsalotProcessor& p) : proc(p)
     key.setPasswordCharacter((juce::juce_wchar) 0x2022);
     key.setTextToShowWhenEmpty("paste key here (Ctrl+V, or right-click > Paste)", theme::muted);
     key.onReturnKey = [this] { connect(); };
+    // Save the key as soon as it is pasted or typed: Connect only tests it, so a
+    // busy model or a closed card can never leave Plugsalot without the key.
+    key.onTextChange = [this]
+    {
+        auto s = proc.loadProviderSettingsFor(currentProvider());
+        s.apiKey = key.getText().trim();
+        s.model = selectedModel();
+        proc.saveProviderSettings(s);
+        if (s.apiKey.isNotEmpty())
+            showResult("Key saved. Click Connect to check it works.", theme::muted);
+    };
     addAndMakeVisible(key);
 
     modelLabel.setText("Model", juce::dontSendNotification);
@@ -85,6 +96,11 @@ SettingsDialog::SettingsDialog(PlugsalotProcessor& p) : proc(p)
     provider.setSelectedId(proc.loadProviderSettings().provider == ProviderSettings::Provider::Claude ? 2 : 1,
                            juce::dontSendNotification);
     updateProviderUi();
+}
+
+void SettingsDialog::showMessage(const juce::String& text)
+{
+    showResult(text, theme::warning);
 }
 
 SettingsDialog::~SettingsDialog()

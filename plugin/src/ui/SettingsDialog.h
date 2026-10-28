@@ -19,6 +19,7 @@ public:
     void mouseUp(const juce::MouseEvent&) override {} // swallow clicks behind the card
 
     std::function<void()> onClose;
+    void showMessage(const juce::String& text);
 
     // Opens a web page in the user's browser. Returns false when it could not be
     // confirmed (the caller then shows the copied link). Blocking: call off the message thread.

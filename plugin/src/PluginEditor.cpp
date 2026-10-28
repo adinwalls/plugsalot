@@ -15,7 +15,11 @@ PlugsalotEditor::PlugsalotEditor(PlugsalotProcessor& p)
 
     chainPanel.onSelect = [this](int slot) { moduleEditor.showSlot(slot); };
     contextBar.settingsButton.onClick = [this] { showSettings(); };
-    proc.onNeedsApiKey = [this] { showSettings(); };
+    proc.onNeedsApiKey = [this]
+    {
+        showSettings();
+        settings->showMessage("Add your API key here first: paste it into the API key box (it saves straight away), then Close and send your message again.");
+    };
     proc.addChangeListener(this);
 
     setResizable(true, true);

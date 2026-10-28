@@ -166,6 +166,8 @@ void PlugsalotProcessor::askAi(const juce::String& userText)
     auto settings = loadProviderSettings();
     if (settings.apiKey.isEmpty())
     {
+        addChat(ChatMessage::From::System, "No API key is saved yet, so the setup card opened. Paste your key there, close it, and send again.");
+        sendChangeMessage();
         if (onNeedsApiKey)
             onNeedsApiKey();
         return;
@@ -258,6 +260,9 @@ ProviderSettings PlugsalotProcessor::loadProviderSettings() const
 
 ProviderSettings PlugsalotProcessor::loadProviderSettingsFor(ProviderSettings::Provider p) const
 {
+    // Another Plugsalot instance (or the standalone app) may have saved a key since this one loaded.
+    if (! settingsFile->needsToBeSaved())
+        settingsFile->reload();
     ProviderSettings s;
     s.provider = p;
     s.apiKey = settingsFile->getValue(s.provider == ProviderSettings::Provider::Claude ? "claudeKey" : "geminiKey");
