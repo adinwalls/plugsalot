@@ -108,7 +108,8 @@ endif()
 
 juce_add_plugin(Plugsalot
     PRODUCT_NAME "Plugsalot"
-    COMPANY_NAME "Plugsalot"
+    COMPANY_NAME "Adin Walls"
+    COMPANY_WEBSITE "https://github.com/adinwalls/plugsalot"
     BUNDLE_ID "org.plugsalot.plugsalot"
     PLUGIN_MANUFACTURER_CODE Plgs
     PLUGIN_CODE Pslt
