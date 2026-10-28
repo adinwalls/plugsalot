@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Plugsalot main window</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600&amp;family=Permanent+Marker&amp;display=swap">
+<style>
+body{margin:0;background:#14100c}
+a{color:#e3a857}a:hover{color:#f3c27a}
+.wood-walnut{background-color:#5e3419;background-image:repeating-linear-gradient(91deg,rgba(0,0,0,0) 0 7px,rgba(35,15,5,.30) 7px 8px,rgba(0,0,0,0) 8px 19px,rgba(255,210,160,.06) 19px 21px),repeating-linear-gradient(88.5deg,rgba(50,20,6,.28) 0 2px,rgba(0,0,0,0) 2px 33px),linear-gradient(90deg,#4f2a14,#7c4724 22%,#643818 48%,#87532c 76%,#542d16)}
+.wood-teak{background-color:#7a4a28;background-image:repeating-linear-gradient(91deg,rgba(0,0,0,0) 0 6px,rgba(60,28,8,.26) 6px 7px,rgba(0,0,0,0) 7px 17px,rgba(255,220,170,.08) 17px 19px),repeating-linear-gradient(88.5deg,rgba(70,32,10,.22) 0 2px,rgba(0,0,0,0) 2px 29px),linear-gradient(90deg,#6a3d1f,#9a6236 25%,#81502b 50%,#a46d3f 78%,#6b3e20)}
+.wood-oak{background-color:#a9824f;background-image:repeating-linear-gradient(91deg,rgba(0,0,0,0) 0 6px,rgba(90,60,25,.22) 6px 7px,rgba(0,0,0,0) 7px 16px,rgba(255,240,210,.10) 16px 18px),repeating-linear-gradient(88.5deg,rgba(100,70,30,.18) 0 2px,rgba(0,0,0,0) 2px 27px),linear-gradient(90deg,#94703f,#c09a64 25%,#a9824f 52%,#c6a26e 78%,#97733f)}
+.tape{background-color:#ece3c6;background-image:linear-gradient(180deg,rgba(255,255,255,.35),rgba(120,100,60,.08));color:#23262b;font-family:'Permanent Marker',cursive;clip-path:polygon(6px 0,calc(100% - 5px) 0,100% 22%,calc(100% - 4px) 42%,100% 63%,calc(100% - 3px) 82%,calc(100% - 6px) 100%,5px 100%,0 80%,4px 60%,0 38%,3px 18%);line-height:1.15;letter-spacing:.02em}
+.ticks{background:conic-gradient(from -136deg,#8f9bab 0deg 2deg,transparent 2deg 27deg,#8f9bab 27deg 29deg,transparent 29deg 54deg,#8f9bab 54deg 56deg,transparent 56deg 81deg,#8f9bab 81deg 83deg,transparent 83deg 108deg,#8f9bab 108deg 110deg,transparent 110deg 135deg,#8f9bab 135deg 137deg,transparent 137deg 162deg,#8f9bab 162deg 164deg,transparent 164deg 189deg,#8f9bab 189deg 191deg,transparent 191deg 216deg,#8f9bab 216deg 218deg,transparent 218deg 243deg,#8f9bab 243deg 245deg,transparent 245deg 270deg,#8f9bab 270deg 272deg,transparent 272deg 360deg)}
+.screw{width:11px;height:11px;border-radius:50%;background:linear-gradient(40deg,transparent 43%,#40464e 43% 57%,transparent 57%),radial-gradient(circle at 35% 30%,#f2f4f6,#9aa1aa 72%);box-shadow:0 1px 1px rgba(0,0,0,.6)}
+.slot{background:linear-gradient(180deg,#0e1216,#171c23);box-shadow:inset 0 3px 10px rgba(0,0,0,.85),inset 0 0 0 1px #232a33;border-radius:3px}
+.pins{background:repeating-linear-gradient(90deg,#ece3c6 0 4px,#7d7458 4px 7px);border-radius:1px;box-shadow:0 0 0 2px #1d2229}
+.capbtn{background:#e7dcc0;color:#25272b;border:0;border-radius:3px;box-shadow:0 2px 0 #8f8262,inset 0 1px 0 #fffaf0;font-family:'Barlow Condensed',sans-serif;font-weight:600;cursor:pointer}
+.capbtn:active{transform:translateY(2px);box-shadow:0 0 0 #8f8262}
+.darkbtn{background:#1b222b;color:#e6ebf1;border:1px solid #455164;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-weight:600;cursor:pointer}
+.darkbtn:hover{border-color:#6c7a90}
+.bezel{background:linear-gradient(160deg,#3a3d42,#121418 50%,#08090b);box-shadow:0 4px 8px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px #000}
+.lamp{border:0;padding:0;cursor:pointer;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 46%,rgba(255,236,200,.95) 0%,rgba(255,150,92,.92) 14%,rgba(236,84,46,.9) 36%,rgba(188,44,30,.92) 66%,rgba(120,22,16,.96) 100%);box-shadow:inset 0 0 0 1px rgba(255,170,130,.35),inset 0 -8px 14px rgba(60,6,4,.55),inset 0 6px 10px rgba(255,200,160,.25),0 0 18px rgba(240,90,50,.45);transition:filter .15s,box-shadow .15s}
+.lamp::before{content:'';position:absolute;inset:0;border-radius:inherit;background:repeating-radial-gradient(circle at 50% 46%,rgba(255,255,255,0) 0 3px,rgba(255,235,215,.16) 3px 4px,rgba(90,10,5,.10) 4px 5px);pointer-events:none}
+.lamp::after{content:'';position:absolute;left:12%;right:30%;top:8%;height:22%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));filter:blur(1px);pointer-events:none}
+.lamp:hover{filter:brightness(1.12) saturate(1.05);box-shadow:inset 0 0 0 1px rgba(255,180,140,.45),inset 0 -8px 14px rgba(60,6,4,.45),inset 0 6px 10px rgba(255,210,170,.3),0 0 28px rgba(250,100,55,.7)}
+.lamp:active{filter:brightness(.92);transform:translateY(1px)}
+.lamp:focus-visible{outline:2px solid #f3c27a;outline-offset:3px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.blink{animation:blink .7s ease-in-out infinite}
+textarea:focus{outline:2px solid #ec7658;outline-offset:1px}
+</style>
+</helmet>
+<div class="wood-{{wood}}" style="width: 1280px; height: 800px; box-sizing: border-box; padding: 20px 34px; font-family: 'Barlow', sans-serif; color: #e6ebf1">
+<div style="width: 100%; height: 100%; display: flex; flex-direction: column; background: {{enamel}}; border-radius: 5px; box-shadow: 0 0 0 2px #1a130c, 0 0 0 3px rgba(255,220,170,.15), inset 0 1px 0 rgba(255,255,255,.08); overflow: hidden">
+
+<header style="position: relative; height: 86px; flex: none; display: flex; align-items: center; gap: 22px; padding: 0 22px; border-bottom: 1px solid #161c24; background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.12))">
+<div style="display: flex; flex-direction: column; gap: 2px; width: 190px">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 32px; letter-spacing: .14em; color: #efe7d2; line-height: 1">PLUGSALOT</div>
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 11.5px; letter-spacing: .18em; color: #a9b4c2">BY ADIN WALLS</div>
+</div>
+<div style="display: flex; gap: 10px; align-items: flex-end">
+<sc-for list="{{selectors}}" as="s" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 10.5px; letter-spacing: .14em; color: #a9b4c2">{{s.label}}</div>
+<button class="darkbtn" type="button" aria-label="{{s.aria}}" style="height: 34px; padding: 0 10px; display: flex; align-items: center; gap: 8px; font-size: 15px; min-width: 96px; justify-content: space-between">{{s.value}}<svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="#a9b4c2" stroke-width="1.6"></path></svg></button>
+</div>
+</sc-for>
+</div>
+<div style="flex: 1"></div>
+<div style="position: relative; width: 150px; height: 62px; border-radius: 4px; background: radial-gradient(ellipse 85% 120% at 50% 112%, #fff3c4 0%, #ffdf8a 28%, #f2bb5a 55%, #c98a35 80%, #7e5220 100%); box-shadow: inset 0 0 0 3px #1b2129, inset 0 5px 12px rgba(40,20,0,.45), inset 0 0 22px rgba(90,50,10,.45), 0 0 16px rgba(255,190,90,.28); overflow: hidden" role="img" aria-label="Output level meter">
+<svg width="150" height="62" viewBox="0 0 150 62" aria-hidden="true" style="position: absolute; inset: 0">
+<path d="M22 50 A62 62 0 0 1 128 50" fill="none" stroke="#2b2b2b" stroke-width="1.2"></path>
+<path d="M104 31 A62 62 0 0 1 128 50" fill="none" stroke="#9c2a1c" stroke-width="3"></path>
+<g stroke="#2b2b2b" stroke-width="1.2"><line x1="31" y1="38" x2="27" y2="34"></line><line x1="48" y1="27" x2="45" y2="22"></line><line x1="75" y1="22" x2="75" y2="16"></line><line x1="102" y1="27" x2="105" y2="22"></line><line x1="119" y1="38" x2="123" y2="34"></line></g>
+<text x="75" y="45" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="11" font-weight="700" fill="#2b2b2b">VU</text>
+<text x="20" y="31" font-family="Barlow Condensed, sans-serif" font-size="8" fill="#2b2b2b">-20</text>
+<text x="121" y="27" font-family="Barlow Condensed, sans-serif" font-size="8" fill="#9c2a1c">+3</text>
+<rect x="0" y="0" width="150" height="20" fill="#ffffff" opacity="0.10"></rect>
+</svg>
+<div style="position: absolute; left: 74px; bottom: -6px; width: 2px; height: 56px; background: #1d1d1d; transform-origin: 50% 100%; transform: rotate({{vuDeg}}deg); transition: transform 500ms cubic-bezier(.3,1.4,.5,1)"></div>
+</div>
+<button class="darkbtn" type="button" style="height: 40px; padding: 0 16px; font-size: 16px; letter-spacing: .06em">SETTINGS</button>
+<div class="tape" style="position: absolute; right: 108px; bottom: 2px; padding: 2px 12px; font-size: 11px; transform: rotate(2deg)">HOW LOUD IT'S COMING OUT</div>
+</header>
+
+<div style="flex: 1; min-height: 0; display: flex; gap: 16px; padding: 14px 16px">
+
+<section style="position: relative; width: 816px; flex: none; display: flex; flex-direction: column; gap: 10px" aria-label="Plugin rack">
+<div style="height: 600px; flex: none; box-sizing: border-box; padding: 16px; display: flex; gap: 8px; background: #0a0d11; border-radius: 4px; box-shadow: inset 0 0 0 1px #000, 0 1px 0 rgba(255,255,255,.07); clip-path: inset(0 -420px -420px -420px)">
+<sc-for list="{{slots}}" as="m" hint-placeholder-count="6">
+<div class="slot" style="position: relative; width: 124px; height: 568px; flex: none" onMouseEnter="{{m.enter}}" onMouseLeave="{{m.leave}}">
+<div class="pins" style="position: absolute; left: 27px; right: 27px; bottom: 12px; height: 14px"></div>
+<sc-if value="{{m.empty}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 46%; left: 0; right: 0; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; letter-spacing: .2em; color: #59636f">EMPTY SLOT</div>
+</sc-if>
+<sc-if value="{{m.has}}" hint-placeholder-val="{{ true }}">
+<div style="{{m.cardStyle}}">
+<div style="display: flex; justify-content: space-between; width: 100%; padding: 0 2px; box-sizing: border-box"><div class="screw"></div><div class="screw"></div></div>
+<div class="tape" style="{{m.tapeStyle}}">{{m.tape}}</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 1px; margin-top: 2px">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: .08em; color: #f1f4f7; text-transform: uppercase; text-align: center; line-height: 1.05">{{m.name}}</div>
+<div style="font-size: 10.5px; color: #a9b4c2; text-align: center">{{m.maker}}</div>
+</div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 9px; margin-top: 10px">
+<sc-for list="{{m.knobs}}" as="k" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 3px">
+<div class="ticks" style="width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center">
+<div style="{{k.capStyle}}">
+<div style="{{k.ptrStyle}}"></div>
+</div>
+</div>
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: .1em; color: #ccd4de">{{k.label}}</div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px">
+<div style="{{m.ledStyle}}"></div>
+<button class="capbtn" type="button" aria-pressed="{{m.on}}" aria-label="{{m.inLabel}}" onClick="{{m.toggle}}" style="{{m.inStyle}}">IN</button>
+</div>
+<div style="font-size: 9.5px; color: #a9b4c2; letter-spacing: .04em; margin-bottom: 30px">{{m.lic}}</div>
+</div>
+</sc-if>
+<sc-if value="{{m.showTip}}" hint-placeholder-val="{{ false }}">
+<div style="{{m.tipStyle}}">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 17px; color: #e3a857; letter-spacing: .04em">{{m.name}}</div>
+<div style="font-size: 13.5px; line-height: 1.45; color: #e6ebf1; margin-top: 4px">{{m.desc}}</div>
+<div style="font-size: 12.5px; line-height: 1.4; color: #c3ccd7; margin-top: 8px">Good for: {{m.good}}</div>
+<div style="font-size: 12px; line-height: 1.4; color: #a9b4c2; margin-top: 8px">Based on {{m.upstream}} ({{m.lic}}, open source)</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="height: 36px; display: flex; align-items: center; gap: 8px">
+<button class="darkbtn" type="button" style="height: 32px; padding: 0 14px; font-size: 14px">UNDO</button>
+<button class="darkbtn" type="button" style="height: 32px; padding: 0 14px; font-size: 14px">CLEAR</button>
+<div style="display: flex; align-items: center; gap: 8px; margin-left: 8px">
+<div class="{{statusLedClass}}" style="{{statusLedStyle}}"></div>
+<div style="font-size: 13px; color: #c3ccd7">{{statusText}}</div>
+</div>
+<div style="flex: 1"></div>
+<sc-for list="{{legend}}" as="l" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 5px; margin-left: 8px">
+<div style="{{l.dot}}"></div>
+<div style="font-family: 'Barlow Condensed', sans-serif; font-size: 12.5px; font-weight: 600; letter-spacing: .06em; color: #c3ccd7">{{l.label}}</div>
+</div>
+</sc-for>
+</div>
+<div class="tape" style="position: absolute; left: 22px; top: -10px; padding: 3px 14px; font-size: 13px; transform: rotate(-1deg); z-index: 3">YOUR CHAIN: SIGNAL FLOWS LEFT TO RIGHT</div>
+<div class="tape" style="position: absolute; right: 6px; bottom: 30px; padding: 2px 10px; font-size: 11px; transform: rotate(-2deg); z-index: 3">KNOB COLOUR GUIDE</div>
+</section>
+
+<section style="position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; background: #212833; border-radius: 4px; padding: 12px; box-shadow: inset 0 0 0 1px #131820" aria-label="Assistant">
+<div style="display: flex; align-items: center; justify-content: space-between; height: 20px">
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: .14em">ASSISTANT</div>
+<div style="font-size: 12.5px; color: #e3a857">{{busyText}}</div>
+</div>
+<div style="flex: 1; min-height: 0; overflow: auto; background: #0f1318; border-radius: 3px; box-shadow: inset 0 2px 8px rgba(0,0,0,.7); padding: 12px; display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{msgs}}" as="msg" hint-placeholder-count="2">
+<div>
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11.5px; letter-spacing: .12em; color: {{msg.whoColor}}">{{msg.who}}</div>
+<div style="font-size: 14px; line-height: 1.45; color: {{msg.textColor}}; margin-top: 2px">{{msg.text}}</div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{quick}}" as="q" hint-placeholder-count="7">
+<button class="capbtn" type="button" onClick="{{q.go}}" style="height: 30px; padding: 0 10px; font-size: 14px">{{q.label}}</button>
+</sc-for>
+</div>
+<label for="chat-input" style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13.5px; color: #ec7658; line-height: 1.25">Tell Plugsalot a bit more about what you're recording and how you want it to sound</label>
+<div style="display: flex; gap: 8px">
+<textarea id="chat-input" rows="3" placeholder="e.g. warm, intimate vocal with a little space" value="{{draft}}" onChange="{{onDraft}}" onKeyDown="{{onKey}}" style="flex: 1; min-width: 0; height: 98px; box-sizing: border-box; resize: none; background: #11161c; border: 1px solid #4a576b; border-radius: 3px; color: #e6ebf1; font-family: 'Barlow', sans-serif; font-size: 14.5px; padding: 8px"></textarea>
+<div style="width: 78px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 5px"><div style="height: 17px; padding: 0 10px; display: flex; align-items: center; background: linear-gradient(180deg, #2a2a2a, #121212); border-radius: 1px; box-shadow: 0 1px 2px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.12); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: .16em; color: #f1ece2">SEND</div><div class="bezel" style="width: 76px; height: 76px; box-sizing: border-box; padding: 5px; border-radius: 10px"><button class="lamp" type="button" aria-label="Send" onClick="{{onSend}}" style="width: 100%; height: 100%; border-radius: 7px"></button></div></div>
+</div>
+<div class="tape" style="position: absolute; left: 14px; top: 352px; padding: 2px 10px; font-size: 11px; transform: rotate(-2deg)">SMALL TWEAKS, NO REBUILD</div>
+</section>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"wood":{"editor":"enum","options":["walnut","teak","oak"],"default":"teak"},"enamel":{"editor":"color","default":"#2b3443","options":["#2b3443","#34383e","#33403a","#3a2f2c"]},"$preview":{"width":1280,"height":800}}'>
+var KC = {
+  blue:  { cap: '#2f62b8', hi: '#6b97e6', ptr: '#ffffff' },
+  red:   { cap: '#b4402e', hi: '#e2725c', ptr: '#ffffff' },
+  grey:  { cap: '#a9b1bb', hi: '#eef1f4', ptr: '#1d232b' },
+  cream: { cap: '#e3d5b0', hi: '#fffaea', ptr: '#2a2a2a' },
+  black: { cap: '#22262c', hi: '#565d67', ptr: '#f2f2f2' }
+};
+var MODS = {
+  console_eq: { name: 'Console EQ', maker: 'Dusk Audio', upstream: 'Dusk Audio 4K EQ 2', lic: 'GPL-3.0', tape: 'TONE: CUT MUD, ADD AIR', cpu: 1, lat: 0,
+    desc: 'British console-style channel EQ: high-pass and low-pass filters plus four bands with musical, slightly coloured curves.',
+    good: 'vocals, guitars, drums, bass, buses',
+    knobs: [['HPF', 'black', .30], ['LOW', 'blue', .42], ['LO MID', 'blue', .38], ['HI MID', 'blue', .58], ['HIGH', 'blue', .62]] },
+  multicomp: { name: 'Multi-Comp', maker: 'Dusk Audio', upstream: 'Dusk Audio Multi-Comp', lic: 'GPL-3.0', tape: 'EVENS OUT THE LEVEL', cpu: 2, lat: 100,
+    desc: 'Compressor with seven hardware-style modes (opto, FET, VCA, bus and more) for levelling vocals, adding punch to drums and gluing buses.',
+    good: 'lead vocal, bass, kick, snare, full kit, buses',
+    knobs: [['PEAK RED', 'red', .50], ['ATTACK', 'red', .30], ['RELEASE', 'red', .45], ['GAIN', 'grey', .55], ['MIX', 'cream', .90]] },
+  deess: { name: 'DeBess', maker: 'Airwindows', upstream: 'Airwindows DeBess', lic: 'MIT', tape: "TAMES HARSH S'S", cpu: 1, lat: 0,
+    desc: "De-esser that finds 's' sounds by their shape rather than a frequency band, so it reduces sibilance and leaves the rest of the treble alone.",
+    good: 'lead and backing vocals',
+    knobs: [['INTENSE', 'red', .40], ['SHARP', 'blue', .55], ['DEPTH', 'red', .30], ['FILTER', 'blue', .50]] },
+  tape: { name: 'Tape Machine', maker: 'Dusk Audio', upstream: 'Dusk Audio TapeMachine 2', lic: 'GPL-3.0', tape: 'WARMTH + GLUE', cpu: 2, lat: 0,
+    desc: 'Analog tape emulation adding saturation, head bump, gentle compression and optional wow and flutter.',
+    good: 'vocals, drums, bass, mix bus',
+    knobs: [['DRIVE', 'grey', .45], ['LOW CUT', 'black', .20], ['WOW', 'cream', .18], ['FLUTTER', 'cream', .12], ['OUTPUT', 'grey', .50]] },
+  plate: { name: 'Plate Reverb', maker: 'Dragonfly', upstream: 'Dragonfly Plate Reverb', lic: 'GPL-3.0', tape: 'SPACE AROUND IT', cpu: 1, lat: 0,
+    desc: 'Plate reverb for bright, dense ambience; the classic choice for lead vocals and snare.',
+    good: 'lead vocal, backing vocal, snare, acoustic guitar, keys',
+    knobs: [['DECAY', 'cream', .40], ['PRE-DLY', 'cream', .22], ['WIDTH', 'cream', .70], ['LOW CUT', 'black', .35], ['MIX', 'cream', .20]] },
+  limiter: { name: 'Peak Limiter', maker: 'x42', upstream: 'x42-dpl Digital Peak Limiter', lic: 'GPL-3.0', tape: 'CATCHES THE PEAKS', cpu: 1, lat: 48,
+    desc: 'Transparent lookahead peak limiter with true-peak detection: the final safety stage that holds the output under the ceiling.',
+    good: 'master, buses, any loud source',
+    knobs: [['INPUT', 'grey', .30], ['CEILING', 'red', .88], ['RELEASE', 'red', .40]] }
+};
+var CHAINS = [
+  { ids: ['console_eq', 'multicomp', 'deess', 'tape', 'plate', 'limiter'],
+    vals: { console_eq: [.32, .48, .34, .60, .66], plate: [.46, .25, .72, .38, .24] },
+    reply: 'Rebuilt for a warm, intimate vocal: high-pass at 90 Hz and a small low-mid cut, opto levelling around 4 dB, gentle de-essing, a touch of tape for warmth, a short plate, and a limiter catching the peaks.' },
+  { ids: ['console_eq', 'multicomp', 'deess', 'plate'],
+    vals: { console_eq: [.28, .40, .40, .62, .70], multicomp: [.42, .35, .50, .52, .85] },
+    reply: 'A lighter, brighter take: cleaner low end, a little less compression, de-essing to keep the extra air smooth, and a slightly longer plate.' }
+];
+var TWEAKS = {
+  'Brighter':   { edits: [['console_eq', 4, .12], ['console_eq', 3, .05]], reply: 'Lifted the high shelf on the Console EQ by about 2 dB and opened up the upper mids a touch.' },
+  'Warmer':     { edits: [['console_eq', 1, .08], ['console_eq', 4, -.06], ['tape', 0, .10]], reply: 'Added a little low shelf, eased off the top, and pushed the tape drive slightly.' },
+  'Less muddy': { edits: [['console_eq', 2, -.10], ['console_eq', 0, .06]], reply: 'Cut a bit more around 300 Hz and raised the high-pass a little.' },
+  'More punch': { edits: [['multicomp', 1, .14], ['multicomp', 0, .05]], reply: 'Slowed the compressor attack so the front of each note comes through, with slightly more gain reduction.' },
+  'More space': { edits: [['plate', 4, .10], ['plate', 0, .08]], reply: 'Raised the plate mix and lengthened the decay a little.' }
+};
+var TAPE_TILT = [-2, 1.5, -1, 2, -1.5, 1];
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    var ids = ['console_eq', 'multicomp', 'deess', 'plate'];
+    var vals = {};
+    ids.forEach(function (id) { vals[id] = MODS[id].knobs.map(function (k) { return k[2]; }); });
+    this.state = {
+      chain: ids, status: ids.map(function () { return 'in'; }), tuned: ids.map(function () { return true; }),
+      vals: vals, bypass: {}, hover: null, phase: 'idle', busyText: '', draft: '', vu: -8, round: 0,
+      msgs: [
+        { who: 'NOTE', text: "Pick what you're recording above, then tell me the sound you want, or press Send for a starting chain." },
+        { who: 'PLUGSALOT', text: 'Demo chain: high-pass and a small mud cut, smooth opto levelling, gentle de-essing and a short plate.' }
+      ]
+    };
+  }
+
+  componentWillUnmount() { this.timers.forEach(clearTimeout); clearTimeout(this.hoverTimer); }
+
+  later(ms, fn) { this.timers.push(setTimeout(fn, ms)); }
+
+  setAt(key, i, v) {
+    this.setState(function (s) { var a = s[key].slice(); a[i] = v; var o = {}; o[key] = a; return o; });
+  }
+
+  say(who, text) {
+    this.setState(function (s) { return { msgs: s.msgs.concat([{ who: who, text: text }]) }; });
+  }
+
+  replug(text) {
+    var self = this;
+    if (this.state.phase !== 'idle') return;
+    var next = CHAINS[this.state.round % CHAINS.length];
+    this.say('YOU', text || 'Set up a chain');
+    this.setState({ phase: 'unplug', busyText: 'Unplugging the old chain...', draft: '', hover: null });
+    var t = 250;
+    for (var i = this.state.chain.length - 1; i >= 0; i--) {
+      (function (j, at) {
+        self.later(at, function () { self.setAt('status', j, 'loose'); self.setState({ vu: -16 }); });
+        self.later(at + 170, function () { self.setAt('status', j, 'out'); });
+      })(i, t);
+      t += 280;
+    }
+    t += 550;
+    this.later(t, function () {
+      var vals = {};
+      next.ids.forEach(function (id) { vals[id] = (next.vals[id] || MODS[id].knobs.map(function (k) { return k[2]; })).slice(); });
+      self.setState({ phase: 'think', busyText: 'Choosing modules...', chain: next.ids.slice(),
+        status: next.ids.map(function () { return 'above'; }), tuned: next.ids.map(function () { return false; }),
+        vals: vals, bypass: {}, vu: -20 });
+    });
+    t += 1500;
+    next.ids.forEach(function (id, j) {
+      self.later(t, function () {
+        self.setAt('status', j, 'in');
+        self.setState({ phase: 'plug', busyText: 'Plugging in ' + MODS[id].name + '...', vu: -13 + Math.random() * 9 });
+      });
+      self.later(t + 420, function () { self.setAt('tuned', j, true); });
+      t += 560;
+    });
+    t += 700;
+    this.later(t, function () {
+      self.setState(function (s) { return { phase: 'idle', busyText: '', vu: -6, round: s.round + 1 }; });
+      self.say('PLUGSALOT', next.reply);
+    });
+  }
+
+  tweak(label) {
+    var self = this;
+    if (this.state.phase !== 'idle') return;
+    this.say('YOU', label);
+    if (label === 'Explain the chain') {
+      var names = this.state.chain.map(function (id) { return MODS[id].name; }).join(', then ');
+      this.say('PLUGSALOT', 'Your signal runs through ' + names + '. Hover any module to see what it does; the coloured knobs show tone (blue), dynamics (red), level (grey), time and space (cream) and filters (black).');
+      return;
+    }
+    var tw = TWEAKS[label];
+    var touched = tw.edits.filter(function (e) { return self.state.chain.indexOf(e[0]) >= 0; });
+    this.setState({ phase: 'tune', busyText: 'Adjusting...' });
+    this.later(700, function () {
+      self.setState(function (s) {
+        var vals = {};
+        Object.keys(s.vals).forEach(function (k) { vals[k] = s.vals[k].slice(); });
+        touched.forEach(function (e) { vals[e[0]][e[1]] = Math.max(0, Math.min(1, vals[e[0]][e[1]] + e[2])); });
+        return { vals: vals, vu: -4 };
+      });
+    });
+    this.later(1700, function () {
+      self.setState({ phase: 'idle', busyText: '', vu: -6 });
+      self.say('PLUGSALOT', touched.length ? tw.reply : 'That needs a module that is not in the chain yet; press Send and I will rebuild it.');
+    });
+  }
+
+  renderVals() {
+    var self = this;
+    var s = this.state;
+    var enamel = this.props.enamel ?? '#2b3443';
+    var slots = [];
+    for (var i = 0; i < 6; i++) {
+      (function (i) {
+        var id = s.chain[i];
+        if (!id) {
+          slots.push({ empty: true, has: false, showTip: false, knobs: [], enter: function () {}, leave: function () {} });
+          return;
+        }
+        var m = MODS[id];
+        var st = s.status[i];
+        var on = !s.bypass[i];
+        var seated = st === 'in';
+        var card = 'position: absolute; inset: 0; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 8px 7px 0; border-radius: 4px; '
+          + 'background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,.10)), ' + enamel + '; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 8px 16px rgba(0,0,0,.6); ';
+        if (st === 'in') card += 'transform: translateY(0); opacity: 1; transition: transform 520ms cubic-bezier(.25,1.6,.5,1), opacity 160ms;';
+        else if (st === 'loose') card += 'transform: translateY(-14px) rotate(-1deg); opacity: 1; transition: transform 160ms ease-out;';
+        else if (st === 'out') card += 'transform: translateY(-640px) rotate(-4deg); opacity: 0; transition: transform 520ms cubic-bezier(.55,0,.85,.35), opacity 420ms 100ms;';
+        else card += 'transform: translateY(-640px); opacity: 0; transition: none;';
+        var lit = seated && s.tuned[i] && on;
+        slots.push({
+          empty: false, has: true, name: m.name, maker: m.maker, upstream: m.upstream, lic: m.lic, tape: m.tape, desc: m.desc, good: m.good,
+          on: on, inLabel: (on ? 'Bypass ' : 'Turn on ') + m.name,
+          cardStyle: card,
+          tapeStyle: 'width: 112px; box-sizing: border-box; padding: 4px 4px 3px; font-size: 11.5px; text-align: center; transform: rotate(' + TAPE_TILT[i] + 'deg)',
+          ledStyle: 'width: 11px; height: 11px; border-radius: 50%; ' + (lit ? 'background: #6ee07c; box-shadow: 0 0 8px #6ee07c, inset 0 -1px 2px rgba(0,0,0,.3);' : 'background: #233026; box-shadow: inset 0 1px 2px rgba(0,0,0,.7);'),
+          inStyle: 'width: 46px; height: 28px; font-size: 14px; letter-spacing: .1em; ' + (on ? '' : 'background: #8f8770; color: #2a2a2a; box-shadow: 0 1px 0 #5d5644;'),
+          showTip: s.hover === i && seated && (s.phase === 'idle' || s.phase === 'tune'),
+          tipStyle: 'position: absolute; top: 120px; ' + (i >= 4 ? 'right: 8px;' : 'left: 8px;') + ' width: 270px; z-index: 6; box-sizing: border-box; padding: 12px 14px; border-radius: 6px; background: #1a2029; border: 1px solid rgba(227,168,87,.6); box-shadow: 0 10px 24px rgba(0,0,0,.6); pointer-events: none',
+          knobs: m.knobs.map(function (k, j) {
+            var v = s.tuned[i] ? s.vals[id][j] : 0;
+            var c = KC[k[1]];
+            return {
+              label: k[0],
+              capStyle: 'position: relative; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle at 35% 28%, ' + c.hi + ', ' + c.cap + ' 62%); box-shadow: 0 3px 5px rgba(0,0,0,.6), inset 0 -2px 3px rgba(0,0,0,.35); transform: rotate(' + (-135 + 270 * v) + 'deg); transition: transform 900ms cubic-bezier(.2,.8,.2,1)',
+              ptrStyle: 'position: absolute; top: 3px; left: 18.5px; width: 3px; height: 13px; border-radius: 2px; background: ' + c.ptr
+            };
+          }),
+          enter: function () {
+            clearTimeout(self.hoverTimer);
+            self.hoverTimer = setTimeout(function () { self.setState({ hover: i }); }, 2000);
+          },
+          leave: function () {
+            clearTimeout(self.hoverTimer);
+            self.setState(function (x) { return x.hover === i ? { hover: null } : null; });
+          },
+          toggle: function () { self.setState(function (x) { var b = Object.assign({}, x.bypass); b[i] = !b[i]; return { bypass: b }; }); }
+        });
+      })(i);
+    }
+    var busy = s.phase !== 'idle';
+    var cpu = s.chain.reduce(function (a, id) { return a + MODS[id].cpu; }, 0);
+    var lat = s.chain.reduce(function (a, id) { return a + MODS[id].lat; }, 0);
+    var who = { YOU: '#e3a857', PLUGSALOT: '#9fb3c8', NOTE: '#ec7658' };
+    return {
+      wood: this.props.wood ?? 'teak',
+      enamel: enamel,
+      selectors: [
+        { label: 'SOURCE', value: 'Lead vocal', aria: 'Source: Lead vocal' },
+        { label: 'STAGE', value: 'Mixing', aria: 'Stage: Mixing' },
+        { label: 'STYLE', value: 'Pop', aria: 'Style: Pop' },
+        { label: 'CHARACTER', value: 'Warm', aria: 'Character: Warm' },
+        { label: 'CPU', value: 'Normal', aria: 'CPU budget: Normal' }
+      ],
+      vuDeg: Math.max(-50, Math.min(50, -50 + (s.vu + 20) * (100 / 23))),
+      slots: slots,
+      statusText: busy ? s.busyText : s.chain.length + ' modules  |  ' + cpu + ' CPU pts  |  latency ' + lat + ' samples',
+      statusLedClass: busy ? 'blink' : '',
+      statusLedStyle: 'width: 10px; height: 10px; border-radius: 50%; ' + (busy ? 'background: #f0b45c; box-shadow: 0 0 8px #f0b45c;' : 'background: #6ee07c; box-shadow: 0 0 6px #6ee07c;'),
+      legend: [['TONE', 'blue'], ['DYNAMICS', 'red'], ['LEVEL', 'grey'], ['TIME + SPACE', 'cream'], ['FILTER', 'black']].map(function (l) {
+        return { label: l[0], dot: 'width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, ' + KC[l[1]].hi + ', ' + KC[l[1]].cap + ' 65%); box-shadow: 0 1px 2px rgba(0,0,0,.6)' };
+      }),
+      busyText: s.busyText,
+      msgs: s.msgs.map(function (m) { return { who: m.who, text: m.text, whoColor: who[m.who] || '#9fb3c8', textColor: m.who === 'NOTE' ? '#ec7658' : '#e6ebf1' }; }),
+      quick: ['Set up a chain', 'Brighter', 'Warmer', 'Less muddy', 'More punch', 'More space', 'Explain the chain'].map(function (q) {
+        return { label: q, go: function () { if (q === 'Set up a chain') self.replug(''); else self.tweak(q); } };
+      }),
+      draft: s.draft,
+      onDraft: function (e) { self.setState({ draft: e.target.value }); },
+      onKey: function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); self.replug(self.state.draft.trim()); } },
+      onSend: function () { self.replug(self.state.draft.trim()); }
+    };
+  }
+}
+</script>
+</body>
+</html>
