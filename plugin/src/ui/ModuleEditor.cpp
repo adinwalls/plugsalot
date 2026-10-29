@@ -176,6 +176,26 @@ void ModuleEditor::addFileRow(const ModuleSpec& spec, const juce::String& curren
     c->addAndMakeVisible(c->label);
     c->addAndMakeVisible(*c->widget);
     content.addAndMakeVisible(c);
+
+    // Credit line for captures that came from TONE3000: tone, creator, licence, link back.
+    const auto info = Library::attribution(spec.fileKind, current);
+    if (info.isObject())
+    {
+        auto* credit = controls.add(new Control());
+        credit->label.setText("Credit", juce::dontSendNotification);
+        credit->label.setColour(juce::Label::textColourId, theme::text);
+        credit->label.setFont(juce::FontOptions(12.5f));
+        const auto text = info.getProperty("tone_title", {}).toString() + " by " + info.getProperty("creator", {}).toString()
+                          + " (" + Tone3000::licenceLabel(info.getProperty("license", {}).toString()) + ") on TONE3000";
+        auto link = std::make_unique<juce::HyperlinkButton>(text, juce::URL(info.getProperty("url", "https://www.tone3000.com").toString()));
+        link->setFont(juce::FontOptions(12.0f), false);
+        link->setColour(juce::HyperlinkButton::textColourId, theme::accent);
+        link->setJustificationType(juce::Justification::centredLeft);
+        credit->widget = std::move(link);
+        credit->addAndMakeVisible(credit->label);
+        credit->addAndMakeVisible(*credit->widget);
+        content.addAndMakeVisible(credit);
+    }
 }
 
 void ModuleEditor::paint(juce::Graphics& g)

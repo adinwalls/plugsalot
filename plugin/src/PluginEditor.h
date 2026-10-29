@@ -7,6 +7,7 @@
 #include "ui/ContextBar.h"
 #include "ui/KeyboardFallback.h"
 #include "ui/ModuleEditor.h"
+#include "ui/Tone3000Dialog.h"
 #include "ui/SettingsDialog.h"
 #include "ui/Theme.h"
 
@@ -25,6 +26,7 @@ public:
 private:
     void changeListenerCallback(juce::ChangeBroadcaster*) override;
     void showSettings();
+    void showTone3000(std::function<void(const juce::String&)> picked);
     void refreshStatus();
 
     PlugsalotProcessor& proc;
@@ -35,6 +37,7 @@ private:
     ModuleEditor moduleEditor;
     ChatPanel chatPanel;
     std::unique_ptr<SettingsDialog> settings;
+    std::unique_ptr<Tone3000Dialog> tone3000Dialog;
     KeyboardFallback keyboardFallback { *this };   // declared last: listens to the components above
 };
 

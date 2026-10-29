@@ -1,4 +1,4 @@
-# Testing Plugsalot 0.1 (first prototype)
+# Testing Plugsalot 0.2 (prototype)
 
 This build is about whether the idea works: you describe a sound, the AI builds a chain from real open-source DSP, and it sounds right. The interface is deliberately plain; its design is the next step.
 
@@ -49,20 +49,26 @@ To compare with Claude, choose **Claude: your own API key** in Settings and past
 6. **Limits:** set CPU to Light and ask for "lots of tape character". The chain should stay within budget. Set Stage to Tracking: no limiter should appear.
 7. **Save and reload:** save your DAW project, close and reopen it. The chain and chat should come back.
 
+8. **Guitar amps (new in 0.2):** set Source to Electric guitar and ask for "a crunchy rock rhythm tone". Plugsalot only uses amp captures you own, so first add some: click a **NAM Amp** module, then **Add file** (any `.nam` file) or **TONE3000** (see below). Add a cabinet `.wav` impulse response to the **Cabinet IR** module the same way. Your files are kept in `Plugsalot/Captures` and `Plugsalot/Cabinets` in your user folder, and the AI is told their names so it can pick one.
+9. **TONE3000 (new in 0.2):** TONE3000 sign-in needs the app key from TONE3000, so it works only once that is built in (or set `PLUGSALOT_TONE3000_CLIENT_ID` in your environment before starting your DAW). Then click **TONE3000** on a NAM Amp module, sign in with the code shown (you approve it in your browser), pick a tone and model, and **Use this capture**. The creator's name and a link are shown under the capture. A2 and "lite" models use much less CPU than standard ones.
+
 ## 5. What to look out for
 
+- Amp captures are heavy on the CPU: a standard WaveNet capture can use 30% of a core on a slow machine. If you hear crackles, switch the CPU box to Light or pick a lighter (A2 or lite) model.
 - Does each first chain sound like a sensible starting point for that source?
 - Do the explanations make sense to you as a musician?
 - Any clicks, dropouts or level jumps when the chain changes?
 - Any reply where nothing happened and a note appeared instead? Copy the note text.
 - How long does a reply take on the free Gemini key?
 
-## Known limits in 0.1
+## Known limits
 
-- Modules: Console EQ (Dusk 4K EQ 2), Multi-Comp (Dusk), DeBess (Airwindows), TapeMachine 2 (Dusk), Plate Reverb (Dragonfly), Peak Limiter (x42). The LSP 8-band EQ and the sfizz drum sampler are in the catalogue but not in the plugin yet.
+- Modules: Console EQ (Dusk 4K EQ 2), Multi-Comp (Dusk), DeBess (Airwindows), TapeMachine 2 (Dusk), Plate Reverb (Dragonfly), Peak Limiter (x42), NAM Amp (Neural Amp Modeler) and Cabinet IR. The LSP 8-band EQ and the sfizz drum sampler are in the catalogue but not in the plugin yet.
 - Your API key is saved in a plain settings file in your user folder (not yet the system keychain).
 - Reverb is an insert with a dry/wet mix, not a send.
 - Bypassing a module that has latency briefly shifts timing; a latency-matched bypass is planned.
+- TONE3000 browsing is tested against a stand-in server only, not the real service, and the interface uses a text "TONE3000" heading until the official logo files are added.
+- Captures are mono and a capture runs at the model's own cost; the amp sums stereo input to mono.
 - No hosted AI yet; the Patreon tier comes later.
 - Builds are unsigned, so operating systems warn on first launch.
 - Multi-Comp's settings panel shows every mode's controls at once; only the chosen mode's controls have an effect.

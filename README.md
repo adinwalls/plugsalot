@@ -4,7 +4,7 @@ An open-source, cross-platform audio plugin with a built-in AI chat that builds 
 
 Plugsalot is **GPL-3.0-or-later**. Its processing modules are ported from high-quality open-source projects; see [THIRD_PARTY.md](THIRD_PARTY.md).
 
-> Status: **0.1 prototype.** A working plugin (VST3, AU, LV2, standalone) with the AI chat, six modules ported from open-source DSP, and the module catalogue it reads. The interface is a functional placeholder. To try it, see [docs/TESTING.md](docs/TESTING.md).
+> Status: **0.2 prototype.** A working plugin (VST3, AU, LV2, standalone) with the AI chat, eight modules ported from open-source DSP (including Neural Amp Modeler amps and cabinet impulse responses, with TONE3000 browsing), and the module catalogue it reads. The interface is a functional placeholder. To try it, see [docs/TESTING.md](docs/TESTING.md).
 
 ## The plugin
 

@@ -5,6 +5,11 @@
 // loudness normalisation, output level.
 #include "dsp/Module.h"
 #include "NAM/get_dsp.h"
+#include "NAM/container.h"
+#include "NAM/convnet.h"
+#include "NAM/linear.h"
+#include "NAM/lstm.h"
+#include "NAM/wavenet/model.h"
 #include "dsp/NoiseGate.h"
 #include "NeuralAmpModeler/ToneStack.h"
 #include <cmath>
@@ -15,6 +20,14 @@ namespace plugsalot
 
 namespace
 {
+// NAM registers each architecture (WaveNet, LSTM, ...) with a static initialiser in its own .cpp.
+// Taking the address of one function from each file makes the linker keep them even when the
+// code ends up in a static library, otherwise loading a capture fails with
+// "No config parser registered for architecture".
+using ConfigFn = std::unique_ptr<nam::ModelConfig> (*)(const nlohmann::json&, double);
+const ConfigFn architectureAnchors[] = { &nam::wavenet::create_config, &nam::convnet::create_config, &nam::lstm::create_config,
+                                         &nam::linear::create_config, &nam::container::create_config };
+
 struct NamState
 {
     std::unique_ptr<nam::DSP> model;
@@ -55,6 +68,9 @@ public:
 
     juce::String loadFile(const juce::File& file) override
     {
+        if (sampleRate < 0.0) // never true; the compiler cannot know, so the references stay
+            for (auto fn : architectureAnchors)
+                fn(nlohmann::json(), 0.0);
         delete retired.exchange(nullptr);
         if (! file.existsAsFile())
         {

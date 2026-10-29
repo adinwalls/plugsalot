@@ -4,6 +4,7 @@
 #include "ai/AiSession.h"
 #include "core/ChainValidator.h"
 #include "dsp/ChainEngine.h"
+#include "core/Tone3000.h"
 #include "dsp/InputAnalyser.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_audio_utils/juce_audio_utils.h>
@@ -72,6 +73,9 @@ public:
     bool hasApiKey() const { return loadProviderSettings().apiKey.isNotEmpty(); }
     juce::String lastModel() const { return lastModelUsed; }
 
+    // One TONE3000 session per process; its tokens are kept in the app-wide settings file.
+    std::shared_ptr<Tone3000> tone3000() const { return t3k; }
+
     std::function<void()> onNeedsApiKey; // editor shows the setup pop-up
 
 private:
@@ -81,6 +85,8 @@ private:
 
     const Catalogue& catalogue;
     ChainValidator validator;
+    std::shared_ptr<Tone3000> t3k;
+    std::shared_ptr<std::atomic<bool>> alive = std::make_shared<std::atomic<bool>>(true);
     ChainEngine engine;
     InputAnalyser analyser;
     AiSession ai;

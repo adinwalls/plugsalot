@@ -45,12 +45,32 @@ PlugsalotProcessor::PlugsalotProcessor()
             addChat(ChatMessage::From::Assistant, r.chain.explanation);
         }
     }
+    {
+        Tone3000::Tokens saved;
+        saved.access = settingsFile->getValue("t3kAccess");
+        saved.refresh = settingsFile->getValue("t3kRefresh");
+        saved.expiresAtMs = settingsFile->getValue("t3kExpires", "0").getLargeIntValue();
+        t3k = std::make_shared<Tone3000>(saved);
+        t3k->onTokensChanged = [this, flag = alive](const Tone3000::Tokens& t)
+        {   // may arrive from a worker thread; the settings file is used on the message thread
+            juce::MessageManager::callAsync([this, flag, t]
+            {
+                if (! flag->load())
+                    return;
+                settingsFile->setValue("t3kAccess", t.access);
+                settingsFile->setValue("t3kRefresh", t.refresh);
+                settingsFile->setValue("t3kExpires", juce::String(t.expiresAtMs));
+                settingsFile->saveIfNeeded();
+            });
+        };
+    }
     engine.onMessage = [this](const juce::String& m) { postNote(m); };
     startTimerHz(5);
 }
 
 PlugsalotProcessor::~PlugsalotProcessor()
 {
+    alive->store(false);
     stopTimer();
 }
 

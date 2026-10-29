@@ -13,6 +13,10 @@ CHAIN = {"schema_version": 1, "source": "Lead vocal", "stage": "mixing",
          "explanation": "Mock chain from the fallback model."}
 
 
+if os.environ.get("MOCK_CHAIN_FILE"):  # a guitar chain for screenshots / manual runs
+    CHAIN = json.load(open(os.environ["MOCK_CHAIN_FILE"]))
+
+
 class H(BaseHTTPRequestHandler):
     def _send(self, code, obj):
         body = json.dumps(obj).encode()

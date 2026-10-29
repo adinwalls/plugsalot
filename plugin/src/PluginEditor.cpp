@@ -14,6 +14,7 @@ PlugsalotEditor::PlugsalotEditor(PlugsalotProcessor& p)
     addAndMakeVisible(chatPanel);
 
     chainPanel.onSelect = [this](int slot) { moduleEditor.showSlot(slot); };
+    moduleEditor.onBrowseTone3000 = [this](int, std::function<void(const juce::String&)> done) { showTone3000(std::move(done)); };
     contextBar.settingsButton.onClick = [this] { showSettings(); };
     proc.onNeedsApiKey = [this]
     {
@@ -56,6 +57,19 @@ void PlugsalotEditor::showSettings()
     settings->setBounds(getLocalBounds());
 }
 
+void PlugsalotEditor::showTone3000(std::function<void(const juce::String&)> picked)
+{
+    tone3000Dialog = std::make_unique<Tone3000Dialog>(proc);
+    juce::Component::SafePointer<PlugsalotEditor> safeThis(this);
+    tone3000Dialog->onPicked = std::move(picked);
+    tone3000Dialog->onClose = [safeThis]
+    {
+        juce::MessageManager::callAsync([sp = safeThis] { if (sp != nullptr) sp->tone3000Dialog.reset(); });
+    };
+    addAndMakeVisible(*tone3000Dialog);
+    tone3000Dialog->setBounds(getLocalBounds());
+}
+
 void PlugsalotEditor::refreshStatus()
 {
     auto s = proc.loadProviderSettings();
@@ -95,6 +109,8 @@ void PlugsalotEditor::resized()
     chatPanel.setBounds(r);
     if (settings != nullptr)
         settings->setBounds(getLocalBounds());
+    if (tone3000Dialog != nullptr)
+        tone3000Dialog->setBounds(getLocalBounds());
 }
 
 } // namespace plugsalot

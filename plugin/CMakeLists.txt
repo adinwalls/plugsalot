@@ -179,6 +179,7 @@ target_sources(Plugsalot PRIVATE
     src/ui/ModuleEditor.cpp
     src/ui/ContextBar.cpp
     src/ui/SettingsDialog.cpp
+    src/ui/Tone3000Dialog.cpp
     src/ui/LinuxFocus.cpp
 )
 target_include_directories(Plugsalot PRIVATE src)
