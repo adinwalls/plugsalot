@@ -50,6 +50,9 @@ public:
     bool isAiBusy() const { return ai.isBusy(); }
     void setManualParam(int slot, const juce::String& paramId, const juce::var& value);
     void setManualBypass(int slot, bool bypass);
+    // Choose the capture / impulse response (library file name, empty for none) for a slot.
+    void setSlotFile(int slot, const juce::String& fileName);
+    void postNote(const juce::String& text); // a system line in the chat
     void removeSlot(int slot);
     void undo();
     bool canUndo() const { return ! undoStack.empty(); }

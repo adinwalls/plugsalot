@@ -24,6 +24,13 @@ struct Library
     // Returns the library file name, or empty on failure.
     static juce::String import(const juce::String& kind, const juce::File& source);
 
+    // A fresh, safe library file for a download called `wantedName` (no extension needed).
+    static juce::File newFileFor(const juce::String& kind, const juce::String& wantedName);
+
+    // Credit for a file that came from TONE3000: tone, creator, licence, link. Void when none.
+    static void writeAttribution(const juce::File& libraryFile, const juce::var& info);
+    static juce::var attribution(const juce::String& kind, const juce::String& name);
+
     static juce::String extensionFor(const juce::String& kind) { return kind == "nam" ? ".nam" : ".wav"; }
 };
 

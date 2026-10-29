@@ -55,6 +55,10 @@ else()
     target_compile_options(plugsalot_dragonfly PRIVATE -w)
 endif()
 
+# TONE3000 publishable key (client id). Safe to ship: it only identifies the app. Leave empty
+# for builds without TONE3000, or set PLUGSALOT_TONE3000_CLIENT_ID in the environment at run time.
+set(PLUGSALOT_TONE3000_CLIENT_ID "" CACHE STRING "TONE3000 publishable key compiled into the plugin")
+
 # Neural Amp Modeler Core, its tone stack, AudioDSPTools and Eigen, compiled unmodified.
 # The NAM plugin's ToneStack includes "../AudioDSPTools/dsp/...", so two forwarding headers
 # in the build directory point those paths at the vendored copy.
@@ -118,6 +122,7 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/core/ChainState.cpp
     src/core/ChainValidator.cpp
     src/core/Library.cpp
+    src/core/Tone3000.cpp
     src/dsp/ChainEngine.cpp
     src/dsp/ModuleFactory.cpp
     src/dsp/modules/MultiCompModule.cpp
@@ -185,6 +190,7 @@ target_compile_definitions(Plugsalot PUBLIC
     JUCE_DISPLAY_SPLASH_SCREEN=0
     JUCE_REPORT_APP_USAGE=0
     PLUGSALOT_VERSION="${PROJECT_VERSION}"
+    PLUGSALOT_TONE3000_CLIENT_ID="${PLUGSALOT_TONE3000_CLIENT_ID}"
 )
 
 target_link_libraries(Plugsalot

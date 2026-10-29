@@ -29,7 +29,7 @@
     "nam",
     "distortion"
   ],
-  "cpu_points": null,
+  "cpu_points": 8,
   "latency": {
     "type": "none"
   },
@@ -119,7 +119,8 @@
     "Parameters are written by hand: they drive Neural Amp Modeler Core (the capture), the NAM plugin's tone stack and AudioDSPTools' noise gate, not plugin ports.",
     "The capture itself is a .nam file chosen from the user's library (or TONE3000); the AI picks it by file name through the slot's 'file' field and never invents one.",
     "With no capture loaded the module passes audio through unchanged.",
-    "CPU depends on the capture's architecture; the placeholder cost applies until measured.",
-    "Captures are mono; stereo input is summed to mono and the result is sent to both channels."
-  ]
+    "Captures are mono; stereo input is summed to mono and the result is sent to both channels.",
+    "CPU: Neural Amp Modeler Core is the heaviest module. The A2 example capture used 15% of one core and the standard WaveNet example 31% at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 8 points is typical for a light capture and heavy captures cost more (capped at 10)."
+  ],
+  "cpu_measured": true
 }

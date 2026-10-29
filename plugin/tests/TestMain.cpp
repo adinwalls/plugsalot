@@ -7,6 +7,7 @@
 #include "ai/AiSession.h"
 #include "core/ChainValidator.h"
 #include "core/Library.h"
+#include "core/Tone3000.h"
 #include "dsp/ChainEngine.h"
 #include <juce_events/juce_events.h>
 #include <chrono>
@@ -347,6 +348,81 @@ static void testReplyParsing(const Catalogue& cat)
     check(prose.kind == AiOutcome::Kind::Error && prose.message.contains("tracking"), "JSON found inside prose, tracking rule enforced");
 }
 
+// Needs tests/mock_tone3000.py running and PLUGSALOT_TONE3000_BASE pointing at it.
+static void testTone3000(const Catalogue& cat)
+{
+    if (juce::SystemStats::getEnvironmentVariable("PLUGSALOT_TONE3000_BASE", {}).isEmpty())
+    {
+        std::cout << "TONE3000 test skipped (start plugin/tests/mock_tone3000.py and set PLUGSALOT_TONE3000_BASE)\n";
+        return;
+    }
+    std::cout << "TONE3000 client (against the stand-in server)\n";
+    auto tmp = juce::File::getSpecialLocation(juce::File::tempDirectory).getChildFile("plugsalot-t3k-lib");
+    tmp.deleteRecursively();
+    tmp.createDirectory();
+#if JUCE_WINDOWS
+    _putenv_s("PLUGSALOT_LIBRARY", tmp.getFullPathName().toRawUTF8());
+    _putenv_s("PLUGSALOT_TONE3000_CLIENT_ID", "pk_test");
+#else
+    setenv("PLUGSALOT_LIBRARY", tmp.getFullPathName().toRawUTF8(), 1);
+    setenv("PLUGSALOT_TONE3000_CLIENT_ID", "pk_test", 1);
+#endif
+    check(Tone3000::configured(), "client id is picked up");
+
+    Tone3000 t3k;
+    int tokenEvents = 0;
+    t3k.onTokensChanged = [&](const Tone3000::Tokens&) { ++tokenEvents; };
+    std::vector<Tone3000::Tone> tones;
+    int pages = 0;
+    check(! t3k.list("trending", {}, {}, 1, tones, pages).ok, "lists need a sign-in first");
+
+    Tone3000::DeviceCode code;
+    auto r = t3k.requestDeviceCode(code);
+    check(r.ok && code.userCode == "ABCD-1234" && code.verificationUriComplete.contains("activate"), "device code requested: " + code.userCode);
+    std::atomic<bool> cancel { false };
+    r = t3k.waitForApproval(code, cancel);
+    check(r.ok && t3k.signedIn() && tokenEvents == 1, "sign-in completes after the user approves (pending is polled through)");
+
+    r = t3k.list("trending", {}, {}, 1, tones, pages);
+    check(r.ok && tones.size() == 2 && tones[0].title == "Plexi Crunch" && tones[0].creator == "tonesmith"
+              && tones[0].avatarUrl.isNotEmpty() && tones[0].license == "cc-by" && tones[1].creator == "Pedal Head",
+          "trending list parsed with creator name, avatar and licence");
+    r = t3k.list("favorited", {}, "plexi", 1, tones, pages);
+    check(r.ok && tones.size() == 1, "favorites search by title");
+    r = t3k.list("downloaded", "pedal", {}, 1, tones, pages);
+    check(r.ok && tones.size() == 1 && tones[0].gear == "pedal", "gear filter");
+
+    std::vector<Tone3000::Model> models;
+    r = t3k.models("101", models);
+    check(r.ok && models.size() == 2 && models[0].architecture == "A2" && models[1].architecture == "A1", "models listed with architectures");
+
+    auto tk = t3k.tokens();
+    tk.expiresAtMs = 0;
+    Tone3000 expired(tk);
+    expired.onTokensChanged = [&](const Tone3000::Tokens&) { ++tokenEvents; };
+    r = expired.list("latest", {}, {}, 1, tones, pages);
+    check(r.ok && tokenEvents == 2, "an expired access token is refreshed automatically");
+
+    auto dest = Library::newFileFor("nam", "Plexi Crunch - standard (tonesmith)");
+    r = t3k.download(models[0], dest);
+    check(r.ok && dest.existsAsFile() && dest.getSize() > 100, "model downloads into the library");
+    check(Library::list("nam").contains(dest.getFileName()), "downloaded model shows in the library list");
+    check(Library::newFileFor("nam", "../../evil/..\\x").getParentDirectory() == Library::folder("nam"), "download names cannot leave the library folder");
+
+    auto m = createModule(*cat.find("nam_amp"));
+    m->prepare(48000.0, 256);
+    const auto msg = m->loadFile(dest);
+    check(msg.isEmpty() || msg.contains("trained at"), "the downloaded capture loads in NAM Amp");
+
+    Tone3000 bad(Tone3000::Tokens{ "old", "wrong-refresh", 0 });
+    r = bad.list("trending", {}, {}, 1, tones, pages);
+    check(! r.ok && ! bad.signedIn() && r.error.contains("sign in"), "a dead refresh token signs the user out with a clear message");
+
+    t3k.signOut();
+    check(! t3k.signedIn(), "sign-out clears the tokens");
+    tmp.deleteRecursively();
+}
+
 static void testLive(const Catalogue& cat)
 {
     ProviderSettings ps;
@@ -383,6 +459,7 @@ int main(int argc, char* argv[])
     testEngine(cat);
     testFileModules(cat, juce::File(PLUGSALOT_SOURCE_DIR "/plugin/vendor/nam-core/example_models"));
     testReplyParsing(cat);
+    testTone3000(cat);
     testLive(cat);
 
     std::cout << (failures == 0 ? "\nAll tests passed\n" : "\n" + std::to_string(failures) + " test(s) failed\n");

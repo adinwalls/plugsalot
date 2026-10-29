@@ -31,8 +31,8 @@
     "ir",
     "guitar"
   ],
-  "cpu_points": null,
-  "cpu_measured": false,
+  "cpu_points": 1,
+  "cpu_measured": true,
   "latency": {
     "type": "none"
   },
@@ -82,6 +82,7 @@
   "notes": [
     "The impulse response is a .wav file chosen from the user's library; the AI picks it by file name through the slot's 'file' field.",
     "With no impulse response loaded the module passes audio through unchanged.",
-    "AudioDSPTools limits the response to 8192 taps and resamples it to the host rate."
+    "AudioDSPTools limits the response to 8192 taps and resamples it to the host rate.",
+    "CPU: a 512-tap response with two filters is under 1% of one core, so the minimum of 1 point applies."
   ]
 }

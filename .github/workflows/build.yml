@@ -65,6 +65,9 @@ jobs:
             echo "Busy-model fallback against a stand-in Gemini server"
             python3 plugin/tests/mock_gemini.py & sleep 2
             PLUGSALOT_GEMINI_BASE=http://127.0.0.1:8765 PLUGSALOT_GEMINI_KEY=good-key "$T" "$GITHUB_WORKSPACE/catalogue/examples"
+            echo "TONE3000 sign-in, lists and download against a stand-in server"
+            python3 plugin/tests/mock_tone3000.py 8766 "$GITHUB_WORKSPACE/plugin/vendor/nam-core/example_models/A2.nam" & sleep 2
+            PLUGSALOT_TONE3000_BASE=http://127.0.0.1:8766 "$T" "$GITHUB_WORKSPACE/catalogue/examples"
           fi
 
       - name: Package

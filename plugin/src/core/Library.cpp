@@ -34,6 +34,37 @@ juce::File Library::resolve(const juce::String& kind, const juce::String& name)
     return folder(kind).getChildFile(name);
 }
 
+juce::File Library::newFileFor(const juce::String& kind, const juce::String& wantedName)
+{
+    auto base = wantedName.removeCharacters("/\\:*?\"<>|\r\n\t").trim();
+    while (base.contains(".."))
+        base = base.replace("..", ".");
+    base = base.trimCharactersAtStart(". ").substring(0, 110).trim();
+    if (base.endsWithIgnoreCase(extensionFor(kind)))
+        base = base.dropLastCharacters(extensionFor(kind).length());
+    if (base.isEmpty())
+        base = "capture";
+    auto dir = folder(kind);
+    auto f = dir.getChildFile(base + extensionFor(kind));
+    for (int n = 2; f.exists() && n < 1000; ++n)
+        f = dir.getChildFile(base + " " + juce::String(n) + extensionFor(kind));
+    return f;
+}
+
+void Library::writeAttribution(const juce::File& f, const juce::var& info)
+{
+    f.getSiblingFile(f.getFileName() + ".source.json").replaceWithText(juce::JSON::toString(info, false));
+}
+
+juce::var Library::attribution(const juce::String& kind, const juce::String& name)
+{
+    auto f = resolve(kind, name);
+    if (f == juce::File())
+        return {};
+    auto side = f.getSiblingFile(f.getFileName() + ".source.json");
+    return side.existsAsFile() ? juce::JSON::parse(side) : juce::var();
+}
+
 juce::String Library::import(const juce::String& kind, const juce::File& source)
 {
     if (! source.existsAsFile() || ! source.hasFileExtension(extensionFor(kind).substring(1)))

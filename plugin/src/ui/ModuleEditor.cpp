@@ -1,5 +1,6 @@
 // Plugsalot - GPL-3.0-or-later
 #include "ModuleEditor.h"
+#include "core/Library.h"
 
 namespace plugsalot
 {
@@ -25,6 +26,8 @@ void ModuleEditor::showSlot(int s)
         if (auto* spec = Catalogue::embedded().find(cs.moduleId))
         {
             title = spec->name;
+            if (spec->fileKind.isNotEmpty())
+                addFileRow(*spec, cs.file);
             for (auto& p : spec->params)
             {
                 auto* c = controls.add(new Control());
@@ -94,6 +97,85 @@ void ModuleEditor::showSlot(int s)
     }
     resized();
     repaint();
+}
+
+void ModuleEditor::addFileRow(const ModuleSpec& spec, const juce::String& current)
+{
+    const bool isNam = spec.fileKind == "nam";
+    auto* c = controls.add(new Control());
+    c->label.setText(isNam ? "Capture" : "Cabinet", juce::dontSendNotification);
+    c->label.setColour(juce::Label::textColourId, theme::text);
+    c->label.setFont(juce::FontOptions(12.5f));
+    c->label.setTooltip(isNam ? "The amp or pedal capture (.nam) this module plays through."
+                              : "The cabinet impulse response (.wav) this module convolves with.");
+
+    // A combo box plus an "Add file" button, laid out inside one component.
+    struct Row final : public juce::Component
+    {
+        juce::ComboBox box;
+        juce::TextButton add { "Add file" };
+        juce::TextButton browse { "TONE3000" };
+        void resized() override
+        {
+            auto r = getLocalBounds();
+            if (browse.isVisible()) { browse.setBounds(r.removeFromRight(78)); r.removeFromRight(4); }
+            add.setBounds(r.removeFromRight(66));
+            r.removeFromRight(4);
+            box.setBounds(r);
+        }
+    };
+    auto row = std::make_unique<Row>();
+    const int index = slot;
+    const auto kind = spec.fileKind;
+    auto* raw = row.get();
+    auto fill = [raw, kind](const juce::String& selected)
+    {
+        raw->box.clear(juce::dontSendNotification);
+        raw->box.addItem("None (pass audio through)", 1);
+        auto names = Library::list(kind);
+        for (int i = 0; i < names.size(); ++i)
+            raw->box.addItem(names[i], i + 2);
+        const int at = names.indexOf(selected);
+        raw->box.setSelectedId(at >= 0 ? at + 2 : 1, juce::dontSendNotification);
+    };
+    fill(current);
+    row->box.onChange = [this, raw, index, kind]
+    {
+        const int id = raw->box.getSelectedId();
+        proc.setSlotFile(index, id <= 1 ? juce::String() : Library::list(kind)[id - 2]);
+    };
+    row->add.onClick = [this, index, kind]
+    {
+        const auto pattern = kind == "nam" ? "*.nam" : "*.wav";
+        chooser = std::make_unique<juce::FileChooser>(kind == "nam" ? "Choose a NAM capture" : "Choose a cabinet impulse response",
+                                                      juce::File::getSpecialLocation(juce::File::userHomeDirectory), pattern);
+        chooser->launchAsync(juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                             [safe = juce::Component::SafePointer<ModuleEditor>(this), index, kind](const juce::FileChooser& fc)
+                             {
+                                 if (safe == nullptr)
+                                     return;
+                                 const auto name = Library::import(kind, fc.getResult());
+                                 if (name.isNotEmpty())
+                                     safe->proc.setSlotFile(index, name); // the panel rebuilds and lists it
+                             });
+    };
+    row->browse.setVisible(isNam && onBrowseTone3000 != nullptr);
+    row->browse.onClick = [this, index]
+    {
+        if (onBrowseTone3000)
+            onBrowseTone3000(index, [safe = juce::Component::SafePointer<ModuleEditor>(this), index](const juce::String& name)
+                             {
+                                 if (safe != nullptr && name.isNotEmpty())
+                                     safe->proc.setSlotFile(index, name);
+                             });
+    };
+    row->addAndMakeVisible(row->box);
+    row->addAndMakeVisible(row->add);
+    row->addAndMakeVisible(row->browse);
+    c->widget = std::move(row);
+    c->addAndMakeVisible(c->label);
+    c->addAndMakeVisible(*c->widget);
+    content.addAndMakeVisible(c);
 }
 
 void ModuleEditor::paint(juce::Graphics& g)

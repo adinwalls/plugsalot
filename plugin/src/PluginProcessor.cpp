@@ -45,6 +45,7 @@ PlugsalotProcessor::PlugsalotProcessor()
             addChat(ChatMessage::From::Assistant, r.chain.explanation);
         }
     }
+    engine.onMessage = [this](const juce::String& m) { postNote(m); };
     startTimerHz(5);
 }
 
@@ -209,6 +210,21 @@ void PlugsalotProcessor::setManualParam(int slot, const juce::String& paramId, c
         return;
     chain.slots[(size_t) slot].params.set(paramId, value);
     engine.setParam(slot, paramId, value);
+}
+
+void PlugsalotProcessor::setSlotFile(int slot, const juce::String& fileName)
+{
+    if (slot < 0 || slot >= (int) chain.slots.size() || chain.slots[(size_t) slot].file == fileName)
+        return;
+    auto c = chain;
+    c.slots[(size_t) slot].file = fileName;
+    applyChain(std::move(c), true);
+}
+
+void PlugsalotProcessor::postNote(const juce::String& text)
+{
+    addChat(ChatMessage::From::System, text);
+    sendChangeMessage();
 }
 
 void PlugsalotProcessor::setManualBypass(int slot, bool bypass)

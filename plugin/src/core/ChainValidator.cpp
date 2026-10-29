@@ -1,5 +1,6 @@
 // Plugsalot - GPL-3.0-or-later
 #include "ChainValidator.h"
+#include "Library.h"
 
 namespace plugsalot
 {
@@ -99,6 +100,9 @@ ValidationResult ChainValidator::validate(ChainState chain, const juce::String& 
                 r.errors.add(where + "'file' must be a plain file name from the library list.");
             else if (! slot.file.endsWithIgnoreCase(ext))
                 r.errors.add(where + "'" + slot.file + "' is not a " + ext + " file.");
+            else if (! Library::list(mod->fileKind).contains(slot.file))
+                r.errors.add(where + "'" + slot.file + "' is not in the library. Available: "
+                             + (Library::list(mod->fileKind).isEmpty() ? juce::String("none") : Library::list(mod->fileKind).joinIntoString("; ")) + ".");
         }
 
         if (chain.stage == "tracking")

@@ -1,6 +1,7 @@
 // Plugsalot - GPL-3.0-or-later
 #include "PromptBuilder.h"
 #include "PlugsalotData.h"
+#include "core/Library.h"
 
 namespace plugsalot
 {
@@ -34,6 +35,10 @@ juce::String PromptBuilder::userTurn(const SessionContext& ctx, const AudioAnaly
     juce::String s;
     s << "Context: source = " << ctx.source << "; stage = " << ctx.stage << "; style = " << ctx.style
       << "; character = " << ctx.character << "; CPU mode = " << ctx.cpuMode << ".\n";
+    const auto captures = Library::list("nam"), cabinets = Library::list("ir");
+    s << "Library (exact file names you may use in \"file\"): captures for nam_amp: "
+      << (captures.isEmpty() ? juce::String("none installed") : "[" + captures.joinIntoString("; ") + "]")
+      << "; cabinets for cab_ir: " << (cabinets.isEmpty() ? juce::String("none installed") : "[" + cabinets.joinIntoString("; ") + "]") << ".\n";
     s << "Audio: " << analysis.describe() << "\n";
     if (current != nullptr && ! current->isEmpty())
         s << "Current chain (module_index counts from 0):\n" << juce::JSON::toString(current->toVar(), true) << "\n";
