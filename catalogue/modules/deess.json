@@ -37,6 +37,30 @@
   "channels": [
     "stereo"
   ],
+  "maker": "Airwindows",
+  "tape": "TAMES HARSH S'S",
+  "knobs": [
+    {
+      "param": "intensity",
+      "label": "INTENSE",
+      "colour": "red"
+    },
+    {
+      "param": "sharpness",
+      "label": "SHARP",
+      "colour": "blue"
+    },
+    {
+      "param": "depth",
+      "label": "DEPTH",
+      "colour": "red"
+    },
+    {
+      "param": "filter",
+      "label": "FILTER",
+      "colour": "blue"
+    }
+  ],
   "params": [
     {
       "id": "intensity",

@@ -40,6 +40,11 @@ struct ParamSpec
     juce::String format(const juce::var& value) const;
 };
 
+struct KnobSpec
+{
+    juce::String paramId, label, colour;   // colour: blue, red, grey, cream or black
+};
+
 struct ModuleSpec
 {
     juce::String id, name, category, kind, purpose;
@@ -48,6 +53,10 @@ struct ModuleSpec
     bool trackingSafe = true;
     juce::NamedValueSet trackingOverrides;
     juce::String licence, upstreamName;
+    juce::String maker, tape;     // short upstream name and the masking-tape label for the faceplate
+    std::vector<KnobSpec> knobs;
+    juce::String knobModeParam;   // when set, knobsByMode picks the knob set by this enum parameter
+    std::map<juce::String, std::vector<KnobSpec>> knobsByMode;
     juce::String fileKind;        // "nam" or "ir" when the module loads a file from the library
     std::vector<ParamSpec> params;      // what the AI may set
     std::vector<ParamSpec> rawParams;   // everything upstream declares (for defaults)
@@ -55,6 +64,8 @@ struct ModuleSpec
     juce::var json;                     // the full catalogue entry
 
     const ParamSpec* findParam(const juce::String& paramId) const;
+    // The faceplate knobs for the given settings (a compressor shows its current mode's controls).
+    const std::vector<KnobSpec>& knobsFor(const juce::NamedValueSet& settings) const;
     int cpuCost() const;                // measured points, or the placeholder
 };
 

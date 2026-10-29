@@ -43,6 +43,40 @@
     "stereo"
   ],
   "file_kind": "nam",
+  "maker": "Neural Amp Modeler",
+  "tape": "THE AMP: YOUR GUITAR TONE",
+  "knobs": [
+    {
+      "param": "input_gain",
+      "label": "INPUT",
+      "colour": "grey"
+    },
+    {
+      "param": "gate_threshold",
+      "label": "GATE",
+      "colour": "red"
+    },
+    {
+      "param": "bass",
+      "label": "BASS",
+      "colour": "blue"
+    },
+    {
+      "param": "mid",
+      "label": "MID",
+      "colour": "blue"
+    },
+    {
+      "param": "treble",
+      "label": "TREBLE",
+      "colour": "blue"
+    },
+    {
+      "param": "output_level",
+      "label": "OUTPUT",
+      "colour": "grey"
+    }
+  ],
   "params": [
     {
       "upstream_id": "input_gain",

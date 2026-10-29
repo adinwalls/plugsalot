@@ -116,6 +116,21 @@ const ParamSpec* ModuleSpec::findParam(const juce::String& paramId) const
     return nullptr;
 }
 
+const std::vector<KnobSpec>& ModuleSpec::knobsFor(const juce::NamedValueSet& settings) const
+{
+    if (knobModeParam.isNotEmpty())
+    {
+        auto mode = settings.getWithDefault(knobModeParam, {}).toString();
+        if (mode.isEmpty())
+            if (auto* p = findParam(knobModeParam))
+                mode = p->defaultValue.toString();
+        auto it = knobsByMode.find(mode);
+        if (it != knobsByMode.end())
+            return it->second;
+    }
+    return knobs;
+}
+
 int ModuleSpec::cpuCost() const
 {
     return cpuPoints.isInt() || cpuPoints.isInt64() || cpuPoints.isDouble() ? (int) cpuPoints : Catalogue::unknownCpuCost;
@@ -141,6 +156,23 @@ void Catalogue::add(const juce::var& j, const juce::var& raw)
     m.upstreamName = src.getProperty("upstream_name", {}).toString();
     m.presets = j.getProperty("presets", {});
     m.fileKind = j.getProperty("file_kind", {}).toString();
+    m.maker = j.getProperty("maker", m.upstreamName).toString();
+    m.tape = j.getProperty("tape", {}).toString();
+    auto readKnobs = [](const juce::var& v)
+    {
+        std::vector<KnobSpec> out;
+        if (auto* arr = v.getArray())
+            for (auto& k : *arr)
+                out.push_back({ k.getProperty("param", {}).toString(), k.getProperty("label", {}).toString(),
+                                k.getProperty("colour", "grey").toString() });
+        return out;
+    };
+    m.knobs = readKnobs(j.getProperty("knobs", {}));
+    auto byMode = j.getProperty("knobs_by_mode", {});
+    m.knobModeParam = byMode.getProperty("param", {}).toString();
+    if (auto* modes = byMode.getProperty("modes", {}).getDynamicObject())
+        for (auto& nv : modes->getProperties())
+            m.knobsByMode[nv.name.toString()] = readKnobs(nv.value);
 
     if (auto* arr = j.getProperty("params", {}).getArray())
         for (auto& p : *arr)
@@ -230,6 +262,8 @@ juce::String Catalogue::toPromptJson() const
         if (m.avoidFor.size() > 0)
             o->setProperty("avoid_for", m.json.getProperty("avoid_for", {}));
         o->setProperty("tracking_safe", m.trackingSafe);
+        if (m.fileKind.isNotEmpty())
+            o->setProperty("file_kind", m.fileKind);
         o->setProperty("cpu_points", m.cpuCost());
 
         juce::Array<juce::var> ps;

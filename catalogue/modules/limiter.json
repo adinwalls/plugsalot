@@ -36,6 +36,25 @@
     "mono",
     "stereo"
   ],
+  "maker": "x42",
+  "tape": "CATCHES THE PEAKS",
+  "knobs": [
+    {
+      "param": "input_gain",
+      "label": "INPUT",
+      "colour": "grey"
+    },
+    {
+      "param": "ceiling",
+      "label": "CEILING",
+      "colour": "red"
+    },
+    {
+      "param": "release",
+      "label": "RELEASE",
+      "colour": "red"
+    }
+  ],
   "params": [
     {
       "id": "input_gain",

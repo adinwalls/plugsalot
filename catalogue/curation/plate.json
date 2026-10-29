@@ -92,5 +92,34 @@
     "Defaults come from the upstream default preset, Bright Plate.",
     "CPU: 0.43% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ],
-  "cpu_measured": true
+  "cpu_measured": true,
+  "maker": "Dragonfly",
+  "tape": "SPACE AROUND IT",
+  "knobs": [
+    {
+      "param": "decay",
+      "label": "DECAY",
+      "colour": "cream"
+    },
+    {
+      "param": "predelay",
+      "label": "PRE-DLY",
+      "colour": "cream"
+    },
+    {
+      "param": "width",
+      "label": "WIDTH",
+      "colour": "cream"
+    },
+    {
+      "param": "low_cut",
+      "label": "LOW CUT",
+      "colour": "black"
+    },
+    {
+      "param": "wet",
+      "label": "MIX",
+      "colour": "cream"
+    }
+  ]
 }

@@ -46,6 +46,14 @@
       }
     },
     "tracking_safe": { "type": "boolean" },
+    "maker": { "type": "string", "description": "Short upstream name shown on the module's faceplate." },
+    "tape": { "type": "string", "description": "The masking-tape label on the module, in plain words." },
+    "knobs": { "type": "array", "items": { "$ref": "#/$defs/knob" }, "description": "The faceplate knobs, in order." },
+    "knobs_by_mode": {
+      "type": "object", "additionalProperties": false, "required": ["param", "modes"],
+      "properties": { "param": { "type": "string" }, "modes": { "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/knob" } } } },
+      "description": "Faceplate knobs that depend on an enum parameter (a compressor's mode)."
+    },
     "file_kind": { "enum": ["nam", "ir"], "description": "The module needs a file from the user's library: a NAM capture or a cabinet impulse response." },
     "tracking_overrides": {
       "description": "Parameter values forced by the validator when stage = tracking, to keep latency at zero.",
@@ -77,6 +85,14 @@
     "notes": { "type": "array", "items": { "type": "string" } }
   },
   "$defs": {
+    "knob": {
+      "type": "object", "additionalProperties": false, "required": ["param", "label", "colour"],
+      "properties": {
+        "param": { "type": "string" },
+        "label": { "type": "string", "maxLength": 10 },
+        "colour": { "enum": ["blue", "red", "grey", "cream", "black"], "description": "blue tone, red dynamics, grey level, cream time and space, black filters" }
+      }
+    },
     "param": {
       "type": "object",
       "additionalProperties": false,

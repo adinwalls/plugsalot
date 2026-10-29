@@ -42,6 +42,35 @@
   "channels": [
     "stereo"
   ],
+  "maker": "Dragonfly",
+  "tape": "SPACE AROUND IT",
+  "knobs": [
+    {
+      "param": "decay",
+      "label": "DECAY",
+      "colour": "cream"
+    },
+    {
+      "param": "predelay",
+      "label": "PRE-DLY",
+      "colour": "cream"
+    },
+    {
+      "param": "width",
+      "label": "WIDTH",
+      "colour": "cream"
+    },
+    {
+      "param": "low_cut",
+      "label": "LOW CUT",
+      "colour": "black"
+    },
+    {
+      "param": "wet",
+      "label": "MIX",
+      "colour": "cream"
+    }
+  ],
   "params": [
     {
       "id": "dry",

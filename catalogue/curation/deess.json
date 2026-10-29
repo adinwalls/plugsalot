@@ -62,5 +62,29 @@
     "Airwindopedia notes DeBess may not engage on prosumer interfaces or moving-coil mics whose top end is dull. Add a conventional frequency-band de-esser as a fallback for those recordings.",
     "CPU: 0.95% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ],
-  "cpu_measured": true
+  "cpu_measured": true,
+  "maker": "Airwindows",
+  "tape": "TAMES HARSH S'S",
+  "knobs": [
+    {
+      "param": "intensity",
+      "label": "INTENSE",
+      "colour": "red"
+    },
+    {
+      "param": "sharpness",
+      "label": "SHARP",
+      "colour": "blue"
+    },
+    {
+      "param": "depth",
+      "label": "DEPTH",
+      "colour": "red"
+    },
+    {
+      "param": "filter",
+      "label": "FILTER",
+      "colour": "blue"
+    }
+  ]
 }

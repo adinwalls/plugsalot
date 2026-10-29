@@ -66,5 +66,24 @@
     "CPU: 0.06% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1.",
     "Not offered while tracking: limiting individual tracks during recording hides clipping the performer should hear. Its lookahead is about 1.3 ms."
   ],
-  "cpu_measured": true
+  "cpu_measured": true,
+  "maker": "x42",
+  "tape": "CATCHES THE PEAKS",
+  "knobs": [
+    {
+      "param": "input_gain",
+      "label": "INPUT",
+      "colour": "grey"
+    },
+    {
+      "param": "ceiling",
+      "label": "CEILING",
+      "colour": "red"
+    },
+    {
+      "param": "release",
+      "label": "RELEASE",
+      "colour": "red"
+    }
+  ]
 }

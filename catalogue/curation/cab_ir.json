@@ -81,5 +81,24 @@
     "AudioDSPTools limits the response to 8192 taps and resamples it to the host rate.",
     "CPU: a 512-tap response with two filters is under 1% of one core, so the minimum of 1 point applies."
   ],
-  "cpu_measured": true
+  "cpu_measured": true,
+  "maker": "AudioDSPTools",
+  "tape": "THE SPEAKER CABINET",
+  "knobs": [
+    {
+      "param": "low_cut",
+      "label": "LOW CUT",
+      "colour": "black"
+    },
+    {
+      "param": "high_cut",
+      "label": "HIGH CUT",
+      "colour": "black"
+    },
+    {
+      "param": "level",
+      "label": "LEVEL",
+      "colour": "grey"
+    }
+  ]
 }

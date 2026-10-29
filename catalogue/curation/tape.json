@@ -104,5 +104,34 @@
     "TapeMachine 2 ships 20 calibrated factory presets (TapeMachinePresets.hpp); a preset extractor is a follow-up task.",
     "CPU: 14.48% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ],
-  "cpu_measured": true
+  "cpu_measured": true,
+  "maker": "Dusk Audio",
+  "tape": "WARMTH + GLUE",
+  "knobs": [
+    {
+      "param": "drive",
+      "label": "DRIVE",
+      "colour": "grey"
+    },
+    {
+      "param": "highpass",
+      "label": "LOW CUT",
+      "colour": "black"
+    },
+    {
+      "param": "wow",
+      "label": "WOW",
+      "colour": "cream"
+    },
+    {
+      "param": "flutter",
+      "label": "FLUTTER",
+      "colour": "cream"
+    },
+    {
+      "param": "output",
+      "label": "OUTPUT",
+      "colour": "grey"
+    }
+  ]
 }

@@ -209,5 +209,34 @@
     "Used as the prototype EQ while the LSP Parametric EQ port is pending.",
     "CPU: 1.27% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ],
-  "cpu_measured": true
+  "cpu_measured": true,
+  "maker": "Dusk Audio",
+  "tape": "TONE: CUT MUD, ADD AIR",
+  "knobs": [
+    {
+      "param": "hpf_hz",
+      "label": "HPF",
+      "colour": "black"
+    },
+    {
+      "param": "lf_gain",
+      "label": "LOW",
+      "colour": "blue"
+    },
+    {
+      "param": "lm_gain",
+      "label": "LO MID",
+      "colour": "blue"
+    },
+    {
+      "param": "hm_gain",
+      "label": "HI MID",
+      "colour": "blue"
+    },
+    {
+      "param": "hf_gain",
+      "label": "HIGH",
+      "colour": "blue"
+    }
+  ]
 }

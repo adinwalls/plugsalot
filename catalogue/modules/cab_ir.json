@@ -42,6 +42,25 @@
     "stereo"
   ],
   "file_kind": "ir",
+  "maker": "AudioDSPTools",
+  "tape": "THE SPEAKER CABINET",
+  "knobs": [
+    {
+      "param": "low_cut",
+      "label": "LOW CUT",
+      "colour": "black"
+    },
+    {
+      "param": "high_cut",
+      "label": "HIGH CUT",
+      "colour": "black"
+    },
+    {
+      "param": "level",
+      "label": "LEVEL",
+      "colour": "grey"
+    }
+  ],
   "params": [
     {
       "upstream_id": "low_cut",

@@ -122,5 +122,39 @@
     "Captures are mono; stereo input is summed to mono and the result is sent to both channels.",
     "CPU: Neural Amp Modeler Core is the heaviest module. The A2 example capture used 15% of one core and the standard WaveNet example 31% at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 8 points is typical for a light capture and heavy captures cost more (capped at 10)."
   ],
-  "cpu_measured": true
+  "cpu_measured": true,
+  "maker": "Neural Amp Modeler",
+  "tape": "THE AMP: YOUR GUITAR TONE",
+  "knobs": [
+    {
+      "param": "input_gain",
+      "label": "INPUT",
+      "colour": "grey"
+    },
+    {
+      "param": "gate_threshold",
+      "label": "GATE",
+      "colour": "red"
+    },
+    {
+      "param": "bass",
+      "label": "BASS",
+      "colour": "blue"
+    },
+    {
+      "param": "mid",
+      "label": "MID",
+      "colour": "blue"
+    },
+    {
+      "param": "treble",
+      "label": "TREBLE",
+      "colour": "blue"
+    },
+    {
+      "param": "output_level",
+      "label": "OUTPUT",
+      "colour": "grey"
+    }
+  ]
 }

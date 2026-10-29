@@ -249,5 +249,183 @@
     "Each mode has its own threshold scale, so switching mode means re-setting the compression amount.",
     "CPU: 3.70% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
   ],
-  "cpu_measured": true
+  "cpu_measured": true,
+  "maker": "Dusk Audio",
+  "tape": "EVENS OUT THE LEVEL",
+  "knobs": [
+    {
+      "param": "mix",
+      "label": "MIX",
+      "colour": "cream"
+    }
+  ],
+  "knobs_by_mode": {
+    "param": "mode",
+    "modes": {
+      "Opto": [
+        {
+          "param": "opto_peak_reduction",
+          "label": "PEAK RED",
+          "colour": "red"
+        },
+        {
+          "param": "opto_gain",
+          "label": "GAIN",
+          "colour": "grey"
+        },
+        {
+          "param": "mix",
+          "label": "MIX",
+          "colour": "cream"
+        }
+      ],
+      "FET": [
+        {
+          "param": "fet_input",
+          "label": "INPUT",
+          "colour": "grey"
+        },
+        {
+          "param": "fet_attack",
+          "label": "ATTACK",
+          "colour": "red"
+        },
+        {
+          "param": "fet_release",
+          "label": "RELEASE",
+          "colour": "red"
+        },
+        {
+          "param": "fet_output",
+          "label": "OUTPUT",
+          "colour": "grey"
+        },
+        {
+          "param": "mix",
+          "label": "MIX",
+          "colour": "cream"
+        }
+      ],
+      "VCA": [
+        {
+          "param": "vca_threshold",
+          "label": "THRESH",
+          "colour": "red"
+        },
+        {
+          "param": "vca_compression",
+          "label": "COMP",
+          "colour": "red"
+        },
+        {
+          "param": "vca_output",
+          "label": "OUTPUT",
+          "colour": "grey"
+        },
+        {
+          "param": "mix",
+          "label": "MIX",
+          "colour": "cream"
+        }
+      ],
+      "Bus": [
+        {
+          "param": "bus_threshold",
+          "label": "THRESH",
+          "colour": "red"
+        },
+        {
+          "param": "bus_makeup",
+          "label": "MAKEUP",
+          "colour": "grey"
+        },
+        {
+          "param": "mix",
+          "label": "MIX",
+          "colour": "cream"
+        }
+      ],
+      "Studio FET": [
+        {
+          "param": "fet_input",
+          "label": "INPUT",
+          "colour": "grey"
+        },
+        {
+          "param": "fet_attack",
+          "label": "ATTACK",
+          "colour": "red"
+        },
+        {
+          "param": "fet_release",
+          "label": "RELEASE",
+          "colour": "red"
+        },
+        {
+          "param": "fet_output",
+          "label": "OUTPUT",
+          "colour": "grey"
+        },
+        {
+          "param": "mix",
+          "label": "MIX",
+          "colour": "cream"
+        }
+      ],
+      "Studio VCA": [
+        {
+          "param": "studio_vca_threshold",
+          "label": "THRESH",
+          "colour": "red"
+        },
+        {
+          "param": "studio_vca_ratio",
+          "label": "RATIO",
+          "colour": "red"
+        },
+        {
+          "param": "studio_vca_attack",
+          "label": "ATTACK",
+          "colour": "red"
+        },
+        {
+          "param": "studio_vca_release",
+          "label": "RELEASE",
+          "colour": "red"
+        },
+        {
+          "param": "studio_vca_output",
+          "label": "OUTPUT",
+          "colour": "grey"
+        }
+      ],
+      "Digital": [
+        {
+          "param": "digital_threshold",
+          "label": "THRESH",
+          "colour": "red"
+        },
+        {
+          "param": "digital_ratio",
+          "label": "RATIO",
+          "colour": "red"
+        },
+        {
+          "param": "digital_attack",
+          "label": "ATTACK",
+          "colour": "red"
+        },
+        {
+          "param": "digital_release",
+          "label": "RELEASE",
+          "colour": "red"
+        },
+        {
+          "param": "digital_output",
+          "label": "OUTPUT",
+          "colour": "grey"
+        }
+      ]
+    }
+  }
 }

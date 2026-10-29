@@ -43,6 +43,35 @@
   "channels": [
     "stereo"
   ],
+  "maker": "Dusk Audio",
+  "tape": "WARMTH + GLUE",
+  "knobs": [
+    {
+      "param": "drive",
+      "label": "DRIVE",
+      "colour": "grey"
+    },
+    {
+      "param": "highpass",
+      "label": "LOW CUT",
+      "colour": "black"
+    },
+    {
+      "param": "wow",
+      "label": "WOW",
+      "colour": "cream"
+    },
+    {
+      "param": "flutter",
+      "label": "FLUTTER",
+      "colour": "cream"
+    },
+    {
+      "param": "output",
+      "label": "OUTPUT",
+      "colour": "grey"
+    }
+  ],
   "params": [
     {
       "id": "deck",
