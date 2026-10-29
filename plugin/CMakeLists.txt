@@ -55,18 +55,53 @@ else()
     target_compile_options(plugsalot_dragonfly PRIVATE -w)
 endif()
 
+# Neural Amp Modeler Core, its tone stack, AudioDSPTools and Eigen, compiled unmodified.
+# The NAM plugin's ToneStack includes "../AudioDSPTools/dsp/...", so two forwarding headers
+# in the build directory point those paths at the vendored copy.
+set(NAMDIR ${V}/nam-core)
+set(NAM_FWD ${CMAKE_CURRENT_BINARY_DIR}/nam_fwd)
+file(MAKE_DIRECTORY ${NAM_FWD}/stub)
+file(WRITE ${NAM_FWD}/AudioDSPTools/dsp/dsp.h "#include \"${V}/audiodsptools/dsp/dsp.h\"\n")
+file(WRITE ${NAM_FWD}/AudioDSPTools/dsp/RecursiveLinearFilter.h "#include \"${V}/audiodsptools/dsp/RecursiveLinearFilter.h\"\n")
+file(GLOB NAM_CORE_SOURCES ${NAMDIR}/NAM/*.cpp ${NAMDIR}/NAM/wavenet/*.cpp)
+# OBJECT, not STATIC: NAM registers its architectures with static initialisers that a static
+# archive would let the linker drop.
+add_library(plugsalot_nam OBJECT
+    ${NAM_CORE_SOURCES}
+    ${V}/audiodsptools/dsp/dsp.cpp
+    ${V}/audiodsptools/dsp/wav.cpp
+    ${V}/audiodsptools/dsp/NoiseGate.cpp
+    ${V}/audiodsptools/dsp/RecursiveLinearFilter.cpp
+    ${V}/audiodsptools/dsp/ImpulseResponse.cpp
+    ${V}/nam-plugin/NeuralAmpModeler/ToneStack.cpp
+)
+set_target_properties(plugsalot_nam PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED ON POSITION_INDEPENDENT_CODE ON)
+target_include_directories(plugsalot_nam PUBLIC
+    ${NAMDIR} ${NAMDIR}/Dependencies/nlohmann ${V}/eigen
+    ${V}/audiodsptools ${V}/nam-plugin ${NAM_FWD}/stub
+)
+if(MSVC)
+    target_compile_options(plugsalot_nam PRIVATE /W0 /bigobj /D_USE_MATH_DEFINES)
+else()
+    target_compile_options(plugsalot_nam PRIVATE -w)
+endif()
+
 # ---------------------------------------------------------------------------
 # Embedded data: the built catalogue, raw upstream parameter lists, AI guidelines
 # ---------------------------------------------------------------------------
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(m ${PLUGSALOT_MODULES})
     # Module and raw files share names; copy with prefixes so resource names are unique.
     configure_file(${CAT}/modules/${m}.json ${CMAKE_CURRENT_BINARY_DIR}/data/module_${m}.json COPYONLY)
-    configure_file(${CAT}/raw/${m}.json ${CMAKE_CURRENT_BINARY_DIR}/data/raw_${m}.json COPYONLY)
+    if(EXISTS ${CAT}/raw/${m}.json)
+        configure_file(${CAT}/raw/${m}.json ${CMAKE_CURRENT_BINARY_DIR}/data/raw_${m}.json COPYONLY)
+    else() # hand-written (manual) modules have no upstream parameter list
+        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/data/raw_${m}.json "{\"module\": \"${m}\", \"params\": []}\n")
+    endif()
     list(APPEND PLUGSALOT_DATA_FILES
         ${CMAKE_CURRENT_BINARY_DIR}/data/module_${m}.json
         ${CMAKE_CURRENT_BINARY_DIR}/data/raw_${m}.json)
@@ -82,6 +117,7 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/core/Catalogue.cpp
     src/core/ChainState.cpp
     src/core/ChainValidator.cpp
+    src/core/Library.cpp
     src/dsp/ChainEngine.cpp
     src/dsp/ModuleFactory.cpp
     src/dsp/modules/MultiCompModule.cpp
@@ -90,6 +126,8 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/PlateModule.cpp
     src/dsp/modules/LimiterModule.cpp
     src/dsp/modules/DeEssModule.cpp
+    src/dsp/modules/NamAmpModule.cpp
+    src/dsp/modules/CabIrModule.cpp
     src/ai/PromptBuilder.cpp
     src/ai/LlmClient.cpp
     src/ai/AiSession.cpp
@@ -154,6 +192,7 @@ target_link_libraries(Plugsalot
         PlugsalotData
         plugsalot_upstream_dsp
         plugsalot_dragonfly
+        plugsalot_nam
         juce::juce_audio_utils
         juce::juce_dsp
     PUBLIC
@@ -173,7 +212,7 @@ if(PLUGSALOT_BUILD_TESTS)
         JUCE_WEB_BROWSER=0 JUCE_USE_CURL=1 JUCE_STANDALONE_APPLICATION=1 PLUGSALOT_VERSION="${PROJECT_VERSION}"
         PLUGSALOT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
     target_link_libraries(PlugsalotTests PRIVATE
-        PlugsalotData plugsalot_upstream_dsp plugsalot_dragonfly
+        PlugsalotData plugsalot_upstream_dsp plugsalot_dragonfly plugsalot_nam
         juce::juce_core juce::juce_events juce::juce_audio_basics juce::juce_data_structures
         juce::juce_recommended_config_flags)
 endif()

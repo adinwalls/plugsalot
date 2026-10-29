@@ -46,6 +46,7 @@
       }
     },
     "tracking_safe": { "type": "boolean" },
+    "file_kind": { "enum": ["nam", "ir"], "description": "The module needs a file from the user's library: a NAM capture or a cabinet impulse response." },
     "tracking_overrides": {
       "description": "Parameter values forced by the validator when stage = tracking, to keep latency at zero.",
       "type": "object"

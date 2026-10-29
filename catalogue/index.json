@@ -2,6 +2,34 @@
   "schema_version": 1,
   "modules": [
     {
+      "id": "cab_ir",
+      "name": "Cabinet IR",
+      "kind": "effect",
+      "category": "amp",
+      "purpose": "Convolves the signal with a cabinet or speaker impulse response, with low and high cut filters; the speaker half of an amp capture.",
+      "good_for": [
+        "electric guitar",
+        "bass guitar",
+        "guitar DI"
+      ],
+      "cpu_points": null,
+      "tracking_safe": true
+    },
+    {
+      "id": "nam_amp",
+      "name": "NAM Amp",
+      "kind": "effect",
+      "category": "amp",
+      "purpose": "Neural capture of a real guitar amp, pedal or bass rig, played through Neural Amp Modeler, with a noise gate and bass/mid/treble tone stack around it.",
+      "good_for": [
+        "electric guitar",
+        "bass guitar",
+        "guitar DI"
+      ],
+      "cpu_points": null,
+      "tracking_safe": true
+    },
+    {
       "id": "tape",
       "name": "TapeMachine 2",
       "kind": "effect",

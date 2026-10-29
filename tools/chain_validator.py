@@ -58,6 +58,19 @@ def check_param(module: dict, pid: str, value, where: str) -> list[str]:
     return []
 
 
+def check_file(mod: dict, name: str | None, where: str) -> list[str]:
+    if not name:
+        return []
+    if not mod.get("file_kind"):
+        return [f"{where}: '{mod['id']}' does not load a file; remove 'file'."]
+    if "/" in name or "\\" in name or ".." in name:
+        return [f"{where}: 'file' must be a plain file name from the library list."]
+    ext = (".nam",) if mod["file_kind"] == "nam" else (".wav",)
+    if not name.lower().endswith(ext):
+        return [f"{where}: '{name}' is not a {ext[0]} file."]
+    return []
+
+
 def validate_chain(reply: dict, catalogue: dict[str, dict], cpu_mode: str = "normal") -> tuple[list[str], dict | None]:
     errors: list[str] = []
     try:
@@ -81,6 +94,7 @@ def validate_chain(reply: dict, catalogue: dict[str, dict], cpu_mode: str = "nor
         cpu += mod["cpu_points"] if mod["cpu_points"] is not None else UNKNOWN_CPU_COST
         for pid, value in slot["params"].items():
             errors += check_param(mod, pid, value, where)
+        errors += check_file(mod, slot.get("file"), where)
         if stage == "tracking":
             if not mod["tracking_safe"]:
                 errors.append(f"{where}: '{mod['id']}' cannot be used while tracking (too much latency, or not suited to recording).")
@@ -112,7 +126,12 @@ def validate_changes(reply: dict, current: dict, catalogue: dict[str, dict], cpu
             if op == "set":
                 slots[ch["module_index"]]["params"][ch["param"]] = ch["value"]
             elif op == "insert":
-                slots.insert(ch["at"], {"module": ch["module"], "params": ch["params"]})
+                new = {"module": ch["module"], "params": ch["params"]}
+                if ch.get("file"):
+                    new["file"] = ch["file"]
+                slots.insert(ch["at"], new)
+            elif op == "set_file":
+                slots[ch["module_index"]]["file"] = ch["file"]
             elif op == "remove":
                 slots.pop(ch["module_index"])
             elif op == "move":

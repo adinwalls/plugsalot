@@ -13,6 +13,7 @@ struct ChainSlot
     juce::String moduleId;
     juce::NamedValueSet params;   // AI-facing ids and values
     bool bypass = false;
+    juce::String file;            // library file name for NAM / cabinet modules
     juce::Uuid instanceId;        // stable identity so DSP state survives edits
 };
 

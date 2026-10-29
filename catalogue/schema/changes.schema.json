@@ -31,7 +31,17 @@
               "op": { "const": "insert" },
               "at": { "type": "integer", "minimum": 0 },
               "module": { "type": "string" },
-              "params": { "type": "object" }
+              "params": { "type": "object" },
+              "file": { "type": "string" }
+            }
+          },
+          {
+            "type": "object", "additionalProperties": false,
+            "required": ["op", "module_index", "file"],
+            "properties": {
+              "op": { "const": "set_file" },
+              "module_index": { "type": "integer", "minimum": 0 },
+              "file": { "type": "string" }
             }
           },
           {

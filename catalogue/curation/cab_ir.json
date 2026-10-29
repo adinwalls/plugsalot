@@ -1,0 +1,83 @@
+{
+  "id": "cab_ir",
+  "name": "Cabinet IR",
+  "kind": "effect",
+  "category": "amp",
+  "source": {
+    "source_key": "audiodsptools",
+    "path": "dsp/ImpulseResponse.h",
+    "upstream_name": "AudioDSPTools ImpulseResponse"
+  },
+  "extractor": {
+    "type": "manual"
+  },
+  "purpose": "Convolves the signal with a cabinet or speaker impulse response, with low and high cut filters; the speaker half of an amp capture.",
+  "good_for": [
+    "electric guitar",
+    "bass guitar",
+    "guitar DI"
+  ],
+  "avoid_for": [
+    "vocals",
+    "drum bus",
+    "master"
+  ],
+  "tags": [
+    "cabinet",
+    "impulse response",
+    "ir",
+    "guitar"
+  ],
+  "cpu_points": null,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "file_kind": "ir",
+  "params": [
+    {
+      "upstream_id": "low_cut",
+      "id": "low_cut",
+      "name": "Low cut",
+      "type": "float",
+      "min": 20,
+      "max": 400,
+      "default": 80,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Removes low rumble. Raise to 100-150 Hz for tighter guitars."
+    },
+    {
+      "upstream_id": "high_cut",
+      "id": "high_cut",
+      "name": "High cut",
+      "type": "float",
+      "min": 2000,
+      "max": 20000,
+      "default": 12000,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Rolls off fizz. 5-8 kHz for smooth high gain, higher for clean sparkle."
+    },
+    {
+      "upstream_id": "level",
+      "id": "level",
+      "name": "Level",
+      "type": "float",
+      "min": -20,
+      "max": 20,
+      "default": 0,
+      "unit": "dB",
+      "ai_hint": "Trim after the cabinet."
+    }
+  ],
+  "notes": [
+    "The impulse response is a .wav file chosen from the user's library; the AI picks it by file name through the slot's 'file' field.",
+    "With no impulse response loaded the module passes audio through unchanged.",
+    "AudioDSPTools limits the response to 8192 taps and resamples it to the host rate."
+  ]
+}

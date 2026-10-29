@@ -6,6 +6,7 @@
 // Optional live AI test: set PLUGSALOT_GEMINI_KEY or PLUGSALOT_CLAUDE_KEY.
 #include "ai/AiSession.h"
 #include "core/ChainValidator.h"
+#include "core/Library.h"
 #include "dsp/ChainEngine.h"
 #include <juce_events/juce_events.h>
 #include <chrono>
@@ -41,14 +42,14 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 6, "six runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 8, "eight runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
         for (auto& p : m.params)
             if (p.check(p.defaultValue).isNotEmpty())
                 defaultsOk = false;
-        check(defaultsOk && ! m.params.empty() && ! m.rawParams.empty(), m.id + ": params and raw defaults valid");
+        check(defaultsOk && ! m.params.empty() && (m.fileKind.isNotEmpty() || ! m.rawParams.empty()), m.id + ": params and raw defaults valid");
     }
     auto prompt = PromptBuilder::systemPrompt(cat);
     check(prompt.contains("Hard limits") && prompt.contains("\"multicomp\""), "system prompt has guidelines and catalogue ("
@@ -185,6 +186,152 @@ static void testEngine(const Catalogue& cat)
     std::cout << "    chain latency: " << engine.latencySamples() << " samples\n";
 }
 
+// A 16-bit mono WAV holding a short decaying-noise "cabinet".
+static juce::File writeTestIr(const juce::File& dir)
+{
+    const int n = 512, rate = 48000;
+    juce::MemoryBlock mb;
+    juce::MemoryOutputStream o(mb, false);
+    o.write("RIFF", 4); o.writeInt(36 + n * 2); o.write("WAVEfmt ", 8);
+    o.writeInt(16); o.writeShort(1); o.writeShort(1); o.writeInt(rate); o.writeInt(rate * 2); o.writeShort(2); o.writeShort(16);
+    o.write("data", 4); o.writeInt(n * 2);
+    juce::Random rnd(7);
+    for (int i = 0; i < n; ++i)
+        o.writeShort((short) (rnd.nextFloat() * 2.0f - 1.0f) * 0 + (short) ((rnd.nextFloat() * 2.0f - 1.0f) * 16000.0f * std::exp(-i / 60.0f)));
+    auto f = dir.getChildFile("test cab.wav");
+    f.replaceWithData(mb.getData(), mb.getSize());
+    return f;
+}
+
+static void testFileModules(const Catalogue& cat, const juce::File& vendorModels)
+{
+    std::cout << "NAM Amp and Cabinet IR (captures from the library folder)\n";
+    auto tmp = juce::File::getSpecialLocation(juce::File::tempDirectory).getChildFile("plugsalot-test-lib");
+    tmp.deleteRecursively();
+    tmp.createDirectory();
+    juce::File(tmp).getChildFile("lib").createDirectory();
+#if JUCE_WINDOWS
+    _putenv_s("PLUGSALOT_LIBRARY", tmp.getChildFile("lib").getFullPathName().toRawUTF8());
+#else
+    setenv("PLUGSALOT_LIBRARY", tmp.getChildFile("lib").getFullPathName().toRawUTF8(), 1);
+#endif
+    const auto a2 = Library::import("nam", vendorModels.getChildFile("A2.nam"));
+    const auto a1 = Library::import("nam", vendorModels.getChildFile("wavenet_a1_standard.nam"));
+    const auto ir = Library::import("ir", writeTestIr(tmp));
+    check(a2 == "A2.nam" && a1 == "wavenet_a1_standard.nam" && ir == "test cab.wav", "files import into the library");
+    check(Library::list("nam").size() == 2 && Library::list("ir").size() == 1, "library lists what was imported");
+    check(! Library::resolve("nam", "../secret.nam").existsAsFile() && Library::resolve("nam", "../x.nam") == juce::File(), "library refuses path tricks");
+
+    const double sr = 48000.0;
+    const int block = 256, blocks = (int) (3 * sr / block);
+    for (const char* name : { "A2.nam", "wavenet_a1_standard.nam" })
+    {
+        auto m = createModule(*cat.find("nam_amp"));
+        m->prepare(sr, block);
+        const auto msg = m->loadFile(Library::resolve("nam", name));
+        check(msg.isEmpty() || msg.contains("trained at"), juce::String(name) + ": loads (" + (msg.isEmpty() ? juce::String("no warning") : msg) + ")");
+        m->setParam("input_gain", 6.0);
+        juce::AudioBuffer<float> buf(2, block), dry(2, block);
+        double seconds = 0, diff = 0;
+        float peak = 0;
+        bool finite = true;
+        for (int b = 0; b < blocks; ++b)
+        {
+            fillTestSignal(buf, b * block, sr);
+            dry.makeCopyOf(buf);
+            float* ch[2] = { buf.getWritePointer(0), buf.getWritePointer(1) };
+            auto t0 = std::chrono::high_resolution_clock::now();
+            m->process(ch, block);
+            seconds += std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - t0).count();
+            for (int i = 0; i < block; ++i)
+            {
+                finite &= std::isfinite(buf.getSample(0, i));
+                peak = juce::jmax(peak, std::abs(buf.getSample(0, i)));
+                diff += std::abs(buf.getSample(0, i) - dry.getSample(0, i));
+            }
+        }
+        check(finite && diff > 1.0 && peak < 8.0f && peak > 1.0e-3f,
+              juce::String(name) + ": capture changes the sound, finite (peak " + juce::String(juce::Decibels::gainToDecibels(peak), 1)
+              + " dBFS, CPU " + juce::String(100.0 * seconds / 3.0, 2) + "% of one core)");
+    }
+
+    {
+        auto m = createModule(*cat.find("nam_amp"));
+        m->prepare(sr, block);
+        const auto msg = m->loadFile(Library::resolve("nam", "missing.nam"));
+        juce::AudioBuffer<float> buf(2, block);
+        fillTestSignal(buf, 0, sr);
+        juce::AudioBuffer<float> before;
+        before.makeCopyOf(buf);
+        float* ch[2] = { buf.getWritePointer(0), buf.getWritePointer(1) };
+        m->process(ch, block);
+        check(msg.isNotEmpty() && buf.getMagnitude(0, block) == before.getMagnitude(0, block), "missing capture reports a message and passes audio through");
+    }
+
+    {
+        auto m = createModule(*cat.find("cab_ir"));
+        m->prepare(sr, block);
+        const auto msg = m->loadFile(Library::resolve("ir", "test cab.wav"));
+        check(msg.isEmpty(), "impulse response loads" + (msg.isEmpty() ? juce::String() : " (" + msg + ")"));
+        juce::AudioBuffer<float> buf(2, block), dry(2, block);
+        double diff = 0;
+        bool finite = true;
+        for (int b = 0; b < 200; ++b)
+        {
+            fillTestSignal(buf, b * block, sr);
+            dry.makeCopyOf(buf);
+            float* ch[2] = { buf.getWritePointer(0), buf.getWritePointer(1) };
+            m->process(ch, block);
+            for (int i = 0; i < block; ++i)
+            {
+                finite &= std::isfinite(buf.getSample(1, i));
+                diff += std::abs(buf.getSample(1, i) - dry.getSample(1, i));
+            }
+        }
+        check(finite && diff > 1.0, "cabinet impulse response colours the signal, finite");
+    }
+
+    // Through the validator and engine: file names travel in the chain, bad ones are refused.
+    ChainValidator v(cat);
+    auto good = juce::JSON::parse(R"({"schema_version":1,"source":"electric guitar","stage":"mixing","chain":[
+        {"module":"nam_amp","params":{"input_gain":3,"gate_threshold":-65},"file":"A2.nam"},
+        {"module":"cab_ir","params":{"low_cut":90},"file":"test cab.wav"},
+        {"module":"plate","params":{"wet":10}}],"explanation":"test"})");
+    auto r = v.validateChain(good, "normal");
+    check(r.ok() && r.chain.slots.size() == 3 && r.chain.slots[0].file == "A2.nam",
+          "chain with capture and cabinet files validates" + (r.ok() ? juce::String() : " -> " + r.errors.joinIntoString("; ")));
+    if (! r.ok() || r.chain.slots.size() < 3) { tmp.deleteRecursively(); return; }
+    auto bad = juce::JSON::parse(R"({"schema_version":1,"source":"electric guitar","stage":"mixing","chain":[
+        {"module":"nam_amp","params":{},"file":"../../etc/passwd.nam"}],"explanation":"x"})");
+    check(! v.validateChain(bad, "normal").ok(), "path tricks in 'file' are rejected");
+    auto wrong = juce::JSON::parse(R"({"schema_version":1,"source":"lead vocal","stage":"mixing","chain":[
+        {"module":"plate","params":{},"file":"A2.nam"}],"explanation":"x"})");
+    check(! v.validateChain(wrong, "normal").ok(), "'file' on a module that loads none is rejected");
+
+    ChainEngine engine;
+    juce::String note;
+    engine.onMessage = [&](const juce::String& s) { note = s; };
+    engine.prepare(sr, block);
+    engine.setChain(r.chain);
+    juce::AudioBuffer<float> buf(2, block);
+    bool finite = true;
+    for (int b = 0; b < 150; ++b)
+    {
+        fillTestSignal(buf, b * block, sr);
+        engine.process(buf);
+        finite &= std::isfinite(buf.getMagnitude(0, block));
+        if (b == 50)
+        {   // swap the capture mid-stream
+            auto next = r.chain;
+            next.slots[0].file = "wavenet_a1_standard.nam";
+            engine.setChain(next);
+        }
+        if (b % 20 == 0) engine.collectGarbage();
+    }
+    check(finite && engine.numModules() == 3, "engine swaps a capture mid-stream without glitches or crashes");
+    tmp.deleteRecursively();
+}
+
 static void testReplyParsing(const Catalogue& cat)
 {
     std::cout << "AI reply parsing\n";
@@ -234,6 +381,7 @@ int main(int argc, char* argv[])
     testModules(cat);
     testTrackingLatency(cat);
     testEngine(cat);
+    testFileModules(cat, juce::File(PLUGSALOT_SOURCE_DIR "/plugin/vendor/nam-core/example_models"));
     testReplyParsing(cat);
     testLive(cat);
 

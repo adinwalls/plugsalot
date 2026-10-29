@@ -37,6 +37,12 @@ public:
 
     virtual int latencySamples() const noexcept { return 0; }
 
+    // Message thread: load a capture / impulse response (modules whose spec has a
+    // fileKind). An empty or unreadable file leaves the module passing audio through.
+    // Returns an empty string on success, otherwise a message for the user.
+    virtual juce::String loadFile(const juce::File&) { return {}; }
+    juce::String loadedFile;   // library name last requested, message thread only
+
     // Push every upstream default (including parameters hidden from the AI),
     // the way each upstream plugin shell does on start-up.
     void applyUpstreamDefaults()

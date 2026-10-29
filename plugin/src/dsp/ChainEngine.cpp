@@ -1,5 +1,6 @@
 // Plugsalot - GPL-3.0-or-later
 #include "ChainEngine.h"
+#include "core/Library.h"
 
 namespace plugsalot
 {
@@ -82,6 +83,14 @@ void ChainEngine::setChain(const ChainState& chain)
             module->bypassed.store(slot.bypass);
             module->prepare(sampleRate, maxBlock);
             module->reset();
+        }
+
+        if (spec->fileKind.isNotEmpty() && module->loadedFile != slot.file)
+        {
+            const auto message = module->loadFile(Library::resolve(spec->fileKind, slot.file));
+            module->loadedFile = slot.file;
+            if (message.isNotEmpty() && onMessage)
+                onMessage(message);
         }
 
         fresh->modules.push_back(std::move(module));

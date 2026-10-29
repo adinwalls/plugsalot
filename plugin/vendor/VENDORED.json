@@ -719,7 +719,14 @@
       "Eigen/src/plugins/InternalHeaderCheck.inc",
       "Eigen/src/plugins/MatrixCwiseBinaryOps.inc",
       "Eigen/src/plugins/MatrixCwiseUnaryOps.inc",
-      "Eigen/src/plugins/ReshapedMethods.inc"
+      "Eigen/src/plugins/ReshapedMethods.inc",
+      "unsupported/Eigen/FFT",
+      "unsupported/Eigen/src/FFT/InternalHeaderCheck.h",
+      "unsupported/Eigen/src/FFT/duccfft_impl.h",
+      "unsupported/Eigen/src/FFT/fftw_impl.h",
+      "unsupported/Eigen/src/FFT/imklfft_impl.h",
+      "unsupported/Eigen/src/FFT/kissfft_impl.h",
+      "unsupported/Eigen/src/FFT/pocketfft_impl.h"
     ]
   }
 }

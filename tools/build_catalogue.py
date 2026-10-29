@@ -26,7 +26,7 @@ CAT = REPO / "catalogue"
 PARAM_KEYS = ("id", "upstream_id", "name", "type", "min", "max", "default", "unit", "scale", "options", "convert", "ai_hint")
 OVERRIDABLE = ("id", "name", "unit", "min", "max", "default", "options", "ai_hint", "convert", "scale")
 COPY_KEYS = ("id", "name", "kind", "category", "purpose", "good_for", "avoid_for", "tags", "cpu_points", "latency",
-             "tracking_safe", "tracking_overrides", "channels", "notes")
+             "tracking_safe", "tracking_overrides", "channels", "file_kind", "notes")
 
 
 class BuildError(Exception):
@@ -142,7 +142,7 @@ def build_module(cur: dict, raw: dict | None, sources: dict) -> dict:
         out.setdefault("notes", []).insert(0, f"Upstream description: {raw['description']}")
 
     order = ["schema_version", "id", "name", "kind", "category", "source", "purpose", "good_for", "avoid_for", "tags",
-             "cpu_points", "cpu_measured", "latency", "tracking_safe", "tracking_overrides", "channels", "params",
+             "cpu_points", "cpu_measured", "latency", "tracking_safe", "tracking_overrides", "channels", "file_kind", "params",
              "hidden_params", "presets", "notes"]
     return {k: out[k] for k in order if k in out}
 

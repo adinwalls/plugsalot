@@ -16,6 +16,7 @@
 #include "core/ChainState.h"
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <vector>
 
@@ -43,6 +44,10 @@ public:
 
     // Audio thread.
     void process(juce::AudioBuffer<float>& buffer) noexcept;
+
+    // Message thread: called with a short note when a capture or impulse response
+    // could not be loaded or may not suit the sample rate.
+    std::function<void(const juce::String&)> onMessage;
 
     // Any thread.
     int latencySamples() const noexcept { return latency.load(std::memory_order_relaxed); }

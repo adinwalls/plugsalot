@@ -116,7 +116,9 @@
       "includes": "Header-only linear algebra library NAM depends on; the commit NeuralAmpModelerCore pins (upstream gitlab.com/libeigen/eigen, fetched from its GitHub mirror)",
       "sparse_paths": [
         "Eigen/*",
-        "COPYING.*"
+        "COPYING.*",
+        "unsupported/Eigen/FFT",
+        "unsupported/Eigen/src/FFT/*"
       ]
     }
   }

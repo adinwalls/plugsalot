@@ -21,6 +21,8 @@ juce::var ChainState::toVar() const
         so->setProperty("params", juce::var(po));
         if (s.bypass)
             so->setProperty("bypass", true);
+        if (s.file.isNotEmpty())
+            so->setProperty("file", s.file);
         chain.add(juce::var(so));
     }
     o->setProperty("chain", chain);
@@ -41,6 +43,7 @@ ChainState ChainState::fromVar(const juce::var& v)
             ChainSlot slot;
             slot.moduleId = s.getProperty("module", {}).toString();
             slot.bypass = (bool) s.getProperty("bypass", false);
+            slot.file = s.getProperty("file", {}).toString();
             if (auto* po = s.getProperty("params", {}).getDynamicObject())
                 slot.params = po->getProperties();
             c.slots.push_back(std::move(slot));

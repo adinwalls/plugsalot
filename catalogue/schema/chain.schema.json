@@ -21,7 +21,8 @@
         "properties": {
           "module": { "type": "string" },
           "params": { "type": "object" },
-          "bypass": { "type": "boolean" }
+          "bypass": { "type": "boolean" },
+          "file": { "type": "string", "description": "Library file name for modules that load a capture or impulse response." }
         }
       }
     },

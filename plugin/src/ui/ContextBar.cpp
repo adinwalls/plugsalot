@@ -9,7 +9,7 @@ ContextBar::ContextBar(PlugsalotProcessor& p) : proc(p)
     const juce::StringArray sources { "Lead vocal", "Backing vocals", "Acoustic guitar", "Electric guitar (DI)",
                                       "Electric guitar (amp)", "Bass (DI)", "Bass (amp)", "Kick", "Snare", "Full kit",
                                       "Software drums", "Synth pad", "Synth lead", "Synth bass", "Keys", "Bus", "Master" };
-    const juce::StringArray styles { "Pop", "Rock", "Hip-hop", "Electronic", "Folk", "Metal", "Jazz", "R&B", "Country", "Ambient" };
+    const juce::StringArray styles { "Pop", "Rock", "Hip-hop", "Electronic", "Folk", "Metal", "Jazz", "R&B", "Country", "Ambient", "Lo-fi" };
     const juce::StringArray characters { "Clean", "Warm", "Vintage", "Bright", "Aggressive" };
 
     addField(source, "Source", sources, sources, [this]() -> juce::String& { return proc.context().source; });

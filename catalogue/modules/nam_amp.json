@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "id": "nam_amp",
+  "name": "NAM Amp",
+  "kind": "effect",
+  "category": "amp",
+  "source": {
+    "source_key": "nam-core",
+    "repo": "https://github.com/sdatkinson/NeuralAmpModelerCore",
+    "commit": "0b3d3c97b0859a3a8c92a8628c4dd89a25eb5842",
+    "path": "NAM/dsp.h",
+    "upstream_name": "Neural Amp Modeler Core",
+    "license": "MIT",
+    "authors": "Steven Atkinson",
+    "extractor": "manual"
+  },
+  "purpose": "Neural capture of a real guitar amp, pedal or bass rig, played through Neural Amp Modeler, with a noise gate and bass/mid/treble tone stack around it.",
+  "good_for": [
+    "electric guitar",
+    "bass guitar",
+    "guitar DI"
+  ],
+  "avoid_for": [
+    "vocals",
+    "drum bus",
+    "master"
+  ],
+  "tags": [
+    "amp",
+    "guitar",
+    "neural",
+    "nam",
+    "distortion"
+  ],
+  "cpu_points": null,
+  "cpu_measured": false,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "file_kind": "nam",
+  "params": [
+    {
+      "upstream_id": "input_gain",
+      "id": "input_gain",
+      "name": "Input level",
+      "type": "float",
+      "min": -20,
+      "max": 20,
+      "default": 0,
+      "unit": "dB",
+      "ai_hint": "Drive into the capture. Raise for more gain and breakup, lower for cleaner tones. Check the input meter before pushing it."
+    },
+    {
+      "upstream_id": "gate",
+      "id": "gate_threshold",
+      "name": "Noise gate",
+      "type": "float",
+      "min": -100,
+      "max": -30,
+      "default": -80,
+      "unit": "dB",
+      "ai_hint": "Gate threshold. -100 is off. Use -70 to -55 for high-gain tones; keep it low for clean playing so notes decay naturally."
+    },
+    {
+      "upstream_id": "bass",
+      "id": "bass",
+      "name": "Bass",
+      "type": "float",
+      "min": 0,
+      "max": 10,
+      "default": 5,
+      "unit": "",
+      "ai_hint": "5 is flat. Lower to tighten a muddy low end."
+    },
+    {
+      "upstream_id": "mid",
+      "id": "mid",
+      "name": "Mid",
+      "type": "float",
+      "min": 0,
+      "max": 10,
+      "default": 5,
+      "unit": "",
+      "ai_hint": "5 is flat. Lower for scooped metal tones, raise for cut."
+    },
+    {
+      "upstream_id": "treble",
+      "id": "treble",
+      "name": "Treble",
+      "type": "float",
+      "min": 0,
+      "max": 10,
+      "default": 5,
+      "unit": "",
+      "ai_hint": "5 is flat. Raise for presence, lower to tame fizz."
+    },
+    {
+      "upstream_id": "output_gain",
+      "id": "output_level",
+      "name": "Output level",
+      "type": "float",
+      "min": -20,
+      "max": 20,
+      "default": 0,
+      "unit": "dB",
+      "ai_hint": "Trim after the capture. Output is already loudness-matched when normalise is on."
+    },
+    {
+      "upstream_id": "normalise",
+      "id": "normalise",
+      "name": "Normalise output",
+      "type": "bool",
+      "default": true,
+      "ai_hint": "Keep on so swapping captures does not change the volume."
+    }
+  ],
+  "notes": [
+    "Parameters are written by hand: they drive Neural Amp Modeler Core (the capture), the NAM plugin's tone stack and AudioDSPTools' noise gate, not plugin ports.",
+    "The capture itself is a .nam file chosen from the user's library (or TONE3000); the AI picks it by file name through the slot's 'file' field and never invents one.",
+    "With no capture loaded the module passes audio through unchanged.",
+    "CPU depends on the capture's architecture; the placeholder cost applies until measured.",
+    "Captures are mono; stereo input is summed to mono and the result is sent to both channels."
+  ]
+}

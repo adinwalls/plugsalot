@@ -10,6 +10,8 @@ std::unique_ptr<Module> createConsoleEqModule(const ModuleSpec&);
 std::unique_ptr<Module> createPlateModule(const ModuleSpec&);
 std::unique_ptr<Module> createLimiterModule(const ModuleSpec&);
 std::unique_ptr<Module> createDeEssModule(const ModuleSpec&);
+std::unique_ptr<Module> createNamAmpModule(const ModuleSpec&);
+std::unique_ptr<Module> createCabIrModule(const ModuleSpec&);
 
 std::unique_ptr<Module> createModule(const ModuleSpec& spec)
 {
@@ -20,6 +22,8 @@ std::unique_ptr<Module> createModule(const ModuleSpec& spec)
     else if (spec.id == "plate")      m = createPlateModule(spec);
     else if (spec.id == "limiter")    m = createLimiterModule(spec);
     else if (spec.id == "deess")      m = createDeEssModule(spec);
+    else if (spec.id == "nam_amp")     m = createNamAmpModule(spec);
+    else if (spec.id == "cab_ir")      m = createCabIrModule(spec);
     if (m)
         m->applyUpstreamDefaults();
     return m;

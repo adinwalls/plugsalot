@@ -48,6 +48,7 @@ struct ModuleSpec
     bool trackingSafe = true;
     juce::NamedValueSet trackingOverrides;
     juce::String licence, upstreamName;
+    juce::String fileKind;        // "nam" or "ir" when the module loads a file from the library
     std::vector<ParamSpec> params;      // what the AI may set
     std::vector<ParamSpec> rawParams;   // everything upstream declares (for defaults)
     juce::var presets;

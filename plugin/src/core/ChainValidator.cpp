@@ -90,6 +90,17 @@ ValidationResult ChainValidator::validate(ChainState chain, const juce::String& 
                 r.errors.add(where + err);
         }
 
+        if (slot.file.isNotEmpty())
+        {
+            const auto ext = mod->fileKind == "nam" ? ".nam" : ".wav";
+            if (mod->fileKind.isEmpty())
+                r.errors.add(where + "'" + mod->id + "' does not load a file; remove 'file'.");
+            else if (slot.file.containsAnyOf("/\\") || slot.file.contains(".."))
+                r.errors.add(where + "'file' must be a plain file name from the library list.");
+            else if (! slot.file.endsWithIgnoreCase(ext))
+                r.errors.add(where + "'" + slot.file + "' is not a " + ext + " file.");
+        }
+
         if (chain.stage == "tracking")
         {
             if (! mod->trackingSafe)
@@ -155,6 +166,7 @@ ValidationResult ChainValidator::applyChanges(const juce::var& reply, const Chai
             s.moduleId = ch.getProperty("module", {}).toString();
             if (auto* po = ch.getProperty("params", {}).getDynamicObject())
                 s.params = po->getProperties();
+            s.file = ch.getProperty("file", {}).toString();
             slots.insert(slots.begin() + at, s);
         }
         else if (op == "remove")
@@ -171,6 +183,12 @@ ValidationResult ChainValidator::applyChanges(const juce::var& reply, const Chai
             slots.erase(slots.begin() + from);
             slots.insert(slots.begin() + to, s);
         }
+        else if (op == "set_file")
+        {
+            const int i = ch.getProperty("module_index", -1);
+            if (! indexOk(i)) { r.errors.add(where + "module_index out of range."); continue; }
+            slots[(size_t) i].file = ch.getProperty("file", {}).toString();
+        }
         else if (op == "bypass")
         {
             const int i = ch.getProperty("module_index", -1);
@@ -178,7 +196,7 @@ ValidationResult ChainValidator::applyChanges(const juce::var& reply, const Chai
             slots[(size_t) i].bypass = (bool) ch.getProperty("bypass", true);
         }
         else
-            r.errors.add(where + "unknown op '" + op + "'. Use set, insert, remove, move or bypass.");
+            r.errors.add(where + "unknown op '" + op + "'. Use set, set_file, insert, remove, move or bypass.");
     }
     if (! r.ok())
         return r;

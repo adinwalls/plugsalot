@@ -140,6 +140,7 @@ void Catalogue::add(const juce::var& j, const juce::var& raw)
     m.licence = src.getProperty("license", {}).toString();
     m.upstreamName = src.getProperty("upstream_name", {}).toString();
     m.presets = j.getProperty("presets", {});
+    m.fileKind = j.getProperty("file_kind", {}).toString();
 
     if (auto* arr = j.getProperty("params", {}).getArray())
         for (auto& p : *arr)

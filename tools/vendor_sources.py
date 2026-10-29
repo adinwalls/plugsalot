@@ -88,6 +88,8 @@ FILES = {
         "COPYING.*",
         "Eigen/*",
         "Eigen/src/**/*",
+        "unsupported/Eigen/FFT",
+        "unsupported/Eigen/src/FFT/*",
     ],
 }
 
