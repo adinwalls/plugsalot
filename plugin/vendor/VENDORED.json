@@ -230,6 +230,18 @@
     "license": "MIT",
     "files": [
       "LICENSE",
+      "plugins/LinuxVST/src/ButterComp2/ButterComp2.cpp",
+      "plugins/LinuxVST/src/ButterComp2/ButterComp2.h",
+      "plugins/LinuxVST/src/ButterComp2/ButterComp2Proc.cpp",
+      "plugins/LinuxVST/src/Console8ChannelHype/Console8ChannelHype.cpp",
+      "plugins/LinuxVST/src/Console8ChannelHype/Console8ChannelHype.h",
+      "plugins/LinuxVST/src/Console8ChannelHype/Console8ChannelHypeProc.cpp",
+      "plugins/LinuxVST/src/Console8ChannelIn/Console8ChannelIn.cpp",
+      "plugins/LinuxVST/src/Console8ChannelIn/Console8ChannelIn.h",
+      "plugins/LinuxVST/src/Console8ChannelIn/Console8ChannelInProc.cpp",
+      "plugins/LinuxVST/src/Console8ChannelOut/Console8ChannelOut.cpp",
+      "plugins/LinuxVST/src/Console8ChannelOut/Console8ChannelOut.h",
+      "plugins/LinuxVST/src/Console8ChannelOut/Console8ChannelOutProc.cpp",
       "plugins/LinuxVST/src/DeBess/DeBess.cpp",
       "plugins/LinuxVST/src/DeBess/DeBess.h",
       "plugins/LinuxVST/src/DeBess/DeBessProc.cpp"

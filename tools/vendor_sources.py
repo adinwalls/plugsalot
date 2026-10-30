@@ -61,6 +61,10 @@ FILES = {
     "airwindows": [
         "LICENSE",
         "plugins/LinuxVST/src/DeBess/*",
+        "plugins/LinuxVST/src/ButterComp2/*",
+        "plugins/LinuxVST/src/Console8ChannelIn/*",
+        "plugins/LinuxVST/src/Console8ChannelHype/*",
+        "plugins/LinuxVST/src/Console8ChannelOut/*",
     ],
     "nam-core": [
         "LICENSE",
