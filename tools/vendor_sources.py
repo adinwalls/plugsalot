@@ -62,6 +62,8 @@ FILES = {
         "LICENSE",
         "plugins/LinuxVST/src/DeBess/*",
         "plugins/LinuxVST/src/ButterComp2/*",
+        "plugins/LinuxVST/src/Srsly2/*",
+        "plugins/LinuxVST/src/SweetWide/*",
         "plugins/LinuxVST/src/Console8ChannelIn/*",
         "plugins/LinuxVST/src/Console8ChannelHype/*",
         "plugins/LinuxVST/src/Console8ChannelOut/*",

@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "id": "srsly2",
+  "name": "Srsly2",
+  "kind": "effect",
+  "category": "utility",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/Srsly2",
+    "upstream_name": "Airwindows Srsly2",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "airwindows"
+  },
+  "purpose": "Psychoacoustic stereo widener in the style of the Hughes SRS: narrow boosts and cuts on the mid and side signals create a wide, holographic image. Can go from subtle spatial depth to extreme width.",
+  "good_for": [
+    "reverb return",
+    "synth",
+    "keys",
+    "acoustic guitar",
+    "backing vocal",
+    "drum bus",
+    "master"
+  ],
+  "avoid_for": [
+    "lead vocal (keep the centre solid)",
+    "bass",
+    "kick",
+    "mono-compatibility-critical material"
+  ],
+  "tags": [
+    "stereo",
+    "widener",
+    "width",
+    "spatial",
+    "hughes srs",
+    "psychoacoustic"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "maker": "Airwindows",
+  "tape": "WIDEN THE PICTURE",
+  "knobs": [
+    {
+      "param": "center",
+      "label": "CENTER",
+      "colour": "grey"
+    },
+    {
+      "param": "space",
+      "label": "SPACE",
+      "colour": "cream"
+    },
+    {
+      "param": "q",
+      "label": "Q",
+      "colour": "black"
+    },
+    {
+      "param": "level",
+      "label": "LEVEL",
+      "colour": "grey"
+    },
+    {
+      "param": "dry_wet",
+      "label": "DRY/WET",
+      "colour": "cream"
+    }
+  ],
+  "params": [
+    {
+      "id": "center",
+      "upstream_id": "A",
+      "name": "Center",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Mid-channel focus. 0.5 is a neutral start; raise for more presence in the centre, lower to open it up."
+    },
+    {
+      "id": "space",
+      "upstream_id": "B",
+      "name": "Space",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Side-channel width. 0.5 is a moderate widening, 0.7-0.9 is very wide, 1.0 is extreme."
+    },
+    {
+      "id": "level",
+      "upstream_id": "C",
+      "name": "Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": "",
+      "ai_hint": "Output level. 1.0 is unity; lower it if widening makes the sound louder."
+    },
+    {
+      "id": "q",
+      "upstream_id": "D",
+      "name": "Q",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Intensity of the filters: 0 is half, 0.5 normal, 1.0 double. Higher is stronger and more obvious."
+    },
+    {
+      "id": "dry_wet",
+      "upstream_id": "E",
+      "name": "Dry/Wet",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": "",
+      "ai_hint": "Dry/wet. 1.0 is fully processed; 0.4-0.7 keeps the original image and adds width."
+    }
+  ],
+  "hidden_params": {
+    "count": 0
+  },
+  "notes": [
+    "Upstream description: Srsly2 is a revisit of Srsly, to make the stereo widening more extreme.",
+    "All Airwindows parameters are 0..1. Srsly2 is a more extreme revisit of Srsly; Airwindopedia suggests it can make a very wide reverb field.",
+    "Wide effects can collapse badly when summed to mono: check mono compatibility.",
+    "CPU: 0.86% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

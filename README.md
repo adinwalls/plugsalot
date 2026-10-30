@@ -107,6 +107,8 @@ python3 tools/vendor_sources.py    # refresh the DSP copied into plugin/vendor
 | `delay` | Plugsalot Clean Delay (original code) | GPL-3.0 |
 | `tape_echo` | Dusk Audio Tape Echo 2 | GPL-3.0 |
 | `buttercomp2` | Airwindows ButterComp2 | MIT |
+| `srsly2` | Airwindows Srsly2 | MIT |
+| `sweetwide` | Airwindows SweetWide | MIT |
 | `console8` | Airwindows Console8 (channel In/Hype + Out) | MIT |
 | `drum_sampler` | sfizz (catalogue only) | BSD-2-Clause |
 

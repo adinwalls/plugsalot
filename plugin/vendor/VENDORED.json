@@ -244,7 +244,13 @@
       "plugins/LinuxVST/src/Console8ChannelOut/Console8ChannelOutProc.cpp",
       "plugins/LinuxVST/src/DeBess/DeBess.cpp",
       "plugins/LinuxVST/src/DeBess/DeBess.h",
-      "plugins/LinuxVST/src/DeBess/DeBessProc.cpp"
+      "plugins/LinuxVST/src/DeBess/DeBessProc.cpp",
+      "plugins/LinuxVST/src/Srsly2/Srsly2.cpp",
+      "plugins/LinuxVST/src/Srsly2/Srsly2.h",
+      "plugins/LinuxVST/src/Srsly2/Srsly2Proc.cpp",
+      "plugins/LinuxVST/src/SweetWide/SweetWide.cpp",
+      "plugins/LinuxVST/src/SweetWide/SweetWide.h",
+      "plugins/LinuxVST/src/SweetWide/SweetWideProc.cpp"
     ]
   },
   "nam-core": {

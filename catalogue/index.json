@@ -248,6 +248,39 @@
       ],
       "cpu_points": 1,
       "tracking_safe": true
+    },
+    {
+      "id": "srsly2",
+      "name": "Srsly2",
+      "kind": "effect",
+      "category": "utility",
+      "purpose": "Psychoacoustic stereo widener in the style of the Hughes SRS: narrow boosts and cuts on the mid and side signals create a wide, holographic image. Can go from subtle spatial depth to extreme width.",
+      "good_for": [
+        "reverb return",
+        "synth",
+        "keys",
+        "acoustic guitar",
+        "backing vocal",
+        "drum bus",
+        "master"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "sweetwide",
+      "name": "SweetWide",
+      "kind": "effect",
+      "category": "utility",
+      "purpose": "Grungy stereo widener built from ring-modulation ideas: exaggerates the side signal with a gnarly, compressed character. Also narrows the image when turned the other way. A secret-weapon colour effect, not a transparent widener.",
+      "good_for": [
+        "synth",
+        "electric guitar",
+        "drum room",
+        "pad"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
     }
   ]
 }

@@ -1,0 +1,62 @@
+{
+  "module": "srsly2",
+  "source_key": "airwindows",
+  "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+  "extractor": {
+    "type": "airwindows",
+    "effect": "Srsly2"
+  },
+  "params": [
+    {
+      "upstream_id": "A",
+      "name": "Center",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string(A)"
+    },
+    {
+      "upstream_id": "B",
+      "name": "Space",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string(B)"
+    },
+    {
+      "upstream_id": "C",
+      "name": "Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": "",
+      "display_expr": "float2string(C)"
+    },
+    {
+      "upstream_id": "D",
+      "name": "Q",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string(D)"
+    },
+    {
+      "upstream_id": "E",
+      "name": "Dry/Wet",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": "",
+      "display_expr": "float2string(E)"
+    }
+  ],
+  "description": "Srsly2 is a revisit of Srsly, to make the stereo widening more extreme."
+}

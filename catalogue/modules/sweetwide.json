@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "id": "sweetwide",
+  "name": "SweetWide",
+  "kind": "effect",
+  "category": "utility",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/SweetWide",
+    "upstream_name": "Airwindows SweetWide",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "airwindows"
+  },
+  "purpose": "Grungy stereo widener built from ring-modulation ideas: exaggerates the side signal with a gnarly, compressed character. Also narrows the image when turned the other way. A secret-weapon colour effect, not a transparent widener.",
+  "good_for": [
+    "synth",
+    "electric guitar",
+    "drum room",
+    "pad"
+  ],
+  "avoid_for": [
+    "lead vocal",
+    "bass",
+    "kick",
+    "full mix",
+    "anything that must stay clean"
+  ],
+  "tags": [
+    "stereo",
+    "widener",
+    "grunge",
+    "narrow",
+    "ring mod",
+    "colour"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "maker": "Airwindows",
+  "tape": "GRUNGY WIDE OR NARROW",
+  "knobs": [
+    {
+      "param": "soar",
+      "label": "SOAR",
+      "colour": "red"
+    },
+    {
+      "param": "un_wide",
+      "label": "UN/WIDE",
+      "colour": "cream"
+    }
+  ],
+  "params": [
+    {
+      "id": "soar",
+      "upstream_id": "A",
+      "name": "Soar",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": "",
+      "ai_hint": "How the effect reacts to quiet sounds: 0 is mild, higher brings up grungy, compressed-sounding side content. Obvious above 0.7."
+    },
+    {
+      "id": "un_wide",
+      "upstream_id": "B",
+      "name": "Un/Wide",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is no change. Above 0.5 widens, below 0.5 narrows (0 is the strongest narrowing). 0.6-0.75 is a typical widening."
+    }
+  ],
+  "hidden_params": {
+    "count": 0
+  },
+  "notes": [
+    "Upstream description: SweetWide is a strange grungy stereo widener.",
+    "All Airwindows parameters are 0..1. Airwindopedia describes it as strange and grungy, suited to heavy guitar busses, synths and drum rooms, and not for full mixes.",
+    "CPU: 0.33% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

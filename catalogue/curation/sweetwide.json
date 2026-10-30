@@ -1,0 +1,78 @@
+{
+  "id": "sweetwide",
+  "name": "SweetWide",
+  "kind": "effect",
+  "category": "utility",
+  "source": {
+    "source_key": "airwindows",
+    "path": "plugins/LinuxVST/src/SweetWide",
+    "upstream_name": "Airwindows SweetWide"
+  },
+  "extractor": {
+    "type": "airwindows",
+    "effect": "SweetWide"
+  },
+  "purpose": "Grungy stereo widener built from ring-modulation ideas: exaggerates the side signal with a gnarly, compressed character. Also narrows the image when turned the other way. A secret-weapon colour effect, not a transparent widener.",
+  "good_for": [
+    "synth",
+    "electric guitar",
+    "drum room",
+    "pad"
+  ],
+  "avoid_for": [
+    "lead vocal",
+    "bass",
+    "kick",
+    "full mix",
+    "anything that must stay clean"
+  ],
+  "tags": [
+    "stereo",
+    "widener",
+    "grunge",
+    "narrow",
+    "ring mod",
+    "colour"
+  ],
+  "cpu_points": 1,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "expose": [
+    {
+      "upstream_id": "A",
+      "id": "soar",
+      "default": 0.0,
+      "ai_hint": "How the effect reacts to quiet sounds: 0 is mild, higher brings up grungy, compressed-sounding side content. Obvious above 0.7."
+    },
+    {
+      "upstream_id": "B",
+      "id": "un_wide",
+      "default": 0.5,
+      "ai_hint": "0.5 is no change. Above 0.5 widens, below 0.5 narrows (0 is the strongest narrowing). 0.6-0.75 is a typical widening."
+    }
+  ],
+  "notes": [
+    "All Airwindows parameters are 0..1. Airwindopedia describes it as strange and grungy, suited to heavy guitar busses, synths and drum rooms, and not for full mixes.",
+    "CPU: 0.33% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ],
+  "cpu_measured": true,
+  "maker": "Airwindows",
+  "tape": "GRUNGY WIDE OR NARROW",
+  "knobs": [
+    {
+      "param": "soar",
+      "label": "SOAR",
+      "colour": "red"
+    },
+    {
+      "param": "un_wide",
+      "label": "UN/WIDE",
+      "colour": "cream"
+    }
+  ]
+}

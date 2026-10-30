@@ -54,6 +54,7 @@ To compare with Claude, choose **Claude: your own API key** in Settings and past
 
 10. **Delays (new):** ask for "a slapback on the lead vocal" or "a dubby tape echo on the snare". The AI chooses between **Clean Delay** (exact, transparent, optional ping-pong and ducking) and **Tape Echo** (warm, wobbly, with spring reverb). Tape Echo's Intensity above about 75% self-oscillates on purpose.
 11. **Compression and colour (new):** ask for a "polished pop vocal with a fast compressor then a smooth LA-2A-style one" (the AI should use two Multi-Comp stages, or ButterComp2 for glue), and for "some console warmth before the reverb" (Console8). Console8's Tone has Solid and Hype; Drive adds saturation and level.
+12. **Stereo width (new):** ask for "make the synth pad wider" or "a huge wide reverb". **Srsly2** is the smooth widener; **SweetWide** is gritty and colours the sound. Check both in mono, because extreme widening can thin out.
 
 ## 5. What to look out for
 
@@ -66,7 +67,7 @@ To compare with Claude, choose **Claude: your own API key** in Settings and past
 
 ## Known limits
 
-- Modules: Console EQ (Dusk 4K EQ 2), Multi-Comp (Dusk), DeBess (Airwindows), TapeMachine 2 (Dusk), Plate Reverb (Dragonfly), Peak Limiter (x42), NAM Amp (Neural Amp Modeler), Cabinet IR, Clean Delay (Plugsalot's own) Tape Echo (Dusk Tape Echo 2), ButterComp2 and Console8 (both Airwindows). The LSP 8-band EQ and the sfizz drum sampler are in the catalogue but not in the plugin yet.
+- Modules: Console EQ (Dusk 4K EQ 2), Multi-Comp (Dusk), DeBess (Airwindows), TapeMachine 2 (Dusk), Plate Reverb (Dragonfly), Peak Limiter (x42), NAM Amp (Neural Amp Modeler), Cabinet IR, Clean Delay (Plugsalot's own) Tape Echo (Dusk Tape Echo 2), ButterComp2, Console8, Srsly2 and SweetWide (all Airwindows). The LSP 8-band EQ and the sfizz drum sampler are in the catalogue but not in the plugin yet.
 - Your API key is saved in a plain settings file in your user folder (not yet the system keychain).
 - Reverb is an insert with a dry/wet mix, not a send.
 - Bypassing a module that has latency briefly shifts timing; a latency-matched bypass is planned.

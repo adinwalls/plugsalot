@@ -43,7 +43,7 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 12, "twelve runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 14, "fourteen runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
@@ -494,6 +494,52 @@ static void testAirwindowsAdditions(const Catalogue& cat)
     std::cout << "  ButterComp2 CPU: " << comp.cpu << "% of one core at 48 kHz\n";
 }
 
+static void testWideners(const Catalogue& cat)
+{
+    std::cout << "Stereo wideners\n";
+    const double sr = 48000.0;
+    const int block = 256, total = (int) sr;
+    // Mostly-centre material with a little different content on each side.
+    auto sideOverMid = [&](const char* id, const std::vector<std::pair<const char*, juce::var>>& params, double& cpu, bool& finite) {
+        auto m = createModule(*cat.find(id));
+        m->prepare(sr, block);
+        for (auto& p : params) m->setParam(p.first, p.second);
+        double mid = 0, side = 0, seconds = 0;
+        for (int s = 0; s < total; s += block)
+        {
+            std::vector<float> l((size_t) block), r((size_t) block);
+            for (int i = 0; i < block; ++i)
+            {
+                const float n = (float) (s + i);
+                const float c = 0.3f * std::sin(0.0587f * n) + 0.1f * std::sin(0.31f * n);
+                l[(size_t) i] = c + 0.06f * std::sin(0.77f * n);
+                r[(size_t) i] = c + 0.06f * std::sin(1.13f * n);
+            }
+            float* ch[2] = { l.data(), r.data() };
+            auto t0 = std::chrono::high_resolution_clock::now();
+            m->process(ch, block);
+            seconds += std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - t0).count();
+            for (int i = 0; i < block; ++i)
+            {
+                finite &= std::isfinite(l[(size_t) i]) && std::isfinite(r[(size_t) i]);
+                if (s >= total / 2) { const double M = 0.5 * (l[(size_t) i] + r[(size_t) i]), S = 0.5 * (l[(size_t) i] - r[(size_t) i]); mid += M * M; side += S * S; }
+            }
+        }
+        cpu = 100.0 * seconds;
+        return std::sqrt(side / juce::jmax(1.0e-12, mid));
+    };
+    double cpu = 0; bool finite = true;
+    const double base = sideOverMid("srsly2", { { "space", 0.0 }, { "center", 0.0 }, { "dry_wet", 0.0 } }, cpu, finite);
+    const double wide = sideOverMid("srsly2", { { "space", 0.9 }, { "center", 0.5 }, { "dry_wet", 1.0 } }, cpu, finite);
+    check(finite && wide > base * 1.3, "Srsly2 widens (side/mid " + juce::String(base, 3) + " -> " + juce::String(wide, 3) + ")");
+    std::cout << "  Srsly2 CPU: " << cpu << "% of one core at 48 kHz\n";
+    const double sw = sideOverMid("sweetwide", { { "un_wide", 0.5 }, { "soar", 0.0 } }, cpu, finite);
+    const double swWide = sideOverMid("sweetwide", { { "un_wide", 0.9 }, { "soar", 0.3 } }, cpu, finite);
+    const double swNarrow = sideOverMid("sweetwide", { { "un_wide", 0.1 }, { "soar", 0.0 } }, cpu, finite);
+    check(finite && swWide > swNarrow, "SweetWide widens and narrows (narrow " + juce::String(swNarrow, 3) + ", neutral " + juce::String(sw, 3) + ", wide " + juce::String(swWide, 3) + ")");
+    std::cout << "  SweetWide CPU: " << cpu << "% of one core at 48 kHz\n";
+}
+
 static void testReplyParsing(const Catalogue& cat)
 {
     std::cout << "AI reply parsing\n";
@@ -623,6 +669,7 @@ int main(int argc, char* argv[])
     testDelay(cat);
     testTapeEcho(cat);
     testAirwindowsAdditions(cat);
+    testWideners(cat);
     testTone3000(cat);
     testLive(cat);
 

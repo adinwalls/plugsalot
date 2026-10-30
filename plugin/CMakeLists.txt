@@ -15,6 +15,10 @@ add_library(plugsalot_upstream_dsp STATIC
     ${V}/airwindows/plugins/LinuxVST/src/DeBess/DeBessProc.cpp
     ${V}/airwindows/plugins/LinuxVST/src/ButterComp2/ButterComp2.cpp
     ${V}/airwindows/plugins/LinuxVST/src/ButterComp2/ButterComp2Proc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Srsly2/Srsly2.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Srsly2/Srsly2Proc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/SweetWide/SweetWide.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/SweetWide/SweetWideProc.cpp
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelIn/Console8ChannelIn.cpp
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelIn/Console8ChannelInProc.cpp
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelHype/Console8ChannelHype.cpp
@@ -30,6 +34,8 @@ target_include_directories(plugsalot_upstream_dsp PUBLIC
     ${V}/x42-dpl/src
     ${V}/airwindows/plugins/LinuxVST/src/DeBess
     ${V}/airwindows/plugins/LinuxVST/src/ButterComp2
+    ${V}/airwindows/plugins/LinuxVST/src/Srsly2
+    ${V}/airwindows/plugins/LinuxVST/src/SweetWide
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelIn
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelHype
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelOut
@@ -39,7 +45,7 @@ target_include_directories(plugsalot_upstream_dsp PUBLIC
 set_source_files_properties(
     ${V}/airwindows/plugins/LinuxVST/src/DeBess/DeBess.cpp
     PROPERTIES COMPILE_DEFINITIONS "createEffectInstance=createEffectInstance_DeBess")
-foreach(fx ButterComp2 Console8ChannelIn Console8ChannelHype Console8ChannelOut)
+foreach(fx ButterComp2 Srsly2 SweetWide Console8ChannelIn Console8ChannelHype Console8ChannelOut)
     set_source_files_properties(${V}/airwindows/plugins/LinuxVST/src/${fx}/${fx}.cpp
         PROPERTIES COMPILE_DEFINITIONS "createEffectInstance=createEffectInstance_${fx}")
 endforeach()
@@ -121,7 +127,7 @@ endif()
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(m ${PLUGSALOT_MODULES})
     # Module and raw files share names; copy with prefixes so resource names are unique.
@@ -161,6 +167,8 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/DelayModule.cpp
     src/dsp/modules/TapeEchoModule.cpp
     src/dsp/modules/ButterComp2Module.cpp
+    src/dsp/modules/Srsly2Module.cpp
+    src/dsp/modules/SweetWideModule.cpp
     src/dsp/modules/Console8Module.cpp
     src/dsp/modules/Console8InStage.cpp
     src/dsp/modules/Console8HypeStage.cpp
