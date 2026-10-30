@@ -14,6 +14,7 @@ class ModuleEditor final : public juce::Component
 public:
     explicit ModuleEditor(PlugsalotProcessor& p);
     void showSlot(int slot);
+    const juce::String& moduleTitle() const { return title; }
     // Set by the editor: opens the TONE3000 browser for a NAM slot and calls back with the
     // library name of the downloaded capture.
     std::function<void(int slot, std::function<void(const juce::String&)> done)> onBrowseTone3000;

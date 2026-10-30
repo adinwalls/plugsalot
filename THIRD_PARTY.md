@@ -36,3 +36,8 @@ Supporting sources (constants only, not ported code):
 
 - lsp-plugin-fw: https://github.com/lsp-plugins/lsp-plugin-fw at `45f2e23ba8` (LGPL-3.0-or-later). Constants only (frequency limits); needed to resolve lsp-para-equalizer ranges.
 - lsp-dsp-units: https://github.com/lsp-plugins/lsp-dsp-units at `8dd2a6905c` (LGPL-3.0-or-later). Constants only (SPEC_FREQ_MIN/MAX, gain constants).
+
+## Fonts (embedded in the plugin window)
+
+- Barlow and Barlow Condensed, Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow), SIL Open Font License 1.1 (`plugin/resources/fonts/OFL-Barlow.txt`)
+- Permanent Marker, Copyright 2010 The Permanent Marker Project Authors (Font Diner, Apache-2.0 via Google Fonts) (`plugin/resources/fonts/LICENSE-PermanentMarker-Apache-2.0.txt`)

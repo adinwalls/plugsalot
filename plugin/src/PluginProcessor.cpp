@@ -121,6 +121,9 @@ void PlugsalotProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Mi
         return;
     }
 
+    if (peak > outputPeak.load(std::memory_order_relaxed))
+        outputPeak.store(peak, std::memory_order_relaxed);
+
     if (outCh == 1)
     {
         buffer.copyFrom(0, 0, view, 0, 0, n);

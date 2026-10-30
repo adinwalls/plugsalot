@@ -32,8 +32,16 @@ public:
     void refresh();
     void resized() override;
     void paint(juce::Graphics&) override;
+    void paintOverChildren(juce::Graphics&) override;
 
 private:
+    // The big red-orange pilot lamp on its bezel, with a "SEND" plate above it.
+    struct LampButton final : public juce::Button
+    {
+        LampButton() : juce::Button("send") {}
+        void paintButton(juce::Graphics&, bool over, bool down) override;
+    };
+
     void send(const juce::String& text);
     void openTypingWindow();
     void mouseDown(const juce::MouseEvent&) override;
@@ -41,10 +49,11 @@ private:
 
     PlugsalotProcessor& proc;
     juce::TextEditor history, input;
-    juce::TextButton sendButton { "Send" };
+    LampButton sendButton;
     juce::TextButton typingWindowButton { "Can't type? Open a typing window" };
     juce::OwnedArray<juce::TextButton> quick;
-    juce::Label busy, chatLabel;
+    juce::Label busy;
+    juce::Rectangle<float> talkTape, tweakTape;
     std::unique_ptr<TypingWindow> typingWindow;
     // Linux plugin hosts (Ardour, for one) keep the keyboard on their own window;
     // there a click on the chat box asks the system for the keyboard directly.

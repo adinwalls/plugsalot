@@ -64,6 +64,8 @@ public:
     SessionContext& context() { return ctx; }
     AudioAnalysis analysis() const { return analyser.snapshot(); }
     int chainCpuPoints() const;
+    // Peak output level since the last call (linear), for the VU meter; message thread only.
+    float takeOutputPeak() noexcept { return outputPeak.exchange(0.0f); }
 
     // Provider settings are app-wide (shared by every instance), stored in the
     // user's settings folder.
@@ -99,6 +101,7 @@ private:
 
     juce::AudioBuffer<float> work;
     std::atomic<bool> safetyMuted { false };
+    std::atomic<float> outputPeak { 0.0f };
     int reportedLatency = -1;
     std::unique_ptr<juce::PropertiesFile> settingsFile;
 

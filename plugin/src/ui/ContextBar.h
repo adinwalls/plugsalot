@@ -15,6 +15,8 @@ public:
     void resized() override;
     void paint(juce::Graphics&) override;
     void refresh();
+    // Feed the VU meter with the latest output peak (linear); call at ~30 Hz.
+    void pushLevel(float peak);
 
     juce::TextButton settingsButton { "Settings" };
     juce::Label status;
@@ -31,6 +33,7 @@ private:
                   const juce::StringArray& values, std::function<juce::String&()> target);
 
     PlugsalotProcessor& proc;
+    float needle = 0.0f;
     Field source, stage, style, character, cpu;
 };
 

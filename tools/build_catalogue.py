@@ -177,6 +177,13 @@ def third_party(modules: list[dict], sources: dict) -> str:
         for k in support:
             s = sources[k]
             lines.append(f"- {k}: {s['repo']} at `{s['commit'][:10]}` ({s['license']}). {s['note']}")
+    lines += [
+        "",
+        "## Fonts (embedded in the plugin window)",
+        "",
+        "- Barlow and Barlow Condensed, Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow), SIL Open Font License 1.1 (`plugin/resources/fonts/OFL-Barlow.txt`)",
+        "- Permanent Marker, Copyright 2010 The Permanent Marker Project Authors (Font Diner, Apache-2.0 via Google Fonts) (`plugin/resources/fonts/LICENSE-PermanentMarker-Apache-2.0.txt`)",
+    ]
     return "\n".join(lines) + "\n"
 
 

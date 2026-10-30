@@ -34,7 +34,7 @@ void ModuleEditor::showSlot(int s)
                 const auto value = cs.params.contains(p.id) ? cs.params[p.id] : p.defaultValue;
                 c->label.setText(p.name, juce::dontSendNotification);
                 c->label.setColour(juce::Label::textColourId, theme::text);
-                c->label.setFont(juce::FontOptions(12.5f));
+                c->label.setFont(vintage::body(13.5f));
                 c->label.setTooltip(p.aiHint);
                 const int index = slot;
                 const auto paramId = p.id;
@@ -105,7 +105,7 @@ void ModuleEditor::addFileRow(const ModuleSpec& spec, const juce::String& curren
     auto* c = controls.add(new Control());
     c->label.setText(isNam ? "Capture" : "Cabinet", juce::dontSendNotification);
     c->label.setColour(juce::Label::textColourId, theme::text);
-    c->label.setFont(juce::FontOptions(12.5f));
+    c->label.setFont(vintage::body(13.5f));
     c->label.setTooltip(isNam ? "The amp or pedal capture (.nam) this module plays through."
                               : "The cabinet impulse response (.wav) this module convolves with.");
 
@@ -184,7 +184,7 @@ void ModuleEditor::addFileRow(const ModuleSpec& spec, const juce::String& curren
         auto* credit = controls.add(new Control());
         credit->label.setText("Credit", juce::dontSendNotification);
         credit->label.setColour(juce::Label::textColourId, theme::text);
-        credit->label.setFont(juce::FontOptions(12.5f));
+        credit->label.setFont(vintage::body(13.5f));
         const auto text = info.getProperty("tone_title", {}).toString() + " by " + info.getProperty("creator", {}).toString()
                           + " (" + Tone3000::licenceLabel(info.getProperty("license", {}).toString()) + ") on TONE3000";
         auto link = std::make_unique<juce::HyperlinkButton>(text, juce::URL(info.getProperty("url", "https://www.tone3000.com").toString()));
@@ -200,27 +200,19 @@ void ModuleEditor::addFileRow(const ModuleSpec& spec, const juce::String& curren
 
 void ModuleEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(theme::panel);
-    g.setColour(theme::outline);
-    g.drawHorizontalLine(0, 0.0f, (float) getWidth());
-    g.setColour(theme::text);
-    g.setFont(juce::FontOptions(13.0f, juce::Font::bold));
-    g.drawText(title.isNotEmpty() ? title.toUpperCase() + " SETTINGS" : "SETTINGS", 14, 6, getWidth() - 28, 18,
-               juce::Justification::centredLeft);
+    g.setColour(vintage::col::transcript);
+    g.fillRoundedRectangle(getLocalBounds().toFloat(), 3.0f);
     if (controls.isEmpty())
     {
         g.setColour(theme::muted);
-        g.setFont(juce::FontOptions(12.5f));
-        g.drawText("Select a module to see and tweak what the assistant set.", getLocalBounds().withTrimmedTop(28).reduced(14, 4),
-                   juce::Justification::topLeft);
+        g.setFont(vintage::body(13.0f));
+        g.drawText("Nothing to adjust here.", getLocalBounds().reduced(14, 8), juce::Justification::topLeft);
     }
 }
 
 void ModuleEditor::resized()
 {
-    auto r = getLocalBounds().reduced(10, 4);
-    r.removeFromTop(24);
-    viewport.setBounds(r);
+    viewport.setBounds(getLocalBounds().reduced(10, 8));
     const int w = viewport.getWidth() - viewport.getScrollBarThickness() - 2;
     content.setSize(w, controls.size() * controlHeight);
     int y = 0;

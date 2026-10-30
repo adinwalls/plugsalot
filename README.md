@@ -13,7 +13,7 @@ plugin/
   src/core/        catalogue loader, chain data, validator (C++ port of tools/chain_validator.py)
   src/dsp/         chain engine (lock-free chain swaps), module wrappers, input analyser
   src/ai/          system prompt, Gemini and Claude clients, validated exchange with one retry
-  src/ui/          prototype interface
+  src/ui/          the vintage-rack interface (RackPanel, Vintage painters, chat, settings)
   resources/       guidelines.md: the AI's instructions (layer 3 of the AI design)
   vendor/          upstream DSP copied unmodified by tools/vendor_sources.py
   shims/           tiny stand-ins for the frameworks upstream code expects (DPF, VST2 SDK)

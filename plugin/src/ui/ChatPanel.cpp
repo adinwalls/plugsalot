@@ -5,7 +5,7 @@
 namespace plugsalot
 {
 
-static constexpr const char* placeholder = "CHAT HERE: e.g. warm, intimate vocal with a little space";
+static constexpr const char* placeholder = "e.g. warm, intimate vocal with a little space";
 
 // ---------------------------------------------------------------------------
 // Typing window
@@ -109,36 +109,35 @@ ChatPanel::ChatPanel(PlugsalotProcessor& p) : proc(p)
     history.setReadOnly(true);
     history.setCaretVisible(false);
     history.setScrollbarsShown(true);
-    history.setColour(juce::TextEditor::backgroundColourId, theme::background);
-    history.setColour(juce::TextEditor::outlineColourId, theme::outline);
+    history.setColour(juce::TextEditor::backgroundColourId, vintage::col::transcript);
+    history.setColour(juce::TextEditor::outlineColourId, juce::Colours::transparentBlack);
+    history.setColour(juce::TextEditor::focusedOutlineColourId, juce::Colours::transparentBlack);
+    history.setIndents(10, 10);
     addAndMakeVisible(history);
-
-    chatLabel.setText("Tell Plugsalot a bit more about what you're recording and how you want it to sound", juce::dontSendNotification);
-    chatLabel.setFont(juce::FontOptions(13.0f, juce::Font::bold));
-    chatLabel.setMinimumHorizontalScale(0.75f);
-    chatLabel.setColour(juce::Label::textColourId, theme::accent);
-    addAndMakeVisible(chatLabel);
 
     // Multi-line so longer requests stay visible; Enter sends.
     input.setMultiLine(true, true);
     input.setReturnKeyStartsNewLine(false);
     input.setScrollbarsShown(true);
     input.setTextToShowWhenEmpty(placeholder, theme::muted);
-    input.setFont(juce::FontOptions(16.0f));
-    input.setColour(juce::TextEditor::backgroundColourId, theme::panelHi);
-    input.setColour(juce::TextEditor::outlineColourId, theme::accent.withAlpha(0.5f));
-    input.setColour(juce::TextEditor::focusedOutlineColourId, theme::accent);
+    input.setFont(vintage::body(14.5f));
+    input.setIndents(8, 8);
+    input.setBorder(juce::BorderSize<int>(1));
+    input.setColour(juce::TextEditor::backgroundColourId, vintage::col::inputBack);
+    input.setColour(juce::TextEditor::outlineColourId, juce::Colour(0xff4a576b));
+    input.setColour(juce::TextEditor::focusedOutlineColourId, vintage::col::note);
+    input.setTooltip("Give Plugsalot as much detail as possible so it can dial in your settings. "
+                     "Tell it how the instrument or voice was recorded, what's in the mix with it etc.");
     input.onReturnKey = [this] { send(input.getText()); };
     addAndMakeVisible(input);
 
-    sendButton.setColour(juce::TextButton::buttonColourId, theme::accent.darker(0.3f));
     sendButton.onClick = [this] { send(input.getText()); };
     addAndMakeVisible(sendButton);
 
     // The typing-window fallback is for hosts that keep the keyboard; the
     // standalone app always receives keys, so it doesn't need it.
-    typingWindowButton.setColour(juce::TextButton::buttonColourId, juce::Colours::transparentBlack);
-    typingWindowButton.setColour(juce::TextButton::textColourOffId, theme::muted);
+    typingWindowButton.getProperties().set("ghost", true);
+    typingWindowButton.getProperties().set("fontSize", 13.0f);
     typingWindowButton.setTooltip("Some DAWs (for example Ardour) keep the keyboard for their own shortcuts. "
                                   "In Ardour you can also click the keyboard button at the top right of the plugin window.");
     typingWindowButton.onClick = [this] { openTypingWindow(); };
@@ -153,6 +152,8 @@ ChatPanel::ChatPanel(PlugsalotProcessor& p) : proc(p)
     for (auto label : { "Set up a chain", "Brighter", "Warmer", "Less muddy", "More punch", "More space", "Explain the chain" })
     {
         auto* b = quick.add(new juce::TextButton(label));
+        b->getProperties().set("cap", true);
+        b->getProperties().set("fontSize", 14.0f);
         b->onClick = [this, b]
         {
             const auto t = b->getButtonText();
@@ -161,8 +162,10 @@ ChatPanel::ChatPanel(PlugsalotProcessor& p) : proc(p)
         addAndMakeVisible(b);
     }
 
-    busy.setColour(juce::Label::textColourId, theme::accent);
-    busy.setFont(juce::FontOptions(12.5f));
+    busy.setColour(juce::Label::textColourId, vintage::col::gold);
+    busy.setFont(vintage::body(12.5f));
+    busy.setJustificationType(juce::Justification::centredRight);
+    busy.setBorderSize({});
     addAndMakeVisible(busy);
     refresh();
 }
@@ -239,14 +242,13 @@ void ChatPanel::refresh()
     history.clear();
     for (auto& m : proc.getChat())
     {
-        juce::Colour c = m.from == ChatMessage::From::User ? theme::user
-                       : m.from == ChatMessage::From::Assistant ? theme::text : theme::warning;
-        const juce::String who = m.from == ChatMessage::From::User ? "You" : m.from == ChatMessage::From::Assistant ? "Plugsalot" : "Note";
-        history.setFont(juce::FontOptions(12.0f, juce::Font::bold));
-        history.setColour(juce::TextEditor::textColourId, c.withAlpha(0.8f));
-        history.insertTextAtCaret(who + "\n");
-        history.setFont(juce::FontOptions(14.5f));
-        history.setColour(juce::TextEditor::textColourId, c);
+        const bool isUser = m.from == ChatMessage::From::User, isNote = m.from == ChatMessage::From::System;
+        const juce::Colour who = isUser ? vintage::col::you : isNote ? vintage::col::note : vintage::col::plugsalot;
+        history.setFont(vintage::condensed(11.5f).withExtraKerningFactor(0.12f));
+        history.setColour(juce::TextEditor::textColourId, who);
+        history.insertTextAtCaret(juce::String(isUser ? "YOU" : isNote ? "NOTE" : "PLUGSALOT") + "\n");
+        history.setFont(vintage::body(14.0f));
+        history.setColour(juce::TextEditor::textColourId, isNote ? vintage::col::note : vintage::col::textHi);
         history.insertTextAtCaret(m.text + "\n\n");
     }
     history.moveCaretToEnd();
@@ -261,42 +263,91 @@ void ChatPanel::refresh()
         busy.setText({}, juce::dontSendNotification);
 }
 
+void ChatPanel::LampButton::paintButton(juce::Graphics& g, bool over, bool down)
+{
+    // "SEND" plate, then the bezel with the lamp in it.
+    const float w = (float) getWidth();
+    juce::Rectangle<float> plate((w - 56.0f) * 0.5f, 0.0f, 56.0f, 17.0f);
+    g.setGradientFill(juce::ColourGradient(juce::Colour(0xff2a2a2a), 0.0f, plate.getY(), juce::Colour(0xff121212), 0.0f, plate.getBottom(), false));
+    g.fillRoundedRectangle(plate, 1.0f);
+    g.setColour(juce::Colour(0x1fffffff));
+    g.drawLine(plate.getX(), plate.getY() + 0.5f, plate.getRight(), plate.getY() + 0.5f);
+    g.setColour(juce::Colour(0xfff1ece2));
+    g.setFont(vintage::condensed(12.0f, false).withExtraKerningFactor(0.16f));
+    g.drawText("SEND", plate, juce::Justification::centred);
+
+    const auto bezel = juce::Rectangle<float>(76.0f, 76.0f).withCentre({ w * 0.5f, 22.0f + 38.0f });
+    vintage::drawBezel(g, bezel, 10.0f);
+    const bool on = isEnabled();
+    if (! on)
+        g.beginTransparencyLayer(0.45f);
+    vintage::drawLamp(g, bezel.reduced(5.0f), over && on, down && on);
+    if (! on)
+        g.endTransparencyLayer();
+}
+
 void ChatPanel::paint(juce::Graphics& g)
 {
-    g.fillAll(theme::panel);
-    g.setColour(theme::text);
-    g.setFont(juce::FontOptions(13.0f, juce::Font::bold));
-    g.drawText("ASSISTANT", 14, 8, 200, 18, juce::Justification::centredLeft);
+    const auto r = getLocalBounds().toFloat();
+    g.setColour(vintage::col::assistant);
+    g.fillRoundedRectangle(r, 4.0f);
+    g.setColour(juce::Colour(0xff131820));
+    g.drawRoundedRectangle(r.reduced(0.5f), 4.0f, 1.0f);
+    g.setColour(vintage::col::textHi);
+    g.setFont(vintage::condensed(15.0f).withExtraKerningFactor(0.14f));
+    g.drawText("ASSISTANT", 12, 12, 200, 20, juce::Justification::centredLeft);
+    // shadow at the top of the transcript, like a recessed window
+    auto t = history.getBounds().toFloat();
+    g.setGradientFill(juce::ColourGradient(juce::Colour(0x99000000), 0.0f, t.getY(), juce::Colours::transparentBlack, 0.0f, t.getY() + 8.0f, false));
+    g.fillRect(t.withHeight(8.0f));
+}
+
+void ChatPanel::paintOverChildren(juce::Graphics& g)
+{
+    vintage::drawTape(g, tweakTape, "SMALL TWEAKS, NO REBUILD", 11.0f, -2.0f);
+    vintage::drawTape(g, talkTape, "Talk to Plugsalot", 14.0f, -1.5f);
 }
 
 void ChatPanel::resized()
 {
-    auto r = getLocalBounds().reduced(10, 8);
-    auto top = r.removeFromTop(20);
-    busy.setBounds(top.removeFromRight(160));
-    r.removeFromTop(4);
+    auto r = getLocalBounds().reduced(12);
+    auto head = r.removeFromTop(20);
+    busy.setBounds(head.removeFromRight(200));
+    r.removeFromTop(10);
 
-    // Typing area: about a quarter of the panel, at least three lines.
-    const int inputHeight = juce::jlimit(84, 150, r.getHeight() / 4);
+    // bottom up: typing-window helper, input row, tape label, quick buttons, then the transcript
     if (typingWindowButton.isVisible())
-        typingWindowButton.setBounds(r.removeFromBottom(22).removeFromLeft(260));
-    auto inputRow = r.removeFromBottom(inputHeight);
-    sendButton.setBounds(inputRow.removeFromRight(90).withTrimmedTop(inputRow.getHeight() - 40));
+    {
+        auto row = r.removeFromBottom(22);
+        typingWindowButton.setBounds(row.removeFromLeft(240));
+        r.removeFromBottom(4);
+    }
+    auto inputRow = r.removeFromBottom(98 + 0);
+    auto lampCol = inputRow.removeFromRight(78);
+    sendButton.setBounds(lampCol.withHeight(22 + 76 + 4));
     inputRow.removeFromRight(8);
     input.setBounds(inputRow);
-    chatLabel.setBounds(r.removeFromBottom(20));
-    r.removeFromBottom(2);
+    r.removeFromBottom(8);
 
-    // Quick buttons wrap onto up to two rows.
-    auto quickArea = r.removeFromBottom(60);
+    const auto talkFont = vintage::marker(14.0f);
+    const float tw = vintage::textWidth(talkFont, "Talk to Plugsalot") + 26.0f;
+    talkTape = juce::Rectangle<float>((float) r.getX(), (float) r.getBottom() - 25.0f, tw, 25.0f);
+    r.removeFromBottom(25 + 10);
+
     juce::FlexBox fb;
     fb.flexWrap = juce::FlexBox::Wrap::wrap;
     fb.justifyContent = juce::FlexBox::JustifyContent::flexStart;
+    fb.alignContent = juce::FlexBox::AlignContent::flexStart;
+    const auto qFont = vintage::condensed(14.0f, false);
     for (auto* b : quick)
-        fb.items.add(juce::FlexItem(*b).withWidth((float) juce::jmax(70, b->getBestWidthForHeight(26) + 14)).withHeight(26).withMargin(2));
+        fb.items.add(juce::FlexItem(*b).withWidth(vintage::textWidth(qFont, b->getButtonText()) + 22.0f).withHeight(30).withMargin({ 0, 6, 6, 0 }));
+    const int rows = 2;
+    auto quickArea = r.removeFromBottom(rows * 36 - 6);
     fb.performLayout(quickArea);
-    r.removeFromBottom(4);
+    r.removeFromBottom(10 - 6 + 0);
     history.setBounds(r);
+
+    tweakTape = juce::Rectangle<float>(5.0f, (float) r.getBottom() - 12.0f, 190.0f, 22.0f);
 }
 
 } // namespace plugsalot

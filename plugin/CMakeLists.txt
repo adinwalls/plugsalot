@@ -129,6 +129,9 @@ set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # (para_eq, drum_sampler) are left out so the AI never offers them.
 set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
+foreach(f BarlowCondensed-SemiBold BarlowCondensed-Bold BarlowCondensed-Medium Barlow-Regular Barlow-Medium PermanentMarker-Regular)
+    list(APPEND PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/${f}.ttf)
+endforeach()
 foreach(m ${PLUGSALOT_MODULES})
     # Module and raw files share names; copy with prefixes so resource names are unique.
     configure_file(${CAT}/modules/${m}.json ${CMAKE_CURRENT_BINARY_DIR}/data/module_${m}.json COPYONLY)
@@ -215,7 +218,8 @@ target_sources(Plugsalot PRIVATE
     src/PluginProcessor.cpp
     src/PluginEditor.cpp
     src/ui/ChatPanel.cpp
-    src/ui/ChainPanel.cpp
+    src/ui/Vintage.cpp
+    src/ui/RackPanel.cpp
     src/ui/ModuleEditor.cpp
     src/ui/ContextBar.cpp
     src/ui/SettingsDialog.cpp
