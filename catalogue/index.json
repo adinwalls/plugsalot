@@ -30,6 +30,26 @@
       "tracking_safe": true
     },
     {
+      "id": "console8",
+      "name": "Console8",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Console-channel colour: subtle analog-style texture (defined lows, softened top, solid depth) as if through a good desk; raise Drive for smooth saturation. A 'secret sauce' late in a vocal chain, before reverb.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "electric guitar",
+        "bass guitar",
+        "keys",
+        "synth",
+        "drum bus",
+        "master"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
       "id": "tape",
       "name": "TapeMachine 2",
       "kind": "effect",
@@ -96,6 +116,25 @@
         "software drums"
       ],
       "cpu_points": null,
+      "tracking_safe": true
+    },
+    {
+      "id": "buttercomp2",
+      "name": "ButterComp2",
+      "kind": "effect",
+      "category": "dynamics",
+      "purpose": "Smooth, glue-style compressor with a soft, musical, almost un-compressor-like feel: it thickens and evens out vocals, bass, guitars and buses without pumping or obvious grabbing. One Compress knob, plus output and dry/wet for parallel use.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "electric guitar",
+        "bass guitar",
+        "keys",
+        "drum bus",
+        "master"
+      ],
+      "cpu_points": 1,
       "tracking_safe": true
     },
     {

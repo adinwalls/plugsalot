@@ -14,6 +14,8 @@ std::unique_ptr<Module> createNamAmpModule(const ModuleSpec&);
 std::unique_ptr<Module> createCabIrModule(const ModuleSpec&);
 std::unique_ptr<Module> createDelayModule(const ModuleSpec&);
 std::unique_ptr<Module> createTapeEchoModule(const ModuleSpec&);
+std::unique_ptr<Module> createButterComp2Module(const ModuleSpec&);
+std::unique_ptr<Module> createConsole8Module(const ModuleSpec&);
 
 std::unique_ptr<Module> createModule(const ModuleSpec& spec)
 {
@@ -28,6 +30,8 @@ std::unique_ptr<Module> createModule(const ModuleSpec& spec)
     else if (spec.id == "cab_ir")      m = createCabIrModule(spec);
     else if (spec.id == "delay")       m = createDelayModule(spec);
     else if (spec.id == "tape_echo")   m = createTapeEchoModule(spec);
+    else if (spec.id == "buttercomp2") m = createButterComp2Module(spec);
+    else if (spec.id == "console8")    m = createConsole8Module(spec);
     if (m)
         m->applyUpstreamDefaults();
     return m;

@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "id": "console8",
+  "name": "Console8",
+  "kind": "effect",
+  "category": "character",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/Console8ChannelIn",
+    "upstream_name": "Airwindows Console8 Channel",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "manual"
+  },
+  "purpose": "Console-channel colour: subtle analog-style texture (defined lows, softened top, solid depth) as if through a good desk; raise Drive for smooth saturation. A 'secret sauce' late in a vocal chain, before reverb.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "acoustic guitar",
+    "electric guitar",
+    "bass guitar",
+    "keys",
+    "synth",
+    "drum bus",
+    "master"
+  ],
+  "avoid_for": [
+    "material that must stay completely untouched"
+  ],
+  "tags": [
+    "console",
+    "saturation",
+    "analog",
+    "warmth",
+    "glue",
+    "secret sauce",
+    "texture"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "maker": "Airwindows",
+  "tape": "CONSOLE SECRET SAUCE",
+  "knobs": [
+    {
+      "param": "drive",
+      "label": "DRIVE",
+      "colour": "red"
+    }
+  ],
+  "params": [
+    {
+      "upstream_id": "tone",
+      "id": "tone",
+      "name": "Tone",
+      "type": "enum",
+      "options": [
+        "Solid",
+        "Hype"
+      ],
+      "default": "Solid",
+      "ai_hint": "Solid: tough, physical, grounded. Hype: softer and more ethereal, with the presence band sticking out; a good finish for a dull or dense vocal."
+    },
+    {
+      "upstream_id": "drive",
+      "id": "drive",
+      "name": "Drive",
+      "type": "float",
+      "min": 0,
+      "max": 100,
+      "default": 20,
+      "unit": "%",
+      "ai_hint": "0 is clean texture only, 20-40 adds warmth and density, 60-100 is obvious smooth saturation and gets louder. Back the level off with later modules if it rises."
+    }
+  ],
+  "notes": [
+    "Written against Airwindows Console8: Console8ChannelIn (or Console8ChannelHype) followed by Console8ChannelOut. In the original, In starts a channel and Out ends it with the other processing between them; Plugsalot runs them back to back as one stage.",
+    "Drive is the Out plugin's fader: 0% is unity, 100% is 6 dB of gain into each of its two sine-shaped stages (about 12 dB total) before they soft-clip.",
+    "Console8 expects clean, low-level inputs; it works best late in a chain on a well-levelled signal.",
+    "CPU: 0.79% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

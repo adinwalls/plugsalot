@@ -43,7 +43,7 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 10, "ten runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 12, "twelve runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
@@ -444,6 +444,56 @@ static void testTapeEcho(const Catalogue& cat)
     std::cout << "  Tape Echo CPU: " << cpu1 << "% of one core at 48 kHz\n";
 }
 
+static void testAirwindowsAdditions(const Catalogue& cat)
+{
+    std::cout << "ButterComp2 and Console8\n";
+    const double sr = 48000.0;
+    const int block = 256, total = (int) sr;
+    struct Result { double rms = 0, peak = 0, cpu = 0; bool finite = true; };
+    auto run = [&](const char* id, const std::vector<std::pair<const char*, juce::var>>& params, float amp) {
+        auto m = createModule(*cat.find(id));
+        m->prepare(sr, block);
+        for (auto& p : params) m->setParam(p.first, p.second);
+        Result r;
+        double sum = 0; int count = 0, secondHalf = total / 2;
+        double seconds = 0;
+        for (int s = 0; s < total; s += block)
+        {
+            std::vector<float> l((size_t) block), rr((size_t) block);
+            for (int i = 0; i < block; ++i) l[(size_t) i] = rr[(size_t) i] = amp * std::sin(0.0587f * (float) (s + i));
+            float* c[2] = { l.data(), rr.data() };
+            auto t0 = std::chrono::high_resolution_clock::now();
+            m->process(c, block);
+            seconds += std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - t0).count();
+            for (int i = 0; i < block; ++i)
+            {
+                r.finite &= std::isfinite(l[(size_t) i]);
+                r.peak = juce::jmax(r.peak, (double) std::abs(l[(size_t) i]));
+                if (s + i >= secondHalf) { sum += (double) l[(size_t) i] * l[(size_t) i]; ++count; }
+            }
+        }
+        r.rms = std::sqrt(sum / juce::jmax(1, count));
+        r.cpu = 100.0 * seconds;
+        return r;
+    };
+    const double inRms = 0.3 / std::sqrt(2.0);
+    auto clean = run("console8", { { "drive", 0.0 }, { "tone", "Solid" } }, 0.3f);
+    check(clean.finite && std::abs(juce::Decibels::gainToDecibels(clean.rms / inRms)) < 1.5,
+          "Console8 at zero drive stays near unity (" + juce::String(juce::Decibels::gainToDecibels(clean.rms / inRms), 2) + " dB)");
+    auto driven = run("console8", { { "drive", 100.0 }, { "tone", "Solid" } }, 0.3f);
+    check(driven.finite && driven.peak < 1.5 && driven.rms > clean.rms, "Console8 drive adds level and stays bounded (peak " + juce::String(driven.peak, 2) + ")");
+    auto hype = run("console8", { { "drive", 0.0 }, { "tone", "Hype" } }, 0.3f);
+    check(hype.finite && std::abs(hype.rms - clean.rms) > 1.0e-6, "Hype tone differs from Solid");
+    std::cout << "  Console8 CPU: " << clean.cpu << "% of one core at 48 kHz\n";
+
+    auto off = run("buttercomp2", { { "compress", 0.0 }, { "output", 0.5 }, { "dry_wet", 1.0 } }, 0.5f);
+    auto comp = run("buttercomp2", { { "compress", 0.7 }, { "output", 0.5 }, { "dry_wet", 1.0 } }, 0.5f);
+    check(off.finite && comp.finite && std::abs(juce::Decibels::gainToDecibels(off.rms / (0.5 / std::sqrt(2.0)))) < 1.0,
+          "ButterComp2 with Compress 0 passes the signal unchanged");
+    check(comp.finite && std::abs(comp.rms - off.rms) > 1.0e-3, "ButterComp2 changes the level when Compress is raised (" + juce::String(juce::Decibels::gainToDecibels(comp.rms / off.rms), 2) + " dB)");
+    std::cout << "  ButterComp2 CPU: " << comp.cpu << "% of one core at 48 kHz\n";
+}
+
 static void testReplyParsing(const Catalogue& cat)
 {
     std::cout << "AI reply parsing\n";
@@ -572,6 +622,7 @@ int main(int argc, char* argv[])
     testReplyParsing(cat);
     testDelay(cat);
     testTapeEcho(cat);
+    testAirwindowsAdditions(cat);
     testTone3000(cat);
     testLive(cat);
 

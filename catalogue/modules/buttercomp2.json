@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "id": "buttercomp2",
+  "name": "ButterComp2",
+  "kind": "effect",
+  "category": "dynamics",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/ButterComp2",
+    "upstream_name": "Airwindows ButterComp2",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "airwindows"
+  },
+  "purpose": "Smooth, glue-style compressor with a soft, musical, almost un-compressor-like feel: it thickens and evens out vocals, bass, guitars and buses without pumping or obvious grabbing. One Compress knob, plus output and dry/wet for parallel use.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "acoustic guitar",
+    "electric guitar",
+    "bass guitar",
+    "keys",
+    "drum bus",
+    "master"
+  ],
+  "avoid_for": [
+    "very fast peak control (use a limiter or Multi-Comp FET)",
+    "de-essing"
+  ],
+  "tags": [
+    "compressor",
+    "glue",
+    "smooth",
+    "parallel",
+    "transparent",
+    "vintage"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "maker": "Airwindows",
+  "tape": "SOFT GLUE COMPRESSION",
+  "knobs": [
+    {
+      "param": "compress",
+      "label": "COMPRESS",
+      "colour": "red"
+    },
+    {
+      "param": "output",
+      "label": "OUTPUT",
+      "colour": "grey"
+    },
+    {
+      "param": "dry_wet",
+      "label": "DRY/WET",
+      "colour": "cream"
+    }
+  ],
+  "params": [
+    {
+      "id": "compress",
+      "upstream_id": "A",
+      "name": "Compress",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.3,
+      "unit": "",
+      "ai_hint": "Amount of compression. 0.1-0.3 gentle glue, 0.4-0.6 clearly thicker and more even, 0.7+ heavy. Raises the level into the compressor by up to 14 dB, so the sound also gets louder."
+    },
+    {
+      "id": "output",
+      "upstream_id": "B",
+      "name": "Output",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Output level. 0.5 is unity (no change), 1.0 is +6 dB, 0 is silent. Trim down after a high Compress setting so level stays matched."
+    },
+    {
+      "id": "dry_wet",
+      "upstream_id": "C",
+      "name": "Dry/Wet",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": "",
+      "ai_hint": "Dry/wet blend. 1.0 is fully compressed; 0.4-0.6 gives parallel compression that keeps transients and adds body."
+    }
+  ],
+  "hidden_params": {
+    "count": 0
+  },
+  "notes": [
+    "Upstream description: ButterComp2 is improved ButterComp with an output control and sound upgrades.",
+    "All Airwindows parameters are 0..1. Compress 0 is effectively off.",
+    "Pairs well after a faster compressor: use ButterComp2 as the gentle second stage for glue.",
+    "CPU: 0.59% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}
