@@ -1,0 +1,105 @@
+name: Release
+
+# Push a tag like v0.2.0 to build Plugsalot on all three platforms and publish a GitHub Release.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-22.04        # not ubuntu-latest: older glibc, so it runs on Ubuntu/Pop!_OS 22.04 and newer
+          - name: Windows
+            os: windows-latest
+          - name: macOS
+            os: macos-latest        # builds a universal (arm64 + x86_64) binary
+    runs-on: ${{ matrix.os }}
+    name: Build ${{ matrix.name }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libjack-jackd2-dev libx11-dev libxrandr-dev libxinerama-dev \
+            libxcursor-dev libxext-dev libfreetype6-dev libfontconfig1-dev libcurl4-openssl-dev libgl1-mesa-dev ninja-build zip
+
+      - name: Configure
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            cmake -S . -B build -G Xcode -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          else
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          fi
+
+      - name: Build
+        shell: bash
+        run: |
+          set -o pipefail
+          if ! cmake --build build --config Release --parallel 4 2>&1 | tee build.log; then
+            grep -E "error C[0-9]+|error:|fatal error|LNK[0-9]+|undefined reference" build.log | sort -u | head -40 | \
+              while IFS= read -r line; do echo "::error::${line//%/%25}"; done
+            exit 1
+          fi
+
+      - name: Test
+        shell: bash
+        run: |
+          T=$(find build -type f \( -name PlugsalotTests -o -name PlugsalotTests.exe \) -perm -u+x 2>/dev/null | head -1)
+          [ -z "$T" ] && T=$(find build -type f -name PlugsalotTests.exe | head -1)
+          echo "Running $T"
+          "$T" "$GITHUB_WORKSPACE/catalogue/examples"
+
+      - name: Package
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          NAME="Plugsalot-${TAG}-${{ matrix.name }}"
+          mkdir -p "stage/$NAME"
+          A=build/plugin/Plugsalot_artefacts/Release
+          for d in VST3 LV2 AU Standalone; do
+            [ -d "$A/$d" ] && cp -R "$A/$d/." "stage/$NAME/"
+          done
+          cp LICENSE THIRD_PARTY.md docs/TESTING.md "stage/$NAME/"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            (cd stage && 7z a -tzip "../$NAME.zip" "$NAME" > /dev/null)
+          else
+            (cd stage && zip -r -y -q "../$NAME.zip" "$NAME")
+          fi
+          ls -la "$NAME.zip"
+          echo "ZIP=$NAME.zip" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ZIP }}
+          path: ${{ env.ZIP }}
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - run: ls -la dist
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true
