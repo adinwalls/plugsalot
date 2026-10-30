@@ -102,7 +102,7 @@ endif()
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(m ${PLUGSALOT_MODULES})
     # Module and raw files share names; copy with prefixes so resource names are unique.
@@ -139,6 +139,7 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/DeEssModule.cpp
     src/dsp/modules/NamAmpModule.cpp
     src/dsp/modules/CabIrModule.cpp
+    src/dsp/modules/DelayModule.cpp
     src/ai/PromptBuilder.cpp
     src/ai/LlmClient.cpp
     src/ai/AiSession.cpp

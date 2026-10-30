@@ -51,6 +51,24 @@
       "tracking_safe": true
     },
     {
+      "id": "delay",
+      "name": "Clean Delay",
+      "kind": "effect",
+      "category": "delay_modulation",
+      "purpose": "Clean, uncoloured stereo or ping-pong echo with filtered feedback and an optional ducker; for slapback, vocal throws, rhythmic echoes and ambience that must stay out of the way.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "electric guitar",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "snare"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
       "id": "drum_sampler",
       "name": "Drum Sampler",
       "kind": "instrument",

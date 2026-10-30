@@ -50,6 +50,11 @@ public:
         for (auto& p : spec.rawParams)
             if (! p.defaultValue.isVoid())
                 setNativeById(p.upstreamId, p.toNative(p.defaultValue));
+        // Hand-written modules have no upstream list: their curated defaults are the defaults.
+        if (spec.rawParams.empty())
+            for (auto& p : spec.params)
+                if (! p.defaultValue.isVoid())
+                    setNativeById(p.upstreamId, p.toNative(p.defaultValue));
     }
 
     // Set an AI-facing parameter by its catalogue id.

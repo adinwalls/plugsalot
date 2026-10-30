@@ -120,6 +120,15 @@
         "unsupported/Eigen/FFT",
         "unsupported/Eigen/src/FFT/*"
       ]
+    },
+    "plugsalot": {
+      "repo": "https://github.com/adinwalls/plugsalot",
+      "commit": "own",
+      "commit_date": "2026-10-30",
+      "license": "GPL-3.0-or-later",
+      "license_file": "LICENSE",
+      "authors": "Plugsalot contributors (written for this project)",
+      "own": true
     }
   }
 }

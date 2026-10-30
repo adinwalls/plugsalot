@@ -24,6 +24,8 @@ def git(*args: str, cwd: Path | None = None) -> str:
 
 
 def fetch(key: str, spec: dict, cache: Path) -> None:
+    if spec.get("own"):
+        return  # Plugsalot's own code: nothing to fetch
     dest = cache / key
     if (dest / ".git").exists():
         try:

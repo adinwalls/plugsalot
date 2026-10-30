@@ -43,14 +43,14 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 8, "eight runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 9, "nine runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
         for (auto& p : m.params)
             if (p.check(p.defaultValue).isNotEmpty())
                 defaultsOk = false;
-        check(defaultsOk && ! m.params.empty() && (m.fileKind.isNotEmpty() || ! m.rawParams.empty()), m.id + ": params and raw defaults valid");
+        check(defaultsOk && ! m.params.empty(), m.id + ": params and raw defaults valid");
     }
     auto prompt = PromptBuilder::systemPrompt(cat);
     check(prompt.contains("Hard limits") && prompt.contains("\"multicomp\""), "system prompt has guidelines and catalogue ("
@@ -333,6 +333,65 @@ static void testFileModules(const Catalogue& cat, const juce::File& vendorModels
     tmp.deleteRecursively();
 }
 
+static void testDelay(const Catalogue& cat)
+{
+    std::cout << "Clean Delay\n";
+    const double sr = 48000.0;
+    const int total = (int) sr; // one second
+    auto run = [&](const char* mode, double feedback, double duck, std::vector<float>& L, std::vector<float>& R, bool loudInput = false)
+    {
+        auto m = createModule(*cat.find("delay"));
+        m->prepare(sr, 512);
+        m->setParam("time_ms", 100.0);
+        m->setParam("mode", mode);
+        m->setParam("feedback", feedback);
+        m->setParam("duck", duck);
+        m->setParam("mix", 50.0);
+        m->setParam("low_cut", 20.0);
+        m->setParam("high_cut", 20000.0);
+        // let the parameter smoothing settle before the test impulse
+        std::vector<float> a(512, 0.0f), b(512, 0.0f);
+        for (int i = 0; i < 300; ++i) { float* c[2] = { a.data(), b.data() }; m->process(c, 512); }
+        L.assign((size_t) total, 0.0f);
+        R.assign((size_t) total, 0.0f);
+        if (loudInput)
+            for (int i = 0; i < total; ++i) L[(size_t) i] = R[(size_t) i] = 0.5f * std::sin(0.05f * (float) i);
+        else
+            L[0] = R[0] = 1.0f;
+        for (int s = 0; s < total; s += 512)
+        {
+            const int n = juce::jmin(512, total - s);
+            float* c[2] = { L.data() + s, R.data() + s };
+            m->process(c, n);
+        }
+    };
+    const int t = (int) (0.1 * sr);
+    std::vector<float> L, R;
+    run("Stereo", 50.0, 0.0, L, R);
+    check(std::abs(L[0] - 1.0f) < 1.0e-4f, "dry impulse passes at unity");
+    check(std::abs(L[(size_t) t] - 0.5f) < 0.02f, "first echo lands at 100 ms (" + juce::String(L[(size_t) t], 3) + ")");
+    check(std::abs(L[(size_t) (2 * t)] - 0.25f) < 0.05f, "second echo is about half of the first at 50% feedback (the feedback filters smear a single-sample click (" + juce::String(L[(size_t) (2 * t)], 3) + ")");
+    check(std::abs(R[(size_t) t] - 0.5f) < 0.02f, "stereo mode repeats on the same side");
+
+    run("Ping-pong", 50.0, 0.0, L, R);
+    check(std::abs(L[(size_t) t] - 0.5f * 1.0f) < 0.03f && std::abs(R[(size_t) t]) < 0.02f, "ping-pong first echo is on the left only");
+    check(std::abs(R[(size_t) (2 * t)]) > 0.1f && std::abs(L[(size_t) (2 * t)]) < 0.02f, "ping-pong second echo is on the right only");
+
+    run("Stereo", 90.0, 0.0, L, R, true);
+    bool finite = true; float peak = 0;
+    for (float x : L) { finite &= std::isfinite(x); peak = juce::jmax(peak, std::abs(x)); }
+    check(finite && peak < 6.0f, "high feedback on a sustained tone stays bounded (peak " + juce::String(peak, 2) + ")");
+
+    std::vector<float> L0, R0, L1, R1;
+    run("Stereo", 40.0, 0.0, L0, R0, true);
+    run("Stereo", 40.0, 100.0, L1, R1, true);
+    double e0 = 0, e1 = 0;
+    for (int i = total / 2; i < total; ++i) { e0 += std::abs(L0[(size_t) i]); e1 += std::abs(L1[(size_t) i]); }
+    double dry = 0;
+    for (int i = total / 2; i < total; ++i) dry += std::abs(0.5f * std::sin(0.05f * (float) i));
+    check((e1 - dry) < 0.6 * (e0 - dry), "ducking cuts the echoes while the input plays");
+}
+
 static void testReplyParsing(const Catalogue& cat)
 {
     std::cout << "AI reply parsing\n";
@@ -459,6 +518,7 @@ int main(int argc, char* argv[])
     testEngine(cat);
     testFileModules(cat, juce::File(PLUGSALOT_SOURCE_DIR "/plugin/vendor/nam-core/example_models"));
     testReplyParsing(cat);
+    testDelay(cat);
     testTone3000(cat);
     testLive(cat);
 

@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "id": "delay",
+  "name": "Clean Delay",
+  "kind": "effect",
+  "category": "delay_modulation",
+  "source": {
+    "source_key": "plugsalot",
+    "repo": "https://github.com/adinwalls/plugsalot",
+    "commit": "own",
+    "path": "plugin/src/dsp/modules/DelayModule.cpp",
+    "upstream_name": "Plugsalot Clean Delay",
+    "license": "GPL-3.0-or-later",
+    "authors": "Plugsalot contributors (written for this project)",
+    "extractor": "manual"
+  },
+  "purpose": "Clean, uncoloured stereo or ping-pong echo with filtered feedback and an optional ducker; for slapback, vocal throws, rhythmic echoes and ambience that must stay out of the way.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "electric guitar",
+    "acoustic guitar",
+    "keys",
+    "synth",
+    "snare"
+  ],
+  "avoid_for": [
+    "kick",
+    "bass",
+    "master",
+    "drum bus"
+  ],
+  "tags": [
+    "delay",
+    "echo",
+    "slapback",
+    "ping-pong",
+    "clean",
+    "ducking"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": false,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "maker": "PLUGSALOT",
+  "tape": "CLEAN ECHO: SPACE WITH TIMING",
+  "knobs": [
+    {
+      "param": "time_ms",
+      "label": "TIME",
+      "colour": "grey"
+    },
+    {
+      "param": "feedback",
+      "label": "FEEDBACK",
+      "colour": "red"
+    },
+    {
+      "param": "low_cut",
+      "label": "LOW CUT",
+      "colour": "black"
+    },
+    {
+      "param": "high_cut",
+      "label": "HIGH CUT",
+      "colour": "black"
+    },
+    {
+      "param": "mix",
+      "label": "MIX",
+      "colour": "cream"
+    }
+  ],
+  "params": [
+    {
+      "upstream_id": "time_ms",
+      "id": "time_ms",
+      "name": "Time",
+      "type": "float",
+      "min": 20,
+      "max": 2000,
+      "default": 350,
+      "unit": "ms",
+      "scale": "log",
+      "ai_hint": "Delay time. Slapback 70-120 ms. Eighth-note echo = 30000/BPM ms, quarter-note = 60000/BPM ms (120 BPM: 250 / 500 ms). Dotted eighth = 45000/BPM ms. Changing it glides smoothly."
+    },
+    {
+      "upstream_id": "mode",
+      "id": "mode",
+      "name": "Mode",
+      "type": "enum",
+      "options": [
+        "Stereo",
+        "Ping-pong"
+      ],
+      "default": "Stereo",
+      "ai_hint": "Stereo repeats each side on itself. Ping-pong sums to mono and bounces repeats left, right, left; wide and busy, so use on sparse parts."
+    },
+    {
+      "upstream_id": "feedback",
+      "id": "feedback",
+      "name": "Feedback",
+      "type": "float",
+      "min": 0,
+      "max": 90,
+      "default": 30,
+      "unit": "%",
+      "ai_hint": "Number of repeats. 0-15 one or two repeats (slapback), 25-40 a few repeats, 50+ long trails; above 70 gets washy."
+    },
+    {
+      "upstream_id": "low_cut",
+      "id": "low_cut",
+      "name": "Low cut",
+      "type": "float",
+      "min": 20,
+      "max": 1000,
+      "default": 150,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "High-pass in the feedback path: each repeat gets thinner so low end does not build up. 150-300 Hz for vocals."
+    },
+    {
+      "upstream_id": "high_cut",
+      "id": "high_cut",
+      "name": "High cut",
+      "type": "float",
+      "min": 1000,
+      "max": 20000,
+      "default": 6000,
+      "unit": "Hz",
+      "scale": "log",
+      "ai_hint": "Low-pass in the feedback path: each repeat gets darker so echoes sit behind the source. 3-5 kHz for dark, 8 kHz+ for bright."
+    },
+    {
+      "upstream_id": "mix",
+      "id": "mix",
+      "name": "Mix",
+      "type": "float",
+      "min": 0,
+      "max": 60,
+      "default": 20,
+      "unit": "%",
+      "ai_hint": "Level of the echoes added to the unchanged dry signal. 10-20% for vocals, 20-35% for effect-style delays."
+    },
+    {
+      "upstream_id": "duck",
+      "id": "duck",
+      "name": "Duck",
+      "type": "float",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "unit": "%",
+      "ai_hint": "Pulls the echoes down while the dry signal is playing, so they bloom in the gaps. 40-70% keeps a vocal clear with a bigger delay."
+    }
+  ],
+  "notes": [
+    "Written for Plugsalot: there is no upstream project. Cubic-interpolated delay lines, 12 dB/oct low-pass and 6 dB/oct high-pass in the feedback path, a soft limiter in the feedback loop.",
+    "The dry signal always passes at full level; Mix sets the echo level.",
+    "There is no host tempo input: work out times in milliseconds from the song tempo if it is known.",
+    "CPU: well under 1% of one core, so the minimum of 1 point applies."
+  ]
+}

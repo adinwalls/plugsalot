@@ -21,7 +21,7 @@
       "properties": {
         "source_key": { "type": "string" },
         "repo": { "type": "string", "format": "uri" },
-        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "commit": { "type": "string", "pattern": "^([0-9a-f]{40}|own)$" },
         "path": { "type": "string" },
         "upstream_name": { "type": "string" },
         "license": { "type": "string" },

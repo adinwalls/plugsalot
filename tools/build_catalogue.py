@@ -161,6 +161,9 @@ def third_party(modules: list[dict], sources: dict) -> str:
     ]
     for m in sorted(modules, key=lambda m: m["id"]):
         s = m["source"]
+        if sources[s["source_key"]].get("own"):
+            lines.append(f"| `{m['id']}` | {s['upstream_name']} | {s['authors']} | {s['license']} | written for Plugsalot |")
+            continue
         lines.append(f"| `{m['id']}` | {s['upstream_name']} | {s['authors']} | {s['license']} | [{s['commit'][:10]}]({s['repo']}/tree/{s['commit']}) |")
     used = {m["source"]["source_key"] for m in modules}
     bundled = [k for k in sorted(used) if sources[k].get("includes")]
