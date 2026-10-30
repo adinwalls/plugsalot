@@ -70,10 +70,16 @@ file(WRITE ${NAM_FWD}/AudioDSPTools/dsp/RecursiveLinearFilter.h "#include \"${V}
 file(GLOB NAM_CORE_SOURCES ${NAMDIR}/NAM/*.cpp ${NAMDIR}/NAM/wavenet/*.cpp)
 # OBJECT, not STATIC: NAM registers its architectures with static initialisers that a static
 # archive would let the linker drop.
+# AudioDSPTools has dsp.cpp and wav.cpp, as does NAM core. Xcode puts every object of a target in one
+# folder named after the source, so same-named files collide; compile the AudioDSPTools ones through
+# uniquely named wrappers.
+foreach(f dsp wav)
+    file(WRITE ${NAM_FWD}/adt_${f}.cpp "#include \"${V}/audiodsptools/dsp/${f}.cpp\"\n")
+endforeach()
 add_library(plugsalot_nam OBJECT
     ${NAM_CORE_SOURCES}
-    ${V}/audiodsptools/dsp/dsp.cpp
-    ${V}/audiodsptools/dsp/wav.cpp
+    ${NAM_FWD}/adt_dsp.cpp
+    ${NAM_FWD}/adt_wav.cpp
     ${V}/audiodsptools/dsp/NoiseGate.cpp
     ${V}/audiodsptools/dsp/RecursiveLinearFilter.cpp
     ${V}/audiodsptools/dsp/ImpulseResponse.cpp
