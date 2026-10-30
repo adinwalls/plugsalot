@@ -102,6 +102,10 @@ python3 tools/vendor_sources.py    # refresh the DSP copied into plugin/vendor
 | `tape` | Dusk Audio TapeMachine 2 | GPL-3.0 |
 | `plate` | Dragonfly Plate Reverb | GPL-3.0 |
 | `limiter` | x42 Digital Peak Limiter | GPL-3.0 |
+| `nam_amp` | Neural Amp Modeler Core | MIT |
+| `cab_ir` | AudioDSPTools ImpulseResponse | MIT |
+| `delay` | Plugsalot Clean Delay (original code) | GPL-3.0 |
+| `tape_echo` | Dusk Audio Tape Echo 2 | GPL-3.0 |
 | `drum_sampler` | sfizz (catalogue only) | BSD-2-Clause |
 
 ## Not done yet

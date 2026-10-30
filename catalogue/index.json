@@ -69,6 +69,24 @@
       "tracking_safe": true
     },
     {
+      "id": "tape_echo",
+      "name": "Tape Echo",
+      "kind": "effect",
+      "category": "delay_modulation",
+      "purpose": "Roland Space Echo style tape delay with three playback heads and a spring reverb: warm, dark, slightly wobbly echoes that get softer and smudgier with each repeat; classic for vocal throws, dub, rockabilly slapback and psychedelic guitar.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "electric guitar",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "snare"
+      ],
+      "cpu_points": 2,
+      "tracking_safe": false
+    },
+    {
       "id": "drum_sampler",
       "name": "Drum Sampler",
       "kind": "instrument",

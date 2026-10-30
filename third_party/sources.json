@@ -129,6 +129,15 @@
       "license_file": "LICENSE",
       "authors": "Plugsalot contributors (written for this project)",
       "own": true
+    },
+    "dusk-audio-echo": {
+      "repo": "https://github.com/dusk-audio/dusk-audio-plugins",
+      "commit": "ee5f3bb67f3ec453b8853eb30e203898a9c5f1b2",
+      "commit_date": "2026-10-30",
+      "license": "GPL-3.0-or-later",
+      "license_file": "LICENSE",
+      "authors": "Dusk Audio",
+      "includes": "Tape Echo 2 DSP core (tape-echo/core). Pinned separately from dusk-audio because Multi-Comp changed upstream after the dusk-audio pin; the shared DSP headers it uses are identical at both commits."
     }
   }
 }

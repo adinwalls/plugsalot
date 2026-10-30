@@ -1,0 +1,224 @@
+{
+  "id": "tape_echo",
+  "name": "Tape Echo",
+  "kind": "effect",
+  "category": "delay_modulation",
+  "source": {
+    "source_key": "dusk-audio-echo",
+    "path": "plugins/tape-echo/core",
+    "upstream_name": "Dusk Audio Tape Echo 2"
+  },
+  "extractor": {
+    "type": "manual"
+  },
+  "purpose": "Roland Space Echo style tape delay with three playback heads and a spring reverb: warm, dark, slightly wobbly echoes that get softer and smudgier with each repeat; classic for vocal throws, dub, rockabilly slapback and psychedelic guitar.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "electric guitar",
+    "acoustic guitar",
+    "keys",
+    "synth",
+    "snare"
+  ],
+  "avoid_for": [
+    "kick",
+    "bass",
+    "master",
+    "drum bus",
+    "anything that must stay clean and precise"
+  ],
+  "tags": [
+    "delay",
+    "echo",
+    "tape",
+    "space echo",
+    "spring reverb",
+    "vintage",
+    "dub",
+    "slapback"
+  ],
+  "cpu_points": 2,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": false,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "params": [
+    {
+      "upstream_id": "mode",
+      "id": "mode",
+      "name": "Head select",
+      "type": "enum",
+      "options": [
+        "Head 1",
+        "Head 2",
+        "Head 3",
+        "Heads 2+3",
+        "Head 1 + Reverb",
+        "Head 2 + Reverb",
+        "Head 3 + Reverb",
+        "Heads 1+2 + Reverb",
+        "Heads 2+3 + Reverb",
+        "Heads 1+3 + Reverb",
+        "Heads 1+2+3 + Reverb",
+        "Reverb only"
+      ],
+      "default": "Head 2",
+      "ai_hint": "Active heads/spring. Head 1 short slapback, 2 medium, 3 long; combos add multi-tap repeats. '+ Reverb' choices add the spring (set reverb_level). 'Reverb only' = spring with no echo."
+    },
+    {
+      "upstream_id": "repeat_rate",
+      "id": "repeat_rate",
+      "name": "Repeat rate",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 40.0,
+      "unit": "%",
+      "ai_hint": "Tape speed: 0 = slow and long, 100 = fast and short. Head 1: 177 to 69 ms, Head 2: 337 to 131 ms, Head 3: 489 to 189 ms. Slapback is 60-80 on Head 1."
+    },
+    {
+      "upstream_id": "intensity",
+      "id": "intensity",
+      "name": "Intensity",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 30.0,
+      "unit": "%",
+      "ai_hint": "Feedback. 0-15 one or two repeats, 25-40 a few, 50-65 long trails. Above ~75 it self-oscillates and runs away: stay under 65 unless a drone is wanted."
+    },
+    {
+      "upstream_id": "echo_level",
+      "id": "echo_level",
+      "name": "Echo volume",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 50.0,
+      "unit": "%",
+      "ai_hint": "Level of the echo return before the Mix control. 30-60 is typical."
+    },
+    {
+      "upstream_id": "reverb_level",
+      "id": "reverb_level",
+      "name": "Reverb volume",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": "%",
+      "ai_hint": "Spring reverb level; heard only in the '+ Reverb' and 'Reverb only' selections. 20-40 splashy spring, more for dub."
+    },
+    {
+      "upstream_id": "bass",
+      "id": "bass",
+      "name": "Bass",
+      "type": "float",
+      "min": -100.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": "%",
+      "ai_hint": "Shapes the echoes only. Cut (-30 to -60) so repeats do not muddy a vocal; 0 is neutral."
+    },
+    {
+      "upstream_id": "treble",
+      "id": "treble",
+      "name": "Treble",
+      "type": "float",
+      "min": -100.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": "%",
+      "ai_hint": "Shapes the echoes only. Negative values darken the repeats and tuck them behind the source; positive adds bite."
+    },
+    {
+      "upstream_id": "input_volume",
+      "id": "input_volume",
+      "name": "Input volume",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 50.0,
+      "unit": "%",
+      "ai_hint": "Drives the tape input stage. 50 is normal; higher saturates and thickens the echoes, lower is cleaner."
+    },
+    {
+      "upstream_id": "wow_flutter",
+      "id": "wow_flutter",
+      "name": "Wow and flutter",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 0.0,
+      "unit": "%",
+      "ai_hint": "Tape speed wobble. 0 = the machine's natural subtle movement; 20-50 obvious vintage drift; more is woozy."
+    },
+    {
+      "upstream_id": "tape_age",
+      "id": "tape_age",
+      "name": "Tape age",
+      "type": "enum",
+      "options": [
+        "New",
+        "Used",
+        "Old"
+      ],
+      "default": "Used",
+      "ai_hint": "New = clean and bright with very little noise. Used = a little loss and noise. Old = dull, noisy, wobbly, with a tape splice that can be heard."
+    },
+    {
+      "upstream_id": "mix",
+      "id": "mix",
+      "name": "Mix",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 50.0,
+      "unit": "%",
+      "ai_hint": "Dry/wet crossfade: 0 dry only, 50 keeps dry and echo/spring both at full level, 100 wet only. Use 50 as an insert and lower Echo volume for quieter echoes."
+    }
+  ],
+  "notes": [
+    "Parameters are written by hand against the framework-free TapeEchoDSP core (Tape Echo 2 by Dusk Audio, GPL-3.0-or-later). Host tempo sync, pans, output trim, noise level, hum frequency and the record-input switch are not exposed and stay at the upstream defaults.",
+    "Tape Echo 2 is pinned to a newer Dusk Audio commit than the other Dusk modules (source key dusk-audio-echo).",
+    "Self-oscillation (Intensity above about 75%) is intentional upstream and can exceed 0 dBFS.",
+    "There is no host tempo input: work out the time by ear, or use Clean Delay when exact note values are needed.",
+    "The stereo input is summed inside the tape and spring paths.",
+    "CPU: 3.5% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%."
+  ],
+  "cpu_measured": true,
+  "maker": "DUSK AUDIO",
+  "tape": "VINTAGE TAPE ECHO",
+  "knobs": [
+    {
+      "param": "repeat_rate",
+      "label": "RATE",
+      "colour": "grey"
+    },
+    {
+      "param": "intensity",
+      "label": "REPEATS",
+      "colour": "red"
+    },
+    {
+      "param": "echo_level",
+      "label": "ECHO",
+      "colour": "cream"
+    },
+    {
+      "param": "reverb_level",
+      "label": "REVERB",
+      "colour": "blue"
+    },
+    {
+      "param": "mix",
+      "label": "MIX",
+      "colour": "cream"
+    }
+  ]
+}

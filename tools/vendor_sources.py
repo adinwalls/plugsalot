@@ -37,6 +37,12 @@ FILES = {
         "plugins/multi-comp/HardwareEmulation/*.h",
         "plugins/shared/AnalogEmulation/*.h",
     ],
+    "dusk-audio-echo": [
+        "LICENSE",
+        "plugins/tape-echo/core/TapeEchoDSP.hpp",
+        "plugins/tape-echo/core/TapeEchoDSP.cpp",
+        "plugins/tape-echo/daf-plugin/TapeEchoParams.hpp",
+    ],
     "dragonfly-reverb": [
         "LICENSE",
         "plugins/dragonfly-plate-reverb/DSP.cpp",

@@ -43,7 +43,7 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 9, "nine runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 10, "ten runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
@@ -392,6 +392,58 @@ static void testDelay(const Catalogue& cat)
     check((e1 - dry) < 0.6 * (e0 - dry), "ducking cuts the echoes while the input plays");
 }
 
+static void testTapeEcho(const Catalogue& cat)
+{
+    std::cout << "Tape Echo\n";
+    const double sr = 48000.0;
+    const int block = 256, total = (int) sr * 2;
+    auto run = [&](double mix, double intensity, std::vector<float>& out, double& cpuPct, bool burst)
+    {
+        auto m = createModule(*cat.find("tape_echo"));
+        m->prepare(sr, block);
+        m->setParam("mode", "Head 1");
+        m->setParam("repeat_rate", 100.0);
+        m->setParam("intensity", intensity);
+        m->setParam("echo_level", 100.0);
+        m->setParam("mix", mix);
+        out.assign((size_t) total, 0.0f);
+        double seconds = 0;
+        for (int s = 0; s < total; s += block)
+        {
+            std::vector<float> l((size_t) block, 0.0f), r((size_t) block, 0.0f);
+            for (int i = 0; i < block; ++i)
+            {
+                const int n = s + i;
+                if (burst && n < 2400) l[(size_t) i] = r[(size_t) i] = 0.4f * std::sin(0.08f * (float) n);
+                else if (! burst) l[(size_t) i] = r[(size_t) i] = 0.3f * std::sin(0.03f * (float) n);
+            }
+            float* c[2] = { l.data(), r.data() };
+            auto t0 = std::chrono::high_resolution_clock::now();
+            m->process(c, block);
+            seconds += std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - t0).count();
+            for (int i = 0; i < block; ++i) out[(size_t) (s + i)] = l[(size_t) i];
+        }
+        cpuPct = 100.0 * seconds / 2.0;
+    };
+    std::vector<float> dry, wet;
+    double cpu0 = 0, cpu1 = 0;
+    run(0.0, 30.0, dry, cpu0, true);
+    float dryPeak = 0, tailDry = 0;
+    for (int i = 0; i < total; ++i) { dryPeak = juce::jmax(dryPeak, std::abs(dry[(size_t) i])); if (i > 12000) tailDry = juce::jmax(tailDry, std::abs(dry[(size_t) i])); }
+    check(dryPeak > 0.3f && tailDry < 1.0e-3f, "mix 0 passes only the dry signal (peak " + juce::String(dryPeak, 2) + ")");
+    run(50.0, 30.0, wet, cpu1, true);
+    float tail = 0;
+    bool finite = true;
+    for (int i = 0; i < total; ++i) { finite &= std::isfinite(wet[(size_t) i]); if (i > 4000 && i < 24000) tail = juce::jmax(tail, std::abs(wet[(size_t) i])); }
+    check(finite && tail > 0.02f, "echoes appear after the burst (peak in tail " + juce::String(tail, 3) + ")");
+    std::vector<float> loud; double cpu2 = 0;
+    run(50.0, 100.0, loud, cpu2, false);
+    float peak = 0; bool fin2 = true;
+    for (float x : loud) { fin2 &= std::isfinite(x); peak = juce::jmax(peak, std::abs(x)); }
+    check(fin2 && peak < 20.0f, "maximum intensity stays finite (peak " + juce::String(peak, 2) + ")");
+    std::cout << "  Tape Echo CPU: " << cpu1 << "% of one core at 48 kHz\n";
+}
+
 static void testReplyParsing(const Catalogue& cat)
 {
     std::cout << "AI reply parsing\n";
@@ -519,6 +571,7 @@ int main(int argc, char* argv[])
     testFileModules(cat, juce::File(PLUGSALOT_SOURCE_DIR "/plugin/vendor/nam-core/example_models"));
     testReplyParsing(cat);
     testDelay(cat);
+    testTapeEcho(cat);
     testTone3000(cat);
     testLive(cat);
 

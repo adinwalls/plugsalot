@@ -64,6 +64,16 @@
       "plugins/shared/AnalogEmulation/WaveshaperCurves.h"
     ]
   },
+  "dusk-audio-echo": {
+    "commit": "ee5f3bb67f3ec453b8853eb30e203898a9c5f1b2",
+    "license": "GPL-3.0-or-later",
+    "files": [
+      "LICENSE",
+      "plugins/tape-echo/core/TapeEchoDSP.cpp",
+      "plugins/tape-echo/core/TapeEchoDSP.hpp",
+      "plugins/tape-echo/daf-plugin/TapeEchoParams.hpp"
+    ]
+  },
   "dragonfly-reverb": {
     "commit": "440ec7b3b3db2fec34b9f80cf4890102ca14d1c3",
     "license": "GPL-3.0",

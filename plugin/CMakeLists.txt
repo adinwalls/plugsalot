@@ -3,11 +3,13 @@
 # ---------------------------------------------------------------------------
 set(V ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 set(DUSK ${V}/dusk-audio/plugins)
+set(DUSKE ${V}/dusk-audio-echo/plugins)   # Tape Echo 2, pinned to a newer Dusk commit than the others
 
 add_library(plugsalot_upstream_dsp STATIC
     ${DUSK}/multi-comp/core/MultiCompDSP.cpp
     ${DUSK}/TapeMachine/core/TapeMachineDSP.cpp
     ${DUSK}/shared-daf/dsp/FourKEQDSP.cpp
+    ${DUSKE}/tape-echo/core/TapeEchoDSP.cpp
     ${V}/x42-dpl/src/peaklim.cc
     ${V}/airwindows/plugins/LinuxVST/src/DeBess/DeBess.cpp
     ${V}/airwindows/plugins/LinuxVST/src/DeBess/DeBessProc.cpp
@@ -16,6 +18,7 @@ target_include_directories(plugsalot_upstream_dsp PUBLIC
     ${DUSK}/multi-comp/core
     ${DUSK}/TapeMachine/core
     ${DUSK}/shared-daf/dsp
+    ${DUSKE}/tape-echo/core
     ${V}/x42-dpl/src
     ${V}/airwindows/plugins/LinuxVST/src/DeBess
     ${CMAKE_CURRENT_SOURCE_DIR}/shims/vst2
@@ -102,7 +105,7 @@ endif()
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(m ${PLUGSALOT_MODULES})
     # Module and raw files share names; copy with prefixes so resource names are unique.
@@ -140,6 +143,7 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/NamAmpModule.cpp
     src/dsp/modules/CabIrModule.cpp
     src/dsp/modules/DelayModule.cpp
+    src/dsp/modules/TapeEchoModule.cpp
     src/ai/PromptBuilder.cpp
     src/ai/LlmClient.cpp
     src/ai/AiSession.cpp
