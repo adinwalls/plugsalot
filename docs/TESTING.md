@@ -78,3 +78,7 @@ To compare with Claude, choose **Claude: your own API key** in Settings and past
 - Builds are unsigned, so operating systems warn on first launch.
 - Multi-Comp's settings panel shows every mode's controls at once; only the chosen mode's controls have an effect.
 - Google's API can't be reached from the build machine, so Gemini is tested against a stand-in server that reproduces its replies (including the "high demand" 503). Your own key is the first real test; if anything fails, the note in the chat says why.
+
+## Electric guitar (0.3.1)
+
+Guitar tones now come from Guitarix amps with knobs, so there is nothing to download: ask for "a clean blues guitar" (BlueAmp), "classic rock crunch" (Plexi), "heavy rhythm guitar" (Supersonic), or "push the amp with an overdrive pedal" (Guvnor before the amp). Every amp chain ends in UltraCab, the speaker cabinet. The Neural Amp Modeler and cabinet impulse-response modules still exist but the AI no longer offers them, and the TONE3000 button is hidden.

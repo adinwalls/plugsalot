@@ -16,6 +16,78 @@
       "tracking_safe": true
     },
     {
+      "id": "gx_blueamp",
+      "name": "BlueAmp",
+      "kind": "effect",
+      "category": "amp",
+      "purpose": "Guitarix model of a clean to slightly breaking-up blues amp. Warm, dynamic and open; push master for edge. The clean guitar sound. Follow with gx_ultracab.",
+      "good_for": [
+        "electric guitar",
+        "clean guitar",
+        "blues guitar",
+        "jazz guitar"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "gx_guvnor",
+      "name": "Guvnor",
+      "kind": "effect",
+      "category": "amp",
+      "purpose": "Guitarix model of a classic overdrive/distortion pedal with gain, level and a three-band tone control. Place it BEFORE an amp (gx_blueamp, gx_plexi or gx_supersonic) to push it, or use it alone before gx_ultracab for a fuzzy lo-fi sound.",
+      "good_for": [
+        "electric guitar",
+        "lead guitar",
+        "bass guitar"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "gx_plexi",
+      "name": "Plexi",
+      "kind": "effect",
+      "category": "amp",
+      "purpose": "Guitarix model of a classic 1960s-70s British plexi head: crunchy, mid-forward classic rock, from edge of breakup to hard rock when pushed. Follow with gx_ultracab.",
+      "good_for": [
+        "electric guitar",
+        "rhythm guitar",
+        "classic rock",
+        "blues rock"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "gx_supersonic",
+      "name": "Supersonic",
+      "kind": "effect",
+      "category": "amp",
+      "purpose": "Guitarix model of a modern high-gain amp: tight, aggressive distortion with gain, bass and treble. The high-gain guitar sound for rock and metal. Follow with gx_ultracab.",
+      "good_for": [
+        "electric guitar",
+        "rhythm guitar",
+        "lead guitar"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "gx_ultracab",
+      "name": "UltraCab",
+      "kind": "effect",
+      "category": "amp",
+      "purpose": "Guitarix speaker-cabinet simulation (stereo) with built-in microphoned cab sound and controls for the character of the box. Always put it AFTER the amp: an amp without a cabinet sounds thin and fizzy.",
+      "good_for": [
+        "electric guitar",
+        "rhythm guitar",
+        "lead guitar"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
       "id": "nam_amp",
       "name": "NAM Amp",
       "kind": "effect",

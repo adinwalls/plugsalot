@@ -102,7 +102,8 @@ python3 tools/vendor_sources.py    # refresh the DSP copied into plugin/vendor
 | `tape` | Dusk Audio TapeMachine 2 | GPL-3.0 |
 | `plate` | Dragonfly Plate Reverb | GPL-3.0 |
 | `limiter` | x42 Digital Peak Limiter | GPL-3.0 |
-| `nam_amp` | Neural Amp Modeler Core | MIT |
+| `gx_blueamp`, `gx_plexi`, `gx_supersonic`, `gx_guvnor`, `gx_ultracab` | Guitarix GxPlugins.lv2 (BlueAmp, Plexi, Supersonic, Guvnor, UltraCab; knobs, no files) | GPL-2.0-or-later |
+| `nam_amp` | Neural Amp Modeler Core (runs, but the AI no longer offers it) | MIT |
 | `cab_ir` | AudioDSPTools ImpulseResponse | MIT |
 | `delay` | Plugsalot Clean Delay (original code) | GPL-3.0 |
 | `tape_echo` | Dusk Audio Tape Echo 2 | GPL-3.0 |

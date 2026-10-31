@@ -51,6 +51,7 @@ struct ModuleSpec
     juce::StringArray goodFor, avoidFor;
     juce::var cpuPoints;          // int or void (not measured yet)
     bool trackingSafe = true;
+    bool offered = true;          // false: runs in chains but is left out of the AI prompt
     juce::NamedValueSet trackingOverrides;
     juce::String licence, upstreamName;
     juce::String maker, tape;     // short upstream name and the masking-tape label for the faceplate

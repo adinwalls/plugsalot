@@ -43,7 +43,7 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 14, "fourteen runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 19, "nineteen runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
@@ -540,6 +540,64 @@ static void testWideners(const Catalogue& cat)
     std::cout << "  SweetWide CPU: " << cpu << "% of one core at 48 kHz\n";
 }
 
+static void testGuitarix(const Catalogue& cat)
+{
+    std::cout << "Guitarix amps\n";
+    const double sr = 48000.0;
+    const int block = 256, total = (int) sr;
+    struct Result { double rms = 0, peak = 0, cpu = 0; bool finite = true; };
+    // Guitar-like DI: a plucked low E chord-ish mix with a decaying envelope, same on both channels.
+    auto run = [&](const char* id, const std::vector<std::pair<const char*, juce::var>>& params) {
+        Result r;
+        auto m = createModule(*cat.find(id));
+        m->prepare(sr, block);
+        for (auto& p : params) m->setParam(p.first, p.second);
+        double sum = 0, seconds = 0;
+        for (int s = 0; s < total; s += block)
+        {
+            std::vector<float> l((size_t) block), rr((size_t) block);
+            for (int i = 0; i < block; ++i)
+            {
+                const double t = (double) (s + i) / sr;
+                const float env = (float) std::exp(-3.0 * std::fmod(t, 0.5));
+                const float x = env * (0.25f * std::sin(6.2831853f * 82.4f * (float) t) + 0.12f * std::sin(6.2831853f * 164.8f * (float) t) + 0.08f * std::sin(6.2831853f * 247.2f * (float) t));
+                l[(size_t) i] = rr[(size_t) i] = x;
+            }
+            float* ch[2] = { l.data(), rr.data() };
+            auto t0 = std::chrono::high_resolution_clock::now();
+            m->process(ch, block);
+            seconds += std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - t0).count();
+            for (int i = 0; i < block; ++i)
+            {
+                r.finite &= std::isfinite(l[(size_t) i]) && std::isfinite(rr[(size_t) i]);
+                r.peak = juce::jmax(r.peak, (double) std::abs(l[(size_t) i]), (double) std::abs(rr[(size_t) i]));
+                if (s >= total / 2) sum += (double) l[(size_t) i] * l[(size_t) i];
+            }
+        }
+        r.rms = std::sqrt(sum / (total / 2));
+        r.cpu = 100.0 * seconds;
+        return r;
+    };
+    for (const char* id : { "gx_supersonic", "gx_blueamp", "gx_plexi", "gx_guvnor", "gx_ultracab" })
+    {
+        const auto r = run(id, {});
+        check(r.finite && r.rms > 1.0e-4 && r.peak < 8.0, juce::String(id) + " renders audio at defaults (rms " + juce::String(r.rms, 4) + ", peak " + juce::String(r.peak, 3) + ")");
+        std::cout << "  " << id << " CPU: " << r.cpu << "% of one core at 48 kHz\n";
+    }
+    const auto sLow = run("gx_supersonic", { { "gain", 0.1 } }), sHigh = run("gx_supersonic", { { "gain", 0.8 } });
+    check(sLow.finite && sHigh.finite && std::abs(sHigh.rms - sLow.rms) > 1.0e-3, "Supersonic gain changes the sound (rms " + juce::String(sLow.rms, 4) + " -> " + juce::String(sHigh.rms, 4) + ")");
+    const auto pLow = run("gx_plexi", { { "volume", 0.1 } }), pHigh = run("gx_plexi", { { "volume", 0.7 } });
+    check(pLow.finite && pHigh.finite && pHigh.rms > pLow.rms, "Plexi volume raises the level (rms " + juce::String(pLow.rms, 4) + " -> " + juce::String(pHigh.rms, 4) + ")");
+    const auto cNar = run("gx_ultracab", { { "size", 0.1 } }), cWide = run("gx_ultracab", { { "size", 0.9 } });
+    check(cNar.finite && cWide.finite && std::abs(cNar.rms - cWide.rms) > 1.0e-4, "UltraCab size changes the sound");
+
+    // The AI is told about the Guitarix amps, not the Neural Amp Modeler or the cabinet IR loader.
+    const auto prompt = cat.toPromptJson();
+    check(prompt.contains("\"gx_plexi\"") && ! prompt.contains("\"nam_amp\"") && ! prompt.contains("\"cab_ir\""),
+          "prompt offers gx_plexi and leaves out nam_amp and cab_ir");
+    check(cat.find("nam_amp") != nullptr && cat.find("cab_ir") != nullptr, "nam_amp and cab_ir remain runnable");
+}
+
 static void testReplyParsing(const Catalogue& cat)
 {
     std::cout << "AI reply parsing\n";
@@ -670,6 +728,7 @@ int main(int argc, char* argv[])
     testTapeEcho(cat);
     testAirwindowsAdditions(cat);
     testWideners(cat);
+    testGuitarix(cat);
     testTone3000(cat);
     testLive(cat);
 

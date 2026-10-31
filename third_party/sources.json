@@ -138,6 +138,51 @@
       "license_file": "LICENSE",
       "authors": "Dusk Audio",
       "includes": "Tape Echo 2 DSP core (tape-echo/core). Pinned separately from dusk-audio because Multi-Comp changed upstream after the dusk-audio pin; the shared DSP headers it uses are identical at both commits."
+    },
+    "gx-supersonic": {
+      "repo": "https://github.com/brummer10/GxSupersonic.lv2",
+      "commit": "cdaad0946f73ff1affb66ccea52d990e693f888d",
+      "commit_date": "2023-03-08",
+      "license": "GPL-2.0-or-later",
+      "license_file": "LICENSE",
+      "authors": "Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose and the Guitarix project; packaged by Hermann Meyer (brummer10)",
+      "includes": "Supersonic high-gain amp: Faust-generated DSP (dsp/), compiled unmodified. Source headers say GPL-2.0-or-later (the repo LICENSE file is the GPL-3 text); compatible with Plugsalot's GPL-3.0-or-later."
+    },
+    "gx-blueamp": {
+      "repo": "https://github.com/brummer10/GxBlueAmp.lv2",
+      "commit": "653d7a98196ed32f603454d85f2456b3b529641d",
+      "commit_date": "2023-03-08",
+      "license": "GPL-2.0-or-later",
+      "license_file": "LICENSE",
+      "authors": "Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose and the Guitarix project; packaged by Hermann Meyer (brummer10)",
+      "includes": "Blue Amp clean/blues amp: Faust-generated DSP (dsp/), compiled unmodified. Source headers say GPL-2.0-or-later (the repo LICENSE file is the GPL-3 text); compatible with Plugsalot's GPL-3.0-or-later."
+    },
+    "gx-guvnor": {
+      "repo": "https://github.com/brummer10/GxGuvnor.lv2",
+      "commit": "bf908c2e6f2c396f745cf3b8d07fb4dec4c0e96c",
+      "commit_date": "2023-03-08",
+      "license": "GPL-2.0-or-later",
+      "license_file": "LICENSE",
+      "authors": "Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose and the Guitarix project; packaged by Hermann Meyer (brummer10)",
+      "includes": "Guvnor overdrive pedal: Faust-generated DSP (dsp/), compiled unmodified. Source headers say GPL-2.0-or-later (the repo LICENSE file is the GPL-3 text); compatible with Plugsalot's GPL-3.0-or-later."
+    },
+    "gx-ultracab": {
+      "repo": "https://github.com/brummer10/GxUltraCab.lv2",
+      "commit": "5c25787b42331867e7ab69290d608c755d7eda9c",
+      "commit_date": "2023-03-08",
+      "license": "GPL-2.0-or-later",
+      "license_file": "LICENSE",
+      "authors": "Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose and the Guitarix project; packaged by Hermann Meyer (brummer10)",
+      "includes": "Ultra Cab speaker-cabinet simulation: Faust-generated DSP (dsp/), compiled unmodified. Source headers say GPL-2.0-or-later (the repo LICENSE file is the GPL-3 text); compatible with Plugsalot's GPL-3.0-or-later."
+    },
+    "gx-plexi": {
+      "repo": "https://github.com/brummer10/GxPlexi.lv2",
+      "commit": "4d7475b39bd4267548704a13e7de7c2ccd7d7a57",
+      "commit_date": "2023-03-08",
+      "license": "GPL-2.0-or-later",
+      "license_file": "LICENSE",
+      "authors": "Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose and the Guitarix project; packaged by Hermann Meyer (brummer10)",
+      "includes": "Plexi classic-rock amp: Faust-generated DSP (dsp/), compiled unmodified. Source headers say GPL-2.0-or-later (the repo LICENSE file is the GPL-3 text); compatible with Plugsalot's GPL-3.0-or-later."
     }
   }
 }

@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "id": "gx_guvnor",
+  "name": "Guvnor",
+  "kind": "effect",
+  "category": "amp",
+  "source": {
+    "source_key": "gx-guvnor",
+    "repo": "https://github.com/brummer10/GxGuvnor.lv2",
+    "commit": "bf908c2e6f2c396f745cf3b8d07fb4dec4c0e96c",
+    "path": "dsp/guvnor.cc",
+    "upstream_name": "Guitarix Guvnor (GxGuvnor.lv2)",
+    "license": "GPL-2.0-or-later",
+    "authors": "Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose and the Guitarix project; packaged by Hermann Meyer (brummer10)",
+    "extractor": "manual"
+  },
+  "purpose": "Guitarix model of a classic overdrive/distortion pedal with gain, level and a three-band tone control. Place it BEFORE an amp (gx_blueamp, gx_plexi or gx_supersonic) to push it, or use it alone before gx_ultracab for a fuzzy lo-fi sound.",
+  "good_for": [
+    "electric guitar",
+    "lead guitar",
+    "bass guitar"
+  ],
+  "avoid_for": [
+    "vocals",
+    "drum bus",
+    "master"
+  ],
+  "tags": [
+    "pedal",
+    "overdrive",
+    "distortion",
+    "guitar",
+    "boost",
+    "guitarix"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "maker": "Guitarix",
+  "tape": "OVERDRIVE PEDAL",
+  "knobs": [
+    {
+      "param": "gain",
+      "label": "GAIN",
+      "colour": "red"
+    },
+    {
+      "param": "bass",
+      "label": "BASS",
+      "colour": "blue"
+    },
+    {
+      "param": "mid",
+      "label": "MID",
+      "colour": "blue"
+    },
+    {
+      "param": "treble",
+      "label": "TREBLE",
+      "colour": "blue"
+    },
+    {
+      "param": "level",
+      "label": "LEVEL",
+      "colour": "grey"
+    }
+  ],
+  "params": [
+    {
+      "upstream_id": "GAIN",
+      "id": "gain",
+      "name": "Gain",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Overdrive amount. 0.2-0.4 light boost, 0.5-0.7 crunch, above 0.8 distortion."
+    },
+    {
+      "upstream_id": "BASS",
+      "id": "bass",
+      "name": "Bass",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral."
+    },
+    {
+      "upstream_id": "MID",
+      "id": "mid",
+      "name": "Mid",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral."
+    },
+    {
+      "upstream_id": "TREBLE",
+      "id": "treble",
+      "name": "Treble",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral."
+    },
+    {
+      "upstream_id": "LEVEL",
+      "id": "level",
+      "name": "Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Output level. Raise to hit the amp after it harder."
+    }
+  ],
+  "notes": [
+    "Port names and ranges come from the Guitarix plug-in (all 0..1); defaults are the plug-in's own.",
+    "The pedal has no bypass control in the plug-in: leave it out of the chain instead.",
+    "CPU: under 2% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

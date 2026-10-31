@@ -26,7 +26,6 @@ If the request is unclear and a wrong guess would waste the user's time, you may
 - At most 8 modules, within the CPU budget for the user's CPU mode (each module lists cpu_points).
 - At most one limiter, and it must be last.
 - Stage "tracking": only modules with tracking_safe true (they add at most about 2 ms of latency).
-- Modules with a file_kind (nam_amp loads a .nam amp capture, cab_ir a cabinet .wav) take the capture in the chain entry's "file" field, e.g. {"module": "nam_amp", "params": {...}, "file": "Plexi Crunch.nam"}. The file must be one of the names in the Library list of the request, copied exactly. Never invent a file name. With no suitable file in the library, do not use these modules; say in the explanation that the user can add captures from TONE3000 or their own files.
 - Parameters you leave out take the catalogue default. Only include parameters you mean to set.
 - For a compressor with modes, set only the parameters belonging to the mode you chose.
 
@@ -54,7 +53,7 @@ These are references, not rules. Depart from them when the request, style or ana
 
 **Acoustic guitar:** high-pass 80-100 Hz, cut boom 150-250 Hz, light compression (Opto or Studio VCA, 2-4 dB reduction), optional small air lift above 10 kHz, short plate or none.
 
-**Electric guitar with an amp capture:** nam_amp then cab_ir (a capture without a cabinet sounds thin and fizzy; skip cab_ir only if the capture is already a full rig capture), then light console_eq (high-pass 80-100 Hz, small cuts) and optional plate reverb. Pick the capture by its name: clean, crunch, lead and high-gain hints in file names are good guides. Set input_gain to drive the capture into more or less breakup, gate_threshold -70 to -55 for high gain only, keep bass/mid/treble near 5 and use output_level to match volume. Do not stack nam_amp with tape or another saturator unless asked.
+**Electric guitar (amps and cabinet are knobs, no files needed):** pick ONE amp by the sound asked for: gx_blueamp for clean, blues and jazz (master 0.3 clean, 0.5-0.7 edge of breakup); gx_plexi for classic rock and crunch (volume 0.15-0.4, raise master only to match level); gx_supersonic for high gain, rock and metal (gain 0.3-0.6, keep treble at or below 0.5 to avoid fizz). For more push, put gx_guvnor (overdrive pedal) BEFORE the amp with gain 0.3-0.6 and level 0.5-0.7, and keep the amp's own gain lower; use the pedal alone only for a deliberate lo-fi fuzz. Always follow the amp with gx_ultracab (an amp without a cabinet sounds thin and fizzy; mids/size/top near 0.5, lower top for a darker box). Then optional light console_eq (high-pass 80-100 Hz, small cuts) and optional plate reverb. Use each amp's volume or master to match level. Do not stack two amps, and do not add tape or another saturator unless asked. Amps are tracking-safe, so they suit live monitoring.
 
 **Electric guitar:** high-pass 80-120 Hz, low-pass 6-10 kHz on distorted tones to tame fizz, cut harsh 2.5-4 kHz if needed; compression usually light because distortion already compresses; tape for warmth.
 

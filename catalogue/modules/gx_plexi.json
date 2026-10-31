@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "id": "gx_plexi",
+  "name": "Plexi",
+  "kind": "effect",
+  "category": "amp",
+  "source": {
+    "source_key": "gx-plexi",
+    "repo": "https://github.com/brummer10/GxPlexi.lv2",
+    "commit": "4d7475b39bd4267548704a13e7de7c2ccd7d7a57",
+    "path": "dsp/plexi.cc",
+    "upstream_name": "Guitarix Plexi (GxPlexi.lv2)",
+    "license": "GPL-2.0-or-later",
+    "authors": "Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose and the Guitarix project; packaged by Hermann Meyer (brummer10)",
+    "extractor": "manual"
+  },
+  "purpose": "Guitarix model of a classic 1960s-70s British plexi head: crunchy, mid-forward classic rock, from edge of breakup to hard rock when pushed. Follow with gx_ultracab.",
+  "good_for": [
+    "electric guitar",
+    "rhythm guitar",
+    "classic rock",
+    "blues rock"
+  ],
+  "avoid_for": [
+    "vocals",
+    "drum bus",
+    "master",
+    "bass guitar"
+  ],
+  "tags": [
+    "amp",
+    "guitar",
+    "classic rock",
+    "crunch",
+    "plexi",
+    "guitarix"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "maker": "Guitarix",
+  "tape": "CLASSIC ROCK AMP",
+  "knobs": [
+    {
+      "param": "volume",
+      "label": "VOLUME",
+      "colour": "red"
+    },
+    {
+      "param": "master",
+      "label": "MASTER",
+      "colour": "grey"
+    },
+    {
+      "param": "bass",
+      "label": "BASS",
+      "colour": "blue"
+    },
+    {
+      "param": "mid",
+      "label": "MID",
+      "colour": "blue"
+    },
+    {
+      "param": "treble",
+      "label": "TREBLE",
+      "colour": "blue"
+    },
+    {
+      "param": "presence",
+      "label": "PRESENCE",
+      "colour": "cream"
+    }
+  ],
+  "params": [
+    {
+      "upstream_id": "VOLUME",
+      "id": "volume",
+      "name": "Volume",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.15,
+      "unit": "",
+      "ai_hint": "Preamp gain, so this is the main drive control: 0.1-0.2 crunch, 0.3-0.5 hard rock, above 0.6 saturated."
+    },
+    {
+      "upstream_id": "MASTER",
+      "id": "master",
+      "name": "Master",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.4,
+      "unit": "",
+      "ai_hint": "Output level (and some power-stage push). Use it to match volume."
+    },
+    {
+      "upstream_id": "BASS",
+      "id": "bass",
+      "name": "Bass",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral."
+    },
+    {
+      "upstream_id": "MID",
+      "id": "mid",
+      "name": "Mid",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral. A plexi is mid-forward; lowering this scoops it."
+    },
+    {
+      "upstream_id": "TREBLE",
+      "id": "treble",
+      "name": "Treble",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral."
+    },
+    {
+      "upstream_id": "PRESENSE",
+      "id": "presence",
+      "name": "Presence",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.15,
+      "unit": "",
+      "ai_hint": "High-frequency sparkle and bite from the power stage. Raise slowly; high values get harsh."
+    }
+  ],
+  "notes": [
+    "Port names and ranges come from the Guitarix plug-in (all 0..1); defaults are the plug-in's own. The upstream port is spelled PRESENSE.",
+    "CPU: under 2% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

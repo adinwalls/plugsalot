@@ -1,0 +1,148 @@
+{
+  "id": "gx_ultracab",
+  "name": "UltraCab",
+  "kind": "effect",
+  "category": "amp",
+  "source": {
+    "source_key": "gx-ultracab",
+    "path": "dsp/ultracab.cc",
+    "upstream_name": "Guitarix UltraCab (GxUltraCab.lv2)"
+  },
+  "extractor": {
+    "type": "manual"
+  },
+  "purpose": "Guitarix speaker-cabinet simulation (stereo) with built-in microphoned cab sound and controls for the character of the box. Always put it AFTER the amp: an amp without a cabinet sounds thin and fizzy.",
+  "good_for": [
+    "electric guitar",
+    "rhythm guitar",
+    "lead guitar"
+  ],
+  "avoid_for": [
+    "vocals",
+    "drum bus",
+    "master"
+  ],
+  "tags": [
+    "cabinet",
+    "speaker",
+    "guitar",
+    "guitarix"
+  ],
+  "cpu_points": 1,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "params": [
+    {
+      "upstream_id": "GAIN",
+      "id": "gain",
+      "name": "Gain",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Level into the cabinet model. 0.5 is neutral."
+    },
+    {
+      "upstream_id": "MIDS",
+      "id": "mids",
+      "name": "Mids",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral. Lower for a scooped box, raise for a honky open-back sound."
+    },
+    {
+      "upstream_id": "PUNCH",
+      "id": "punch",
+      "name": "Punch",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Low-end thump from the cabinet. 0.5 is neutral."
+    },
+    {
+      "upstream_id": "RESONANCE",
+      "id": "resonance",
+      "name": "Resonance",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Low-frequency cabinet resonance. 0.5 is neutral."
+    },
+    {
+      "upstream_id": "SIZE_",
+      "id": "size",
+      "name": "Size",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Apparent cabinet size. Lower is smaller and brighter, higher bigger and darker."
+    },
+    {
+      "upstream_id": "TOP",
+      "id": "top",
+      "name": "Top",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "High-frequency content of the cabinet. Lower for a darker, smoother tone."
+    }
+  ],
+  "notes": [
+    "Port names and ranges come from the Guitarix plug-in (all 0..1); defaults are the plug-in's own. The upstream size port is SIZE_.",
+    "The input is stereo (processed as two channels); a mono guitar through an amp module arrives here as identical channels.",
+    "CPU: under 2% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ],
+  "cpu_measured": true,
+  "maker": "Guitarix",
+  "tape": "SPEAKER CABINET",
+  "knobs": [
+    {
+      "param": "gain",
+      "label": "GAIN",
+      "colour": "grey"
+    },
+    {
+      "param": "mids",
+      "label": "MIDS",
+      "colour": "blue"
+    },
+    {
+      "param": "punch",
+      "label": "PUNCH",
+      "colour": "red"
+    },
+    {
+      "param": "resonance",
+      "label": "RESONANCE",
+      "colour": "cream"
+    },
+    {
+      "param": "size",
+      "label": "SIZE",
+      "colour": "blue"
+    },
+    {
+      "param": "top",
+      "label": "TOP",
+      "colour": "blue"
+    }
+  ]
+}
