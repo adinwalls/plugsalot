@@ -1,9 +1,18 @@
 name: Release
 
-# Push a tag like v0.2.0 to build Plugsalot on all three platforms and publish a GitHub Release.
+# Push a tag like v0.2.0 (or 0.2.0) to build Plugsalot on all three platforms and attach zips to the GitHub Release.
+# To build for a tag that already exists, run this workflow manually (Actions tab > Release > Run workflow) and enter the tag.
 on:
   push:
-    tags: ["v*"]
+    tags: ["v*", "[0-9]*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to build and release (e.g. 0.3.0)"
+        required: true
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
 
 permissions:
   contents: write
@@ -25,6 +34,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
 
       - name: Linux dependencies
         if: runner.os == 'Linux'
@@ -68,7 +79,6 @@ jobs:
       - name: Package
         shell: bash
         run: |
-          TAG="${GITHUB_REF_NAME}"
           NAME="Plugsalot-${TAG}-${{ matrix.name }}"
           mkdir -p "stage/$NAME"
           A=build/plugin/Plugsalot_artefacts/Release
@@ -103,6 +113,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.TAG }}
           files: dist/*.zip
           generate_release_notes: true
           fail_on_unmatched_files: true
