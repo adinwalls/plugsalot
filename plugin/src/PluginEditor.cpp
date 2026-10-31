@@ -32,7 +32,7 @@ void PlugsalotEditor::Stage::paint(juce::Graphics& g)
     g.drawRoundedRectangle(panel.expanded(1.0f), 5.5f, 2.0f);
     g.setColour(juce::Colour::fromFloatRGBA(1.0f, 0.86f, 0.67f, 0.15f));
     g.drawRoundedRectangle(panel.expanded(2.5f), 6.5f, 1.0f);
-    g.setColour(vintage::enamel);
+    g.setColour(vintage::col::enamel);
     g.fillRoundedRectangle(panel, 5.0f);
     g.setColour(juce::Colour(0x14ffffff));
     g.drawHorizontalLine((int) panel.getY(), panel.getX() + 5.0f, panel.getRight() - 5.0f);
