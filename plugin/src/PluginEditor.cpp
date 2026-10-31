@@ -23,6 +23,19 @@ constexpr int chatX = rackX + rackW + 16, chatY = 120, chatW = 1230 - chatX, cha
 void PlugsalotEditor::Stage::paint(juce::Graphics& g)
 {
     vintage::drawWood(g, getLocalBounds());
+
+    // As in the design: the wood is only the case frame (20px top and bottom, 34px at the sides);
+    // everything inside sits on the dark enamel panel.
+    const auto panel = juce::Rectangle<float>((float) headerX, (float) headerY,
+                                              (float) (designWidth - 2 * headerX), (float) (designHeight - 2 * headerY));
+    g.setColour(juce::Colour(0xff1a130c));
+    g.drawRoundedRectangle(panel.expanded(1.0f), 5.5f, 2.0f);
+    g.setColour(juce::Colour::fromFloatRGBA(1.0f, 0.86f, 0.67f, 0.15f));
+    g.drawRoundedRectangle(panel.expanded(2.5f), 6.5f, 1.0f);
+    g.setColour(vintage::enamel);
+    g.fillRoundedRectangle(panel, 5.0f);
+    g.setColour(juce::Colour(0x14ffffff));
+    g.drawHorizontalLine((int) panel.getY(), panel.getX() + 5.0f, panel.getRight() - 5.0f);
 }
 
 void PlugsalotEditor::TapeLayer::paint(juce::Graphics& g)
