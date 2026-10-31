@@ -1,0 +1,88 @@
+# Developing Plugsalot
+
+Technical notes moved out of the README. For the friendly overview see [README.md](../README.md).
+
+## The plugin
+
+```
+plugin/
+  src/core/        catalogue loader, chain data, validator (C++ port of tools/chain_validator.py)
+  src/dsp/         chain engine (lock-free chain swaps), module wrappers, input analyser
+  src/ai/          system prompt, Gemini and Claude clients, validated exchange with one retry
+  src/ui/          the vintage-rack interface (RackPanel, Vintage painters, chat, settings)
+  resources/       guidelines.md: the AI's instructions (layer 3 of the AI design)
+  vendor/          upstream DSP copied unmodified by tools/vendor_sources.py
+  shims/           tiny stand-ins for the frameworks upstream code expects (DPF, VST2 SDK)
+  tests/           headless tests: validator parity, every module on test audio, engine swaps
+```
+
+How a request flows: dropdowns + your words + the input analysis -> system prompt (guidelines + catalogue) -> Gemini or Claude -> reply JSON -> validator (hard limits; one retry with the errors) -> chain engine swaps the chain in without stopping audio. Follow-ups come back as small change lists, and every change can be undone.
+
+AI providers: a free Google Gemini key (default; the plugin picks the newest Flash model automatically) or your own Claude API key. The hosted Patreon tier is designed in the AI Service Design doc but not built yet.
+
+### Building
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
+build/plugin/PlugsalotTests_artefacts/Release/PlugsalotTests   # headless tests
+```
+
+Linux needs: `libasound2-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxext-dev libfreetype-dev libfontconfig1-dev libcurl4-openssl-dev libgl1-mesa-dev`. GitHub Actions builds Linux, Windows and macOS on every push (`.github/workflows/build.yml`).
+
+JUCE 8 is used under the AGPLv3, which GPLv3 explicitly allows combining with (GPLv3 section 13).
+
+## How the catalogue works
+
+The AI never guesses at plugin settings. It reads a catalogue describing every module (what it's for, its parameters, their safe ranges and units) and replies with a chain as JSON, which a validator checks before anything touches audio.
+
+```
+third_party/sources.json      pinned upstream repos and their licences
+        │  tools/fetch_sources.py
+        ▼
+.cache/upstream/<source>/     upstream code at the pinned commit (git-ignored)
+        │  tools/extract_all.py
+        ▼
+catalogue/raw/<id>.json       everything upstream declares, machine-extracted
+        │  + catalogue/curation/<id>.json   (human judgement: purpose, hints, what the AI sees)
+        │  tools/build_catalogue.py
+        ▼
+catalogue/modules/<id>.json   final entries the AI reads
+catalogue/index.json          short summary of every module
+THIRD_PARTY.md                generated credits and licences
+        │  tools/validate.py
+        ▼
+schema checks + example chains in catalogue/examples/
+```
+
+Curation can only **narrow** what upstream allows. If a bumped upstream commit changes a range so a curated limit no longer fits, the build fails rather than shipping a wrong value.
+
+### Parameter extractors
+
+| Extractor | Source format | Used for |
+| --- | --- | --- |
+| `juce_apvts` | JUCE `AudioProcessorValueTreeState` layouts | Dusk Audio JUCE plugins |
+| `dusk_daf` | Dusk DAF descriptor tables | TapeMachine 2, 4K EQ, Multi-Q, Tape Echo 2 |
+| `dpf_param_table` | DPF `PARAMS[]` tables + presets | Dragonfly Reverb |
+| `lv2_ttl` | LV2 Turtle port lists | x42 and other LV2 plugins |
+| `airwindows` | Airwindows effect sources + Airwindopedia | all ~500 Airwindows effects |
+| `lsp_para_eq` | LSP port macros | LSP Parametric Equalizer |
+| `manual` | written in the curation file | library APIs such as sfizz |
+
+## Quick start
+
+```bash
+pip install -r requirements.txt
+python3 tools/fetch_sources.py     # clone upstreams at their pinned commits
+python3 tools/extract_all.py       # extract raw parameters
+python3 tools/build_catalogue.py   # merge with curation
+python3 tools/validate.py          # schema + example chains
+python3 tools/vendor_sources.py    # refresh the DSP copied into plugin/vendor
+```
+
+## Adding a module
+
+1. Add or reuse its upstream in `third_party/sources.json` (repo, commit, licence). Only GPL-3-compatible licences.
+2. Create `catalogue/curation/<id>.json`: source, extractor, purpose, `good_for`, and the `expose` list of parameters the AI may set, with hints.
+3. Run the four commands above and review `catalogue/raw/<id>.json` for anything marked `unresolved`.
+4. Add an example chain using it to `catalogue/examples/`.
