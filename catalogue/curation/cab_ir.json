@@ -79,7 +79,8 @@
     "The impulse response is a .wav file chosen from the user's library; the AI picks it by file name through the slot's 'file' field.",
     "With no impulse response loaded the module passes audio through unchanged.",
     "AudioDSPTools limits the response to 8192 taps and resamples it to the host rate.",
-    "CPU: a 512-tap response with two filters is under 1% of one core, so the minimum of 1 point applies."
+    "CPU: a 512-tap response with two filters is under 1% of one core, so the minimum of 1 point applies.",
+    "Not offered to the AI since 0.3.1 (Guitarix amps are the guitar path); the module still runs for chains and saved sessions that already use it."
   ],
   "cpu_measured": true,
   "maker": "AudioDSPTools",
@@ -100,5 +101,6 @@
       "label": "LEVEL",
       "colour": "grey"
     }
-  ]
+  ],
+  "offered": false
 }

@@ -127,7 +127,7 @@ endif()
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(f BarlowCondensed-SemiBold BarlowCondensed-Bold BarlowCondensed-Medium Barlow-Regular Barlow-Medium PermanentMarker-Regular)
     list(APPEND PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/${f}.ttf)
@@ -149,6 +149,13 @@ juce_add_binary_data(PlugsalotData
     NAMESPACE PlugsalotData
     SOURCES ${PLUGSALOT_DATA_FILES}
 )
+
+# Guitarix Faust DSP (vendored, unmodified): each wrapper TU finds its own plug-in's dsp/ directory.
+set_source_files_properties(src/dsp/modules/GxSupersonicDsp.cpp PROPERTIES INCLUDE_DIRECTORIES ${V}/gx-supersonic/dsp COMPILE_OPTIONS "$<IF:$<CXX_COMPILER_ID:MSVC>,/W0,-w>")
+set_source_files_properties(src/dsp/modules/GxBlueAmpDsp.cpp    PROPERTIES INCLUDE_DIRECTORIES ${V}/gx-blueamp/dsp    COMPILE_OPTIONS "$<IF:$<CXX_COMPILER_ID:MSVC>,/W0,-w>")
+set_source_files_properties(src/dsp/modules/GxGuvnorDsp.cpp     PROPERTIES INCLUDE_DIRECTORIES ${V}/gx-guvnor/dsp     COMPILE_OPTIONS "$<IF:$<CXX_COMPILER_ID:MSVC>,/W0,-w>")
+set_source_files_properties(src/dsp/modules/GxUltraCabDsp.cpp   PROPERTIES INCLUDE_DIRECTORIES ${V}/gx-ultracab/dsp   COMPILE_OPTIONS "$<IF:$<CXX_COMPILER_ID:MSVC>,/W0,-w>")
+set_source_files_properties(src/dsp/modules/GxPlexiDsp.cpp      PROPERTIES INCLUDE_DIRECTORIES ${V}/gx-plexi/dsp      COMPILE_OPTIONS "$<IF:$<CXX_COMPILER_ID:MSVC>,/W0,-w>")
 
 # Engine sources shared by the plugin and the test runner (no GUI dependencies).
 set(PLUGSALOT_ENGINE_SOURCES
@@ -173,6 +180,12 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/Srsly2Module.cpp
     src/dsp/modules/SweetWideModule.cpp
     src/dsp/modules/Console8Module.cpp
+    src/dsp/modules/GuitarixModule.cpp
+    src/dsp/modules/GxSupersonicDsp.cpp
+    src/dsp/modules/GxBlueAmpDsp.cpp
+    src/dsp/modules/GxGuvnorDsp.cpp
+    src/dsp/modules/GxUltraCabDsp.cpp
+    src/dsp/modules/GxPlexiDsp.cpp
     src/dsp/modules/Console8InStage.cpp
     src/dsp/modules/Console8HypeStage.cpp
     src/dsp/modules/Console8OutStage.cpp

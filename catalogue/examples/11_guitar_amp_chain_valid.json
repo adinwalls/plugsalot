@@ -1,0 +1,37 @@
+{
+ "expect": "valid",
+ "reply": {
+  "schema_version": 1,
+  "source": "electric guitar",
+  "stage": "mixing",
+  "chain": [
+   {
+    "module": "gx_guvnor",
+    "params": {
+     "gain": 0.4,
+     "level": 0.6
+    }
+   },
+   {
+    "module": "gx_plexi",
+    "params": {
+     "volume": 0.2,
+     "master": 0.4
+    }
+   },
+   {
+    "module": "gx_ultracab",
+    "params": {}
+   },
+   {
+    "module": "console_eq",
+    "params": {}
+   },
+   {
+    "module": "plate",
+    "params": {}
+   }
+  ],
+  "explanation": "Overdrive pedal pushing a plexi-style amp, then the cabinet, with a light EQ and a little plate."
+ }
+}

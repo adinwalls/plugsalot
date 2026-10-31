@@ -1,0 +1,102 @@
+{
+  "id": "gx_blueamp",
+  "name": "BlueAmp",
+  "kind": "effect",
+  "category": "amp",
+  "source": {
+    "source_key": "gx-blueamp",
+    "path": "dsp/blueamp.cc",
+    "upstream_name": "Guitarix BlueAmp (GxBlueAmp.lv2)"
+  },
+  "extractor": {
+    "type": "manual"
+  },
+  "purpose": "Guitarix model of a clean to slightly breaking-up blues amp. Warm, dynamic and open; push master for edge. The clean guitar sound. Follow with gx_ultracab.",
+  "good_for": [
+    "electric guitar",
+    "clean guitar",
+    "blues guitar",
+    "jazz guitar"
+  ],
+  "avoid_for": [
+    "vocals",
+    "drum bus",
+    "master",
+    "high-gain metal"
+  ],
+  "tags": [
+    "amp",
+    "guitar",
+    "clean",
+    "blues",
+    "guitarix"
+  ],
+  "cpu_points": 1,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "params": [
+    {
+      "upstream_id": "MASTER",
+      "id": "master",
+      "name": "Master",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Power-stage drive. Around 0.3 is clean, 0.5 edge of breakup, above 0.7 bluesy overdrive."
+    },
+    {
+      "upstream_id": "TONE",
+      "id": "tone",
+      "name": "Tone",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral. Lower for a darker, warmer sound, raise for brightness."
+    },
+    {
+      "upstream_id": "VOLUME",
+      "id": "volume",
+      "name": "Volume",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Output level after the amp."
+    }
+  ],
+  "notes": [
+    "Port names and ranges come from the Guitarix plug-in (all 0..1); defaults are the plug-in's own.",
+    "CPU: under 2% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ],
+  "cpu_measured": true,
+  "maker": "Guitarix",
+  "tape": "CLEAN BLUES AMP",
+  "knobs": [
+    {
+      "param": "master",
+      "label": "MASTER",
+      "colour": "red"
+    },
+    {
+      "param": "tone",
+      "label": "TONE",
+      "colour": "blue"
+    },
+    {
+      "param": "volume",
+      "label": "VOLUME",
+      "colour": "grey"
+    }
+  ]
+}

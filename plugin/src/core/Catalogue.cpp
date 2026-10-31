@@ -156,6 +156,7 @@ void Catalogue::add(const juce::var& j, const juce::var& raw)
     m.upstreamName = src.getProperty("upstream_name", {}).toString();
     m.presets = j.getProperty("presets", {});
     m.fileKind = j.getProperty("file_kind", {}).toString();
+    m.offered = (bool) j.getProperty("offered", true);
     m.maker = j.getProperty("maker", m.upstreamName).toString();
     m.tape = j.getProperty("tape", {}).toString();
     auto readKnobs = [](const juce::var& v)
@@ -253,6 +254,8 @@ juce::String Catalogue::toPromptJson() const
     juce::Array<juce::var> mods;
     for (auto& m : list)
     {
+        if (! m.offered)
+            continue; // still runs, but the AI is not told about it
         auto* o = new juce::DynamicObject();
         o->setProperty("id", m.id);
         o->setProperty("name", m.name);

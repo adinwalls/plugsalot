@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "id": "gx_supersonic",
+  "name": "Supersonic",
+  "kind": "effect",
+  "category": "amp",
+  "source": {
+    "source_key": "gx-supersonic",
+    "repo": "https://github.com/brummer10/GxSupersonic.lv2",
+    "commit": "cdaad0946f73ff1affb66ccea52d990e693f888d",
+    "path": "dsp/supersonic.cc",
+    "upstream_name": "Guitarix Supersonic (GxSupersonic.lv2)",
+    "license": "GPL-2.0-or-later",
+    "authors": "Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose and the Guitarix project; packaged by Hermann Meyer (brummer10)",
+    "extractor": "manual"
+  },
+  "purpose": "Guitarix model of a modern high-gain amp: tight, aggressive distortion with gain, bass and treble. The high-gain guitar sound for rock and metal. Follow with gx_ultracab.",
+  "good_for": [
+    "electric guitar",
+    "rhythm guitar",
+    "lead guitar"
+  ],
+  "avoid_for": [
+    "vocals",
+    "drum bus",
+    "master",
+    "bass guitar"
+  ],
+  "tags": [
+    "amp",
+    "guitar",
+    "high gain",
+    "distortion",
+    "metal",
+    "guitarix"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "maker": "Guitarix",
+  "tape": "HIGH-GAIN AMP",
+  "knobs": [
+    {
+      "param": "gain",
+      "label": "GAIN",
+      "colour": "red"
+    },
+    {
+      "param": "bass",
+      "label": "BASS",
+      "colour": "blue"
+    },
+    {
+      "param": "treble",
+      "label": "TREBLE",
+      "colour": "blue"
+    },
+    {
+      "param": "volume",
+      "label": "VOLUME",
+      "colour": "grey"
+    }
+  ],
+  "params": [
+    {
+      "upstream_id": "GAIN",
+      "id": "gain",
+      "name": "Gain",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.15,
+      "unit": "",
+      "ai_hint": "Distortion amount. 0.1-0.25 crunch, 0.3-0.6 high gain, above 0.7 saturated and compressed."
+    },
+    {
+      "upstream_id": "BASS",
+      "id": "bass",
+      "name": "Bass",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral. Lower to tighten palm mutes, raise for weight."
+    },
+    {
+      "upstream_id": "TREBLE",
+      "id": "treble",
+      "name": "Treble",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "0.5 is neutral. Lower to tame fizz, raise for bite."
+    },
+    {
+      "upstream_id": "VOLUME",
+      "id": "volume",
+      "name": "Volume",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.25,
+      "unit": "",
+      "ai_hint": "Output level after the amp. Adjust to match the other guitar tones; 0.25 is a sensible starting level."
+    }
+  ],
+  "notes": [
+    "Port names and ranges come from the Guitarix plug-in (all 0..1); defaults are the plug-in's own.",
+    "CPU: under 2% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

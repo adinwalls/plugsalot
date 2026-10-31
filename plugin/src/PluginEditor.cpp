@@ -113,7 +113,8 @@ PlugsalotEditor::PlugsalotEditor(PlugsalotProcessor& p)
 
     rack.onOpenSettings = [this](int slot) { showModuleSettings(slot); };
     rack.onStatusChanged = [this] { bottom.repaint(); };
-    moduleEditor.onBrowseTone3000 = [this](int, std::function<void(const juce::String&)> done) { showTone3000(std::move(done)); };
+    // TONE3000 browsing stays built in but hidden (no handler, so the button never shows) until NAM captures are offered again.
+    // moduleEditor.onBrowseTone3000 = [this](int, std::function<void(const juce::String&)> done) { showTone3000(std::move(done)); };
     contextBar.settingsButton.onClick = [this] { showSettings(); };
     proc.onNeedsApiKey = [this]
     {

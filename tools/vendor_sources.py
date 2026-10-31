@@ -68,6 +68,11 @@ FILES = {
         "plugins/LinuxVST/src/Console8ChannelHype/*",
         "plugins/LinuxVST/src/Console8ChannelOut/*",
     ],
+    "gx-supersonic": ["LICENSE", "dsp/supersonic.cc", "dsp/supersonic_table.h", "dsp/gx_pluginlv2.h"],
+    "gx-blueamp": ["LICENSE", "dsp/blueamp.cc", "dsp/sarrisbluesamp_table.h", "dsp/gx_pluginlv2.h"],
+    "gx-guvnor": ["LICENSE", "dsp/guvnor.cc", "dsp/gx_pluginlv2.h"],
+    "gx-ultracab": ["LICENSE", "dsp/ultracab.cc", "dsp/unicab_p2_table.h", "dsp/unicab_p3_table.h", "dsp/gx_pluginlv2.h"],
+    "gx-plexi": ["LICENSE", "dsp/plexi.cc", "dsp/plexi*_table.h", "dsp/gx_pluginlv2.h"],
     "nam-core": [
         "LICENSE",
         "NAM/*.h",
@@ -108,8 +113,12 @@ FILES = {
 
 def main() -> int:
     sources = json.loads((REPO / "third_party" / "sources.json").read_text())["sources"]
-    manifest = {}
+    only = sys.argv[1:]  # optional: vendor just these source keys, merging into VENDORED.json
+    manifest_path = VENDOR / "VENDORED.json"
+    manifest = json.loads(manifest_path.read_text()) if only and manifest_path.exists() else {}
     for key, patterns in FILES.items():
+        if only and key not in only:
+            continue
         root = CACHE / key
         if not root.exists():
             print(f"{key}: not fetched; run tools/fetch_sources.py", file=sys.stderr)
@@ -131,7 +140,7 @@ def main() -> int:
                 copied.append(str(rel))
         manifest[key] = {"commit": sources[key]["commit"], "license": sources[key]["license"], "files": sorted(set(copied))}
         print(f"  {key}: {len(set(copied))} files")
-    (VENDOR / "VENDORED.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    manifest_path.write_text(json.dumps(dict(sorted(manifest.items())) if only else manifest, indent=2) + "\n")
     return 0
 
 

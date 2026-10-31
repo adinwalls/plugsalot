@@ -18,6 +18,11 @@ std::unique_ptr<Module> createButterComp2Module(const ModuleSpec&);
 std::unique_ptr<Module> createConsole8Module(const ModuleSpec&);
 std::unique_ptr<Module> createSrsly2Module(const ModuleSpec&);
 std::unique_ptr<Module> createSweetWideModule(const ModuleSpec&);
+std::unique_ptr<Module> createGxSupersonicModule(const ModuleSpec&);
+std::unique_ptr<Module> createGxBlueAmpModule(const ModuleSpec&);
+std::unique_ptr<Module> createGxPlexiModule(const ModuleSpec&);
+std::unique_ptr<Module> createGxGuvnorModule(const ModuleSpec&);
+std::unique_ptr<Module> createGxUltraCabModule(const ModuleSpec&);
 
 std::unique_ptr<Module> createModule(const ModuleSpec& spec)
 {
@@ -36,6 +41,11 @@ std::unique_ptr<Module> createModule(const ModuleSpec& spec)
     else if (spec.id == "console8")    m = createConsole8Module(spec);
     else if (spec.id == "srsly2")      m = createSrsly2Module(spec);
     else if (spec.id == "sweetwide")   m = createSweetWideModule(spec);
+    else if (spec.id == "gx_supersonic") m = createGxSupersonicModule(spec);
+    else if (spec.id == "gx_blueamp") m = createGxBlueAmpModule(spec);
+    else if (spec.id == "gx_plexi") m = createGxPlexiModule(spec);
+    else if (spec.id == "gx_guvnor") m = createGxGuvnorModule(spec);
+    else if (spec.id == "gx_ultracab") m = createGxUltraCabModule(spec);
     if (m)
         m->applyUpstreamDefaults();
     return m;

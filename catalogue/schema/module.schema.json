@@ -55,6 +55,7 @@
       "description": "Faceplate knobs that depend on an enum parameter (a compressor's mode)."
     },
     "file_kind": { "enum": ["nam", "ir"], "description": "The module needs a file from the user's library: a NAM capture or a cabinet impulse response." },
+    "offered": { "type": "boolean", "description": "False keeps the module out of the AI prompt while it still runs in chains and saved sessions that use it. Default true." },
     "tracking_overrides": {
       "description": "Parameter values forced by the validator when stage = tracking, to keep latency at zero.",
       "type": "object"
