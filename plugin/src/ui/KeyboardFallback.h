@@ -78,8 +78,41 @@ private:
             editor->repaint();
     }
 
+    // Ctrl+V / Cmd+V / Shift+Insert. Some hosts (and some keyboard layouts) deliver
+    // the key as the raw control character 0x16 or with odd modifier flags, so
+    // JUCE's own shortcut match misses it and the paste silently does nothing.
+    static bool isPasteKey(const juce::KeyPress& key)
+    {
+        const auto mods = key.getModifiers();
+        if (key.getKeyCode() == juce::KeyPress::insertKey && mods.isShiftDown() && ! mods.isCtrlDown())
+            return true;
+        if (! (mods.isCtrlDown() || mods.isCommandDown()) || mods.isAltDown())
+            return false;
+        return key.getKeyCode() == 'V' || key.getKeyCode() == 'v' || key.getTextCharacter() == (juce::juce_wchar) 0x16;
+    }
+
     bool keyPressed(const juce::KeyPress& key, juce::Component*) override
     {
+        if (isPasteKey(key))
+        {
+            // Paste into the focused text box if it is ours, else the last one clicked.
+            juce::TextEditor* t = nullptr;
+            if (auto* f = juce::Component::getCurrentlyFocusedComponent())
+                if (root.isParentOf(f))
+                    t = dynamic_cast<juce::TextEditor*>(f);
+            if (t == nullptr)
+                t = target.getComponent();
+            if (t != nullptr && t->isShowing() && t->isEnabled() && ! t->isReadOnly())
+            {
+                auto text = juce::SystemClipboard::getTextFromClipboard();
+                if (! t->isMultiLine())
+                    text = text.removeCharacters("\r\n");
+                if (text.isNotEmpty())
+                    t->insertTextAtCaret(text);
+                return true;
+            }
+        }
+
         auto* t = target.getComponent();
         if (t == nullptr || ! t->isShowing() || ! t->isEnabled())
             return false;
