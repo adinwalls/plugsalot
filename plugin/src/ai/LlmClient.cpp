@@ -198,7 +198,6 @@ LlmResult LlmClient::completeOnce(const ProviderSettings& s, const juce::String&
         auto* body = new juce::DynamicObject();
         body->setProperty("model", model);
         body->setProperty("max_tokens", 2048);
-        body->setProperty("temperature", 0.3);
 
         auto* block = new juce::DynamicObject();
         block->setProperty("type", "text");
