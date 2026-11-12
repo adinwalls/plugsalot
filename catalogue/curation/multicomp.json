@@ -115,7 +115,8 @@
     },
     {
       "upstream_id": "auto_makeup",
-      "ai_hint": "On to keep output level matched while adjusting compression."
+      "default": true,
+      "ai_hint": "Keep ON for every Multi-Comp: it matches output loudness to input so compression never makes the track quieter. While on, the manual output/makeup knobs have no effect, so leave them out."
     },
     {
       "upstream_id": "oversampling",
