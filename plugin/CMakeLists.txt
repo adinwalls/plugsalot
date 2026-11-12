@@ -96,23 +96,6 @@ else()
     target_compile_options(plugsalot_dragonfly PRIVATE -w)
 endif()
 
-# DuskVerb: a large reverb with many engines. Its classes live in the global namespace, so it is its
-# own library and only DuskVerbModule.cpp sees its headers.
-set(DV ${DUSK}/DuskVerb)
-file(GLOB PLUGSALOT_DUSKVERB_SOURCES CONFIGURE_DEPENDS ${DV}/src/dsp/*.cpp)
-add_library(plugsalot_duskverb STATIC
-    ${PLUGSALOT_DUSKVERB_SOURCES}
-    ${DV}/core/DuskVerbDSP.cpp
-    ${DV}/core/DuskVerbPresetEngineConfig.cpp
-)
-# Only core/ is public: DuskVerb's src/ has a dsp/ folder whose header names collide with other modules' includes.
-target_include_directories(plugsalot_duskverb PUBLIC ${DV}/core PRIVATE ${DV}/src ${DUSK}/shared-daf/dsp)
-if(MSVC)
-    target_compile_options(plugsalot_duskverb PRIVATE /W0 /D_USE_MATH_DEFINES /bigobj)
-else()
-    target_compile_options(plugsalot_duskverb PRIVATE -w)
-endif()
-
 # TuneBrew's header-only engine uses M_PI, which MSVC only declares with _USE_MATH_DEFINES set
 # before the first <cmath> include.
 set_source_files_properties(src/dsp/modules/TuneBrewModule.cpp PROPERTIES COMPILE_DEFINITIONS _USE_MATH_DEFINES)
@@ -191,7 +174,7 @@ endif()
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide tunebrew duskverb hall room tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide tunebrew hall room tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(f BarlowCondensed-SemiBold BarlowCondensed-Bold BarlowCondensed-Medium Barlow-Regular Barlow-Medium PermanentMarker-Regular)
     list(APPEND PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/${f}.ttf)
@@ -235,7 +218,6 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/ConsoleEqModule.cpp
     src/dsp/modules/PlateModule.cpp
     src/dsp/modules/HallModule.cpp
-    src/dsp/modules/DuskVerbModule.cpp
     src/dsp/modules/TuneBrewModule.cpp
     src/dsp/modules/RoomModule.cpp
     src/dsp/modules/LimiterModule.cpp
@@ -328,7 +310,7 @@ target_link_libraries(Plugsalot
     PRIVATE
         PlugsalotData
         plugsalot_upstream_dsp
-        plugsalot_duskverb plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly
+        plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly
         plugsalot_nam
         juce::juce_audio_utils
         juce::juce_dsp
@@ -349,7 +331,7 @@ if(PLUGSALOT_BUILD_TESTS)
         JUCE_WEB_BROWSER=0 JUCE_USE_CURL=1 JUCE_STANDALONE_APPLICATION=1 PLUGSALOT_VERSION="${PROJECT_VERSION}"
         PLUGSALOT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
     target_link_libraries(PlugsalotTests PRIVATE
-        PlugsalotData plugsalot_upstream_dsp plugsalot_duskverb plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly plugsalot_nam
+        PlugsalotData plugsalot_upstream_dsp plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly plugsalot_nam
         juce::juce_core juce::juce_events juce::juce_audio_basics juce::juce_data_structures
         juce::juce_recommended_config_flags)
 endif()

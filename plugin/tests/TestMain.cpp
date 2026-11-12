@@ -43,7 +43,7 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 28, "twenty-eight runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 27, "twenty-seven runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
@@ -539,41 +539,6 @@ static void testWideners(const Catalogue& cat)
     const double swNarrow = sideOverMid("sweetwide", { { "un_wide", 0.1 }, { "soar", 0.0 } }, cpu, finite);
     check(finite && swWide > swNarrow, "SweetWide widens and narrows (narrow " + juce::String(swNarrow, 3) + ", neutral " + juce::String(sw, 3) + ", wide " + juce::String(swWide, 3) + ")");
     std::cout << "  SweetWide CPU: " << cpu << "% of one core at 48 kHz\n";
-
-    // DuskVerb: every factory preset renders, and a cathedral rings far longer than a small drum room.
-    if (auto* dv = cat.find("duskverb"))
-    {
-        const double sr = 48000.0; const int block = 256;
-        auto tail = [&](const juce::String& preset, double scale, bool& fin)
-        {
-            auto m = createModule(*dv);
-            m->setParam("preset", preset); m->setParam("mix", 100.0); m->setParam("decay_scale", scale);
-            m->prepare(sr, block); m->reset();
-            std::vector<float> l((size_t) block), r((size_t) block);
-            juce::Random rng(7); double late = 0;
-            for (int b = 0; b < (int) (3 * sr / block); ++b)
-            {
-                for (int i = 0; i < block; ++i)
-                    l[(size_t) i] = r[(size_t) i] = b < 40 ? 0.3f * (rng.nextFloat() * 2.0f - 1.0f) : 0.0f;   // 0.2 s noise burst
-                float* ch[2] = { l.data(), r.data() };
-                m->process(ch, block);
-                for (int i = 0; i < block; ++i)
-                {
-                    fin &= std::isfinite(l[(size_t) i]) && std::isfinite(r[(size_t) i]) && std::abs(l[(size_t) i]) < 8.0f;
-                    if (b * block > 1.5 * sr) late += l[(size_t) i] * l[(size_t) i];
-                }
-            }
-            return late;
-        };
-        bool fin = true; int rendered = 0;
-        if (auto* pp = dv->findParam("preset"))
-            for (auto& name : pp->options) { tail(name, 1.0, fin); ++rendered; }
-        check(fin && rendered == 20, "DuskVerb: all " + juce::String(rendered) + " presets render finite output");
-        const double room = tail("Small Drum Room", 1.0, fin), cathedral = tail("Cathedral Large Hall", 1.0, fin);
-        const double shortHall = tail("Vocal Hall", 0.5, fin), longHall = tail("Vocal Hall", 2.0, fin);
-        check(fin && cathedral > room * 20.0, "DuskVerb: the cathedral tail outlasts the small drum room");
-        check(fin && longHall > shortHall * 4.0, "DuskVerb: decay_scale lengthens the tail");
-    }
 
     // TuneBrew: a voice-like tone sung 35 cents sharp of A3 comes out on A3.
     if (auto* tb = cat.find("tunebrew"))

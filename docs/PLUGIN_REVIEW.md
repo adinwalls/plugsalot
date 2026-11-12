@@ -93,7 +93,7 @@ Also worth doing regardless: tag `sweetwide`, `limiter` and `srsly2` for the voc
 
 ## 6. Status (updated 2026-11-12)
 
-Adin approved batch 1. Added and passing the headless tests (28 runnable modules):
+Adin approved batch 1. Added and passing the headless tests (27 runnable modules):
 
 | Module | Upstream | Fills |
 | --- | --- | --- |
@@ -104,7 +104,6 @@ Adin approved batch 1. Added and passing the headless tests (28 runnable modules
 | `chorus_ensemble` | Airwindows ChorusEnsemble | Chorus, thickening, light doubling |
 | `hall` | Dragonfly Hall Reverb | Big, spacious reverb |
 | `room` | Dragonfly Room Reverb | Small natural spaces |
-| `duskverb` | Dusk Audio DuskVerb | 20 tuned spaces: plates, halls, chambers, rooms, spring, gated, reverse, shimmer. The preset is the main control, with mix, decay, tone, character and duck layered on top. About 5 CPU points |
 | `tunebrew` | Adin Brew TuneBrew Autotune (`adinwalls/adin-brew`, main) | Pitch correction. Only used when asked for; first in the chain; mixing only (about 49 ms latency) |
 
 The AI guidelines (`plugin/resources/guidelines.md`) now say when to pick each colour stage and each reverb.
@@ -113,5 +112,6 @@ Not yet listened to on real vocals: default levels and the hint ranges are from 
 
 Still to do:
 
+- **DuskVerb** was ported and then dropped on 2026-11-12 at Adin's request. It worked (20 factory spaces behind a preset choice, with mix, decay, tone, character and duck on top) but measured 5-11% of a core against under 2% for Hall and Room. Decision: listen to the lighter Dragonfly Hall and Room first, and revisit DuskVerb only if their quality is not good enough. The port is in the branch history (commit 90cf88f) if it is wanted again.
 - **TuneBrew key detection.** TuneBrew is in, but its Detect Key button is not wired up: Plugsalot has no UI for it, so the AI uses Chromatic unless the user states the key. Wiring detection into the input analyser would let the AI set key and scale itself.
 - LSP Gate and the remaining candidates, if still wanted.

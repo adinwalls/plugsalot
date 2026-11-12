@@ -36,13 +36,6 @@ FILES = {
         "plugins/4k-eq/daf-plugin/FourKEQBandFrequency.hpp",
         "plugins/multi-comp/HardwareEmulation/*.h",
         "plugins/shared/AnalogEmulation/*.h",
-        "plugins/DuskVerb/core/*.hpp",
-        "plugins/DuskVerb/core/*.h",
-        "plugins/DuskVerb/core/*.cpp",
-        "plugins/DuskVerb/src/FactoryPresets.h",
-        "plugins/DuskVerb/src/StereoImagePresets.h",
-        "plugins/DuskVerb/src/dsp/*.h",
-        "plugins/DuskVerb/src/dsp/*.cpp",
     ],
     "dusk-audio-echo": [
         "LICENSE",

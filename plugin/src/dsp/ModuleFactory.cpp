@@ -18,7 +18,6 @@ std::unique_ptr<Module> createButterComp2Module(const ModuleSpec&);
 std::unique_ptr<Module> createConsole8Module(const ModuleSpec&);
 std::unique_ptr<Module> createSrsly2Module(const ModuleSpec&);
 std::unique_ptr<Module> createHallModule(const ModuleSpec&);
-std::unique_ptr<Module> createDuskVerbModule(const ModuleSpec&);
 std::unique_ptr<Module> createTuneBrewModule(const ModuleSpec&);
 std::unique_ptr<Module> createRoomModule(const ModuleSpec&);
 std::unique_ptr<Module> createTube2Module(const ModuleSpec&);
@@ -41,7 +40,6 @@ std::unique_ptr<Module> createModule(const ModuleSpec& spec)
     else if (spec.id == "console_eq") m = createConsoleEqModule(spec);
     else if (spec.id == "plate")      m = createPlateModule(spec);
     else if (spec.id == "tunebrew")   m = createTuneBrewModule(spec);
-    else if (spec.id == "duskverb")   m = createDuskVerbModule(spec);
     else if (spec.id == "hall")       m = createHallModule(spec);
     else if (spec.id == "room")       m = createRoomModule(spec);
     else if (spec.id == "limiter")    m = createLimiterModule(spec);

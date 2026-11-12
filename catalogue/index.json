@@ -401,27 +401,6 @@
       "tracking_safe": false
     },
     {
-      "id": "duskverb",
-      "name": "DuskVerb",
-      "kind": "effect",
-      "category": "reverb",
-      "purpose": "Many reverbs in one: plates, halls, chambers, rooms, spring, gated, reverse and shimmer, each a tuned preset. The choice for lush, spacious, expansive or special-effect reverb.",
-      "good_for": [
-        "lead vocal",
-        "backing vocal",
-        "snare",
-        "full kit",
-        "software drums",
-        "acoustic guitar",
-        "electric guitar",
-        "keys",
-        "synth",
-        "pad"
-      ],
-      "cpu_points": 5,
-      "tracking_safe": true
-    },
-    {
       "id": "hall",
       "name": "Hall Reverb",
       "kind": "effect",
