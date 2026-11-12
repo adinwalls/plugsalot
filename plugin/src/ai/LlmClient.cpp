@@ -260,6 +260,16 @@ LlmResult LlmClient::completeOnce(const ProviderSettings& s, const juce::String&
     gen->setProperty("responseMimeType", "application/json");
     gen->setProperty("temperature", 0.3);
     gen->setProperty("maxOutputTokens", 4096);
+    // Gemini 2.5 Flash "thinks" before answering by default, which can add tens
+    // of seconds. The reply is a schema-checked JSON chain (and we retry on a
+    // rule break), so cap the thinking. Only 2.5 Flash/Flash-Lite are known to
+    // accept budget 0; other families keep their defaults.
+    if (model.contains("2.5") && model.contains("flash"))
+    {
+        auto* thinking = new juce::DynamicObject();
+        thinking->setProperty("thinkingBudget", model.contains("lite") ? 0 : 512);
+        gen->setProperty("thinkingConfig", juce::var(thinking));
+    }
     body->setProperty("generationConfig", juce::var(gen));
 
     auto r = post(geminiBase() + "/v1beta/models/" + model + ":generateContent",
