@@ -113,6 +113,10 @@ else()
     target_compile_options(plugsalot_duskverb PRIVATE -w)
 endif()
 
+# TuneBrew's header-only engine uses M_PI, which MSVC only declares with _USE_MATH_DEFINES set
+# before the first <cmath> include.
+set_source_files_properties(src/dsp/modules/TuneBrewModule.cpp PROPERTIES COMPILE_DEFINITIONS _USE_MATH_DEFINES)
+
 # Dragonfly Hall and Room. Every Dragonfly plug-in names its DSP class DragonflyReverbDSP and its
 # parameter header DistrhoPluginInfo.h, so each one is its own small library with the class renamed.
 foreach(df hall room)
