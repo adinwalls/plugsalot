@@ -1,0 +1,63 @@
+{
+  "expect": "valid",
+  "reply": {
+    "schema_version": 1,
+    "source": "lead vocal",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "console_eq",
+        "params": {
+          "hpf_enabled": true,
+          "hpf_hz": 100
+        }
+      },
+      {
+        "module": "multicomp",
+        "params": {
+          "mode": "Opto",
+          "opto_peak_reduction": 45
+        }
+      },
+      {
+        "module": "deess",
+        "params": {
+          "intensity": 0.4
+        }
+      },
+      {
+        "module": "tube2",
+        "params": {
+          "input": 0.5,
+          "tube": 0.4
+        }
+      },
+      {
+        "module": "air2",
+        "params": {
+          "air": 0.7,
+          "silk": 0.3,
+          "dry_wet": 0.6
+        }
+      },
+      {
+        "module": "chorus_ensemble",
+        "params": {
+          "dry_wet": 0.2
+        }
+      },
+      {
+        "module": "hall",
+        "params": {
+          "wet": 15,
+          "decay": 2.8,
+          "predelay": 45,
+          "size": 35,
+          "low_cut": 180,
+          "high_cut": 8000
+        }
+      }
+    ],
+    "explanation": "Warm tube colour, a little air, a touch of doubling and a big hall for a spacious ballad vocal."
+  }
+}

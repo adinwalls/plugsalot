@@ -15,3 +15,6 @@ Next: user tags `v0.3.1` (pre-release), listens, then tune default levels in cur
 - Build/test: `cmake -S . -B build && cmake --build build -j8`; test runner `PlugsalotTests`.
 - Be economical: one commit per job, check CI once, avoid polling and screenshots unless the UI changes.
 - The Design prototype artifact for the UI is https://claude.ai/artifact/X8z1XUBd44vtk4WxhyJXJB.
+
+## 2026-11-12: variety batch
+Seven modules added (tube2, density, air2, channel9, chorus_ensemble from Airwindows; hall and room from Dragonfly): 26 runnable modules, tests pass on Linux. See `docs/PLUGIN_REVIEW.md` section 6. `tools/extractors/dpf_param_table.py` now reads Dragonfly preset banks. Hall and Room each build as their own small library because every Dragonfly plug-in uses the same class and header names. Not yet listened to. Next: DuskVerb (framework-free core is in the pinned Dusk repo) and TuneBrew for pitch correction.

@@ -41,17 +41,21 @@ If the request is unclear and a wrong guess would waste the user's time, you may
 - Two-stage vocal compression (what many producers do): a first compressor for control (multicomp FET or VCA, 3-5 dB) then a second, slower one for tone and levelling (multicomp Opto, the LA-2A-style choice, 2-4 dB; or buttercomp2 compress 0.2-0.4 for gentle glue). Keep each stage light rather than one heavy compressor.
 - console8 is a subtle console-style colour and light saturation, best late in the chain on an already levelled signal, just before delay and reverb. Tone Solid is grounded; Hype adds presence and air. Do not stack it with tape or another saturator unless asked.
 - Stereo width: srsly2 widens (space 0.5-0.8, dry_wet 0.4-0.7 to keep it natural) and suits reverb returns, synths, keys, backing vocals and stereo guitars; sweetwide is a grungy colour widener (un_wide 0.6-0.75) for synths, heavy guitars and drum rooms. Never widen the lead vocal, kick or bass; keep the centre solid and mono compatible.
+- Colour choices (pick ONE saturator per chain unless asked for a heavily coloured sound, and vary your choice to suit the request instead of always using the same one): console8 for subtle desk polish; channel9 for a named desk flavour (Neve smooth, API punchy, SSL tight and bright, Teac dark and vibey, Mackie lo-fi grind; drive 0.1-0.35); tube2 for round tube warmth (input 0.5, tube 0.3-0.5; more for grit); density to fatten and bring a thin sound forward (density 0.3-0.5, highpass 0.3-0.6 on vocals so the lows do not build up), or below 0.2 to thin a sound and push it back; tape for tape warmth, head bump and glue.
+- Air and sparkle: air2 adds top-end sheen that EQ cannot (air 0.6-0.8, hiss and glitter near 0.5, silk 0.2-0.4, dry_wet 0.5-0.75). Put it after the de-esser, never before, and skip it on harsh or sibilant sources.
+- Thickening and doubling: chorus_ensemble thickens backing vocals, pads, keys and clean guitars (dry_wet 0.5-0.8); on a lead vocal only when the user asks for doubling or a chorus effect, and then low (dry_wet 0.15-0.3). Put it before delay and reverb.
+- Reverb choice: plate is bright and dense, the classic pop vocal and snare reverb. room puts a dry source in a small natural space (decay 0.3-1.0 s; intimate, dry, modern, drums, acoustic). hall is the big, spacious, expansive one (decay 1.5-4 s, predelay 30-60 ms, size 25-45; ballads, pads, ambient, epic vocals); keep its wet level modest (10-20%) and raise low_cut so it does not wash out the mix. Use one reverb per chain. Words like "huge", "spacious", "expansive", "cathedral" or "dreamy" mean hall; "tight", "natural", "in the room" or "dry" mean room.
 - The explanation is for a musician, not an engineer: say what each move does to the sound in plain words, with the key numbers.
 
 ## Starting points by source
 
 These are references, not rules. Depart from them when the request, style or analysis calls for it, and say why.
 
-**Lead vocal (mixing):** console_eq high-pass 80-120 Hz, cut 2-3 dB around 250-400 Hz if muddy, gentle presence lift 3-5 kHz only if dull -> multicomp Opto (peak reduction 40-55, auto makeup on) or FET for rock -> deess intensity 0.3-0.5 -> optional console8 (tone Solid, drive 15-35) as the last colour stage before the space effects -> plate wet 10-20%, predelay 20-40 ms, low_cut 200-300 Hz.
+**Lead vocal (mixing):** console_eq high-pass 80-120 Hz, cut 2-3 dB around 250-400 Hz if muddy, gentle presence lift 3-5 kHz only if dull -> multicomp Opto (peak reduction 40-55, auto makeup on) or FET for rock -> deess intensity 0.3-0.5 -> optional ONE colour stage before the space effects (console8 tone Solid drive 15-35, or tube2, density or channel9 to suit the style) -> optional air2 if the user wants air or sparkle -> ONE reverb: plate wet 10-20%, predelay 20-40 ms, low_cut 200-300 Hz for a classic vocal; room for intimate or dry styles; hall for big, spacious, expansive vocals.
 
-**Backing vocals:** like lead but brighter and more compressed, a higher high-pass (150-200 Hz), more reverb than the lead so they sit behind it.
+**Backing vocals:** like lead but brighter and more compressed, a higher high-pass (150-200 Hz), more reverb than the lead so they sit behind it. chorus_ensemble or srsly2 can thicken and widen a stack.
 
-**Acoustic guitar:** high-pass 80-100 Hz, cut boom 150-250 Hz, light compression (Opto or Studio VCA, 2-4 dB reduction), optional small air lift above 10 kHz, short plate or none.
+**Acoustic guitar:** high-pass 80-100 Hz, cut boom 150-250 Hz, light compression (Opto or Studio VCA, 2-4 dB reduction), optional small air lift above 10 kHz or air2, short plate or room, or none.
 
 **Electric guitar (amps and cabinet are knobs, no files needed):** pick ONE amp by the sound asked for: gx_blueamp for clean, blues and jazz (master 0.3 clean, 0.5-0.7 edge of breakup); gx_plexi for classic rock and crunch (volume 0.15-0.4, raise master only to match level); gx_supersonic for high gain, rock and metal (gain 0.3-0.6, keep treble at or below 0.5 to avoid fizz). For more push, put gx_guvnor (overdrive pedal) BEFORE the amp with gain 0.3-0.6 and level 0.5-0.7, and keep the amp's own gain lower; use the pedal alone only for a deliberate lo-fi fuzz. Always follow the amp with gx_ultracab (an amp without a cabinet sounds thin and fizzy; mids/size/top near 0.5, lower top for a darker box). Then optional light console_eq (high-pass 80-100 Hz, small cuts) and optional plate reverb. Use each amp's volume or master to match level. Do not stack two amps, and do not add tape or another saturator unless asked. Amps are tracking-safe, so they suit live monitoring.
 
@@ -67,9 +71,9 @@ These are references, not rules. Depart from them when the request, style or ana
 
 **Software drums:** treat like a full kit; they are often already processed, so use lighter settings and focus on glue and tone.
 
-**Synth pad / lead / bass:** pads: high-pass 100-200 Hz to make room, gentle compression, plate for width. Leads: presence and controlled compression. Synth bass: like bass, keep the low end mono-friendly, no reverb.
+**Synth pad / lead / bass:** pads: high-pass 100-200 Hz to make room, gentle compression, hall or plate for space, chorus_ensemble for lushness. Leads: presence and controlled compression. Synth bass: like bass, keep the low end mono-friendly, no reverb.
 
-**Keys:** high-pass 60-100 Hz, light compression, short reverb.
+**Keys:** high-pass 60-100 Hz, light compression, short reverb (room or plate).
 
 **Bus / master (mastering stage):** subtle moves only: console EQ under 2 dB, Bus compression 1-2 dB reduction, tape optional, limiter last with ceiling -1 dB and input gain 0-3 dB unless loudness is requested.
 

@@ -1,6 +1,6 @@
 # Plugin review: what we have and what could add variety
 
-Written 2026-11-12 from `catalogue/index.json`, `THIRD_PARTY.md` and `docs/HANDOVER.md` at commit 7f150b8. Nothing has been added; this is a menu to choose from.
+Written 2026-11-12 from `catalogue/index.json`, `THIRD_PARTY.md` and `docs/HANDOVER.md` at commit 7f150b8. Nothing had been added at that point; this was a menu to choose from. See the status section at the end for what has been added since.
 
 ## 1. What the app uses today
 
@@ -90,3 +90,27 @@ Also worth doing regardless: tag `sweetwide`, `limiter` and `srsly2` for the voc
 
 - Descriptions of candidate plugins come from general knowledge of those projects, not from reading their pinned source. Each should be confirmed (name, licence file, parameter list) when its curation file is written.
 - The licence column assumes the project rule that only GPL-3-compatible licences are accepted (`docs/DEVELOPING.md`).
+
+## 6. Status (updated 2026-11-12)
+
+Adin approved batch 1. Added and passing the headless tests (26 runnable modules):
+
+| Module | Upstream | Fills |
+| --- | --- | --- |
+| `tube2` | Airwindows Tube2 | Tube saturation |
+| `density` | Airwindows Density | Fatten / thin saturation |
+| `air2` | Airwindows Air2 | Exciter / air. Air2 was used instead of Air because Air only works properly at 44.1 kHz |
+| `channel9` | Airwindows Channel9 | Console flavours (Neve, API, SSL, Teac, Mackie) |
+| `chorus_ensemble` | Airwindows ChorusEnsemble | Chorus, thickening, light doubling |
+| `hall` | Dragonfly Hall Reverb | Big, spacious reverb |
+| `room` | Dragonfly Room Reverb | Small natural spaces |
+
+The AI guidelines (`plugin/resources/guidelines.md`) now say when to pick each colour stage and each reverb.
+
+Not yet listened to on real vocals: default levels and the hint ranges are from the upstream documentation and source, so they may need tuning after a listening pass.
+
+Still to do:
+
+- **DuskVerb** (Dusk Audio, same pinned repo as Multi-Comp). It has a framework-free core (`plugins/DuskVerb/core`) with many engines (halls, chambers, plates, spring, shimmer, non-linear, reverse). It is a bigger port than the others because its factory presets carry engine configuration, so it is its own piece of work.
+- **TuneBrew** as the built-in pitch corrector, replacing the x42 Auto-Tune idea in section 3C. Needs access to its source.
+- LSP Gate and the remaining candidates, if still wanted.

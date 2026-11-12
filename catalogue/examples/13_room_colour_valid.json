@@ -1,0 +1,40 @@
+{
+  "expect": "valid",
+  "reply": {
+    "schema_version": 1,
+    "source": "acoustic guitar",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "console_eq",
+        "params": {
+          "hpf_enabled": true,
+          "hpf_hz": 90
+        }
+      },
+      {
+        "module": "channel9",
+        "params": {
+          "console": "Neve",
+          "drive": 0.2
+        }
+      },
+      {
+        "module": "density",
+        "params": {
+          "density": 0.35,
+          "highpass": 0.4
+        }
+      },
+      {
+        "module": "room",
+        "params": {
+          "wet": 12,
+          "decay": 0.6,
+          "size": 12
+        }
+      }
+    ],
+    "explanation": "Neve-style desk colour, a little thickness and a small natural room."
+  }
+}
