@@ -1,0 +1,91 @@
+{
+  "id": "chorus_ensemble",
+  "name": "ChorusEnsemble",
+  "kind": "effect",
+  "category": "delay_modulation",
+  "source": {
+    "source_key": "airwindows",
+    "path": "plugins/LinuxVST/src/ChorusEnsemble",
+    "upstream_name": "Airwindows ChorusEnsemble"
+  },
+  "extractor": {
+    "type": "airwindows",
+    "effect": "ChorusEnsemble"
+  },
+  "purpose": "Multi-tap chorus with a lush, textured sound that sits well away from the original; thickens pads, backing vocals and guitars, and doubles a vocal when blended low.",
+  "good_for": [
+    "backing vocal",
+    "synth",
+    "keys",
+    "pad",
+    "electric guitar",
+    "acoustic guitar"
+  ],
+  "avoid_for": [
+    "lead vocal unless blended very low",
+    "bass",
+    "kick",
+    "snare"
+  ],
+  "tags": [
+    "chorus",
+    "ensemble",
+    "modulation",
+    "thicken",
+    "doubling",
+    "width"
+  ],
+  "cpu_points": 1,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "notes": [
+    "All Airwindows parameters are 0..1. Stereo in, stereo out; the multi-tap character depends mainly on Range.",
+    "Keep it low on lead vocals: heavy chorus can smear the centre.",
+    "CPU: 0.51% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ],
+  "cpu_measured": true,
+  "maker": "Airwindows",
+  "tape": "LUSH CHORUS",
+  "knobs": [
+    {
+      "param": "speed",
+      "label": "SPEED",
+      "colour": "grey"
+    },
+    {
+      "param": "range",
+      "label": "RANGE",
+      "colour": "red"
+    },
+    {
+      "param": "dry_wet",
+      "label": "DRY/WET",
+      "colour": "cream"
+    }
+  ],
+  "expose": [
+    {
+      "upstream_id": "A",
+      "id": "speed",
+      "default": 0.5,
+      "ai_hint": "Modulation speed. Lower is slow and gentle; higher is faster and more obviously chorused."
+    },
+    {
+      "upstream_id": "B",
+      "id": "range",
+      "default": 0.5,
+      "ai_hint": "Modulation depth. Lower is subtle thickening; higher is more detuned and obvious. Extreme settings sound wrong on purpose."
+    },
+    {
+      "upstream_id": "C",
+      "id": "dry_wet",
+      "default": 0.4,
+      "ai_hint": "Dry/wet. 0.2-0.4 thickens or doubles a vocal; 0.6-0.9 is an obvious chorus on pads and synths."
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "id": "channel9",
+  "name": "Channel9",
+  "kind": "effect",
+  "category": "character",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/Channel9",
+    "upstream_name": "Airwindows Channel9",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "manual"
+  },
+  "purpose": "Mixing-desk channel: choose a Neve, API, SSL, Teac or Mackie voicing with drive; a more coloured console option than Console8.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "bass guitar",
+    "electric guitar",
+    "acoustic guitar",
+    "keys",
+    "synth",
+    "drum bus",
+    "kick",
+    "snare"
+  ],
+  "avoid_for": [
+    "material that must stay completely untouched"
+  ],
+  "tags": [
+    "console",
+    "saturation",
+    "analog",
+    "neve",
+    "ssl",
+    "api",
+    "vintage"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "maker": "Airwindows",
+  "tape": "CONSOLE FLAVOURS",
+  "knobs": [
+    {
+      "param": "drive",
+      "label": "DRIVE",
+      "colour": "red"
+    },
+    {
+      "param": "output",
+      "label": "OUT",
+      "colour": "grey"
+    }
+  ],
+  "params": [
+    {
+      "upstream_id": "A",
+      "id": "console",
+      "name": "Console",
+      "type": "enum",
+      "options": [
+        "Neve",
+        "API",
+        "SSL",
+        "Teac",
+        "Mackie"
+      ],
+      "default": "Neve",
+      "ai_hint": "Neve: smooth, extended highs, a good vocal choice. API: punchy and forward. SSL: tight, brighter, steeper top. Teac: dark, vibey, gritty low-end. Mackie: leaner and brighter, grindy and lo-fi.",
+      "convert": "enum_index"
+    },
+    {
+      "upstream_id": "B",
+      "id": "drive",
+      "name": "Drive",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": "",
+      "ai_hint": "Drive into the console stages. 0 is subtle colour only; 0.2-0.4 adds warmth and density; 0.6+ is obvious saturation and louder."
+    },
+    {
+      "upstream_id": "C",
+      "id": "output",
+      "name": "Output",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": "",
+      "ai_hint": "Output level. 1.0 is unity; lower it if drive makes the sound louder."
+    }
+  ],
+  "notes": [
+    "Upstream description: Channel9 is Channel8 with ultrasonic filtering, and new Teac and Mackie 'low end' settings.",
+    "All Airwindows parameters are 0..1 except the console type, which Plugsalot presents as a choice.",
+    "Calibrated to give the general sense of each desk rather than clone it.",
+    "CPU: 0.22% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

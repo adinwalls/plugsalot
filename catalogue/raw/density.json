@@ -1,0 +1,52 @@
+{
+  "module": "density",
+  "source_key": "airwindows",
+  "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+  "extractor": {
+    "type": "airwindows",
+    "effect": "Density"
+  },
+  "params": [
+    {
+      "upstream_id": "A",
+      "name": "Density",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.2,
+      "unit": " ",
+      "display_expr": "float2string((A*5.0)-1.0)"
+    },
+    {
+      "upstream_id": "B",
+      "name": "Highpass",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": " ",
+      "display_expr": "float2string(B)"
+    },
+    {
+      "upstream_id": "C",
+      "name": "Out Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": " ",
+      "display_expr": "float2string(C)"
+    },
+    {
+      "upstream_id": "D",
+      "name": "Dry/Wet",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": " ",
+      "display_expr": "float2string(D)"
+    }
+  ],
+  "description": "Density is a Swiss Army Knife of saturation/antisaturation."
+}

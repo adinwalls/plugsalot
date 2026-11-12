@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "id": "density",
+  "name": "Density",
+  "kind": "effect",
+  "category": "character",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/Density",
+    "upstream_name": "Airwindows Density",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "airwindows"
+  },
+  "purpose": "Smooth sine-shaped saturation that fattens and pushes a sound forward; negative settings thin it and push it back. A highpass keeps the fattening out of the lows.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "bass guitar",
+    "electric guitar",
+    "acoustic guitar",
+    "keys",
+    "synth",
+    "drum bus",
+    "kick",
+    "snare"
+  ],
+  "avoid_for": [
+    "material that must stay completely untouched"
+  ],
+  "tags": [
+    "saturation",
+    "density",
+    "fatten",
+    "thin",
+    "presence",
+    "utility"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "maker": "Airwindows",
+  "tape": "FATTEN OR THIN",
+  "knobs": [
+    {
+      "param": "density",
+      "label": "DENSITY",
+      "colour": "red"
+    },
+    {
+      "param": "highpass",
+      "label": "HIGHPASS",
+      "colour": "grey"
+    },
+    {
+      "param": "out_level",
+      "label": "OUT",
+      "colour": "grey"
+    },
+    {
+      "param": "dry_wet",
+      "label": "DRY/WET",
+      "colour": "cream"
+    }
+  ],
+  "params": [
+    {
+      "id": "density",
+      "upstream_id": "A",
+      "name": "Density",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.2,
+      "unit": " ",
+      "ai_hint": "0.2 is neutral. 0.4 mild fattening, 0.6 fat and forward, 1.0 extreme. Below 0.2 thins the sound and pushes it back. Try 0.3-0.5 on vocals."
+    },
+    {
+      "id": "highpass",
+      "upstream_id": "B",
+      "name": "Highpass",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": " ",
+      "ai_hint": "Highpass on the added density only. 0 leaves the lows fattened too; raise it (0.3-0.6) so a vocal or full-range sound gets thickness without extra low-end build up."
+    },
+    {
+      "id": "out_level",
+      "upstream_id": "C",
+      "name": "Out Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": " ",
+      "ai_hint": "Output level. 1.0 is unity; lower it if the density makes the sound louder."
+    },
+    {
+      "id": "dry_wet",
+      "upstream_id": "D",
+      "name": "Dry/Wet",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": " ",
+      "ai_hint": "Dry/wet. 1.0 is fully processed; 0.4-0.7 blends in the original for parallel-style thickening."
+    }
+  ],
+  "hidden_params": {
+    "count": 0
+  },
+  "notes": [
+    "Upstream description: Density is a Swiss Army Knife of saturation/antisaturation.",
+    "All Airwindows parameters are 0..1; Density's own display is (A*5)-1, so 0.2 is 0.",
+    "Raising Density increases level: use Out Level or a later module to rebalance.",
+    "CPU: 0.19% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

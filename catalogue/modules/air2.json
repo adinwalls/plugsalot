@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "id": "air2",
+  "name": "Air2",
+  "kind": "effect",
+  "category": "character",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/Air2",
+    "upstream_name": "Airwindows Air2",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "airwindows"
+  },
+  "purpose": "Treble exciter: three boost bands (hiss, glitter, air) plus a Silk control that adds soft harmonics to the highs; adds sparkle EQ cannot.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "acoustic guitar",
+    "keys",
+    "synth",
+    "drum bus",
+    "master"
+  ],
+  "avoid_for": [
+    "harsh or sibilant sources (de-ess first)"
+  ],
+  "tags": [
+    "air",
+    "exciter",
+    "sparkle",
+    "brightness",
+    "silk",
+    "treble"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "maker": "Airwindows",
+  "tape": "ADD SPARKLE",
+  "knobs": [
+    {
+      "param": "hiss",
+      "label": "HISS",
+      "colour": "grey"
+    },
+    {
+      "param": "glitter",
+      "label": "GLITTER",
+      "colour": "grey"
+    },
+    {
+      "param": "air",
+      "label": "AIR",
+      "colour": "red"
+    },
+    {
+      "param": "silk",
+      "label": "SILK",
+      "colour": "cream"
+    },
+    {
+      "param": "dry_wet",
+      "label": "DRY/WET",
+      "colour": "cream"
+    }
+  ],
+  "params": [
+    {
+      "id": "hiss",
+      "upstream_id": "A",
+      "name": "Hiss",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Upper-treble band. 0.5 is off; 0.6-0.7 adds a little sheen, below 0.5 cuts. Start at 0.5 on a vocal and use the Air band first."
+    },
+    {
+      "id": "glitter",
+      "upstream_id": "B",
+      "name": "Glitter",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Mid-treble band. 0.5 is off; 0.55-0.65 adds clarity; be careful, it adds harshness when pushed on vocals."
+    },
+    {
+      "id": "air",
+      "upstream_id": "C",
+      "name": "Air",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Broad air band, the softest and prettiest of the three. 0.5 is off; 0.6-0.8 is typical for vocal air."
+    },
+    {
+      "id": "silk",
+      "upstream_id": "D",
+      "name": "Silk",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": "",
+      "ai_hint": "Silk: soft harmonics added to the highs. 0 is off; 0.2-0.5 gives a smooth, expensive top end."
+    },
+    {
+      "id": "dry_wet",
+      "upstream_id": "E",
+      "name": "Dry/Wet",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.7,
+      "unit": "",
+      "ai_hint": "Up to 0.75 you keep the full dry signal and add the effect on top; above 0.75 the dry fades out. 0.5-0.75 for normal use."
+    }
+  ],
+  "hidden_params": {
+    "count": 0
+  },
+  "notes": [
+    "Upstream description: Air2 is a different bright EQ with silk tone and high sample rate support.",
+    "All Airwindows parameters are 0..1; the three bands display as (value*2)-1, so 0.5 is neutral.",
+    "Unlike Air, Air2 works at high sample rates.",
+    "Place after the de-esser so it does not exaggerate sibilance.",
+    "CPU: 0.20% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

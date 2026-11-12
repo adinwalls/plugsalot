@@ -19,6 +19,16 @@ add_library(plugsalot_upstream_dsp STATIC
     ${V}/airwindows/plugins/LinuxVST/src/Srsly2/Srsly2Proc.cpp
     ${V}/airwindows/plugins/LinuxVST/src/SweetWide/SweetWide.cpp
     ${V}/airwindows/plugins/LinuxVST/src/SweetWide/SweetWideProc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Tube2/Tube2.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Tube2/Tube2Proc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Density/Density.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Density/DensityProc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Air2/Air2.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Air2/Air2Proc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Channel9/Channel9.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Channel9/Channel9Proc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/ChorusEnsemble/ChorusEnsemble.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/ChorusEnsemble/ChorusEnsembleProc.cpp
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelIn/Console8ChannelIn.cpp
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelIn/Console8ChannelInProc.cpp
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelHype/Console8ChannelHype.cpp
@@ -36,6 +46,11 @@ target_include_directories(plugsalot_upstream_dsp PUBLIC
     ${V}/airwindows/plugins/LinuxVST/src/ButterComp2
     ${V}/airwindows/plugins/LinuxVST/src/Srsly2
     ${V}/airwindows/plugins/LinuxVST/src/SweetWide
+    ${V}/airwindows/plugins/LinuxVST/src/Tube2
+    ${V}/airwindows/plugins/LinuxVST/src/Density
+    ${V}/airwindows/plugins/LinuxVST/src/Air2
+    ${V}/airwindows/plugins/LinuxVST/src/Channel9
+    ${V}/airwindows/plugins/LinuxVST/src/ChorusEnsemble
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelIn
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelHype
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelOut
@@ -45,7 +60,7 @@ target_include_directories(plugsalot_upstream_dsp PUBLIC
 set_source_files_properties(
     ${V}/airwindows/plugins/LinuxVST/src/DeBess/DeBess.cpp
     PROPERTIES COMPILE_DEFINITIONS "createEffectInstance=createEffectInstance_DeBess")
-foreach(fx ButterComp2 Srsly2 SweetWide Console8ChannelIn Console8ChannelHype Console8ChannelOut)
+foreach(fx ButterComp2 Srsly2 SweetWide Tube2 Density Air2 Channel9 ChorusEnsemble Console8ChannelIn Console8ChannelHype Console8ChannelOut)
     set_source_files_properties(${V}/airwindows/plugins/LinuxVST/src/${fx}/${fx}.cpp
         PROPERTIES COMPILE_DEFINITIONS "createEffectInstance=createEffectInstance_${fx}")
 endforeach()
@@ -127,7 +142,7 @@ endif()
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(f BarlowCondensed-SemiBold BarlowCondensed-Bold BarlowCondensed-Medium Barlow-Regular Barlow-Medium PermanentMarker-Regular)
     list(APPEND PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/${f}.ttf)
@@ -178,6 +193,11 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/TapeEchoModule.cpp
     src/dsp/modules/ButterComp2Module.cpp
     src/dsp/modules/Srsly2Module.cpp
+    src/dsp/modules/Tube2Module.cpp
+    src/dsp/modules/DensityModule.cpp
+    src/dsp/modules/Air2Module.cpp
+    src/dsp/modules/Channel9Module.cpp
+    src/dsp/modules/ChorusEnsembleModule.cpp
     src/dsp/modules/SweetWideModule.cpp
     src/dsp/modules/Console8Module.cpp
     src/dsp/modules/GuitarixModule.cpp

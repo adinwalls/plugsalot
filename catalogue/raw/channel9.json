@@ -1,0 +1,41 @@
+{
+  "module": "channel9",
+  "source_key": "airwindows",
+  "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+  "extractor": {
+    "type": "airwindows",
+    "effect": "Channel9"
+  },
+  "params": [
+    {
+      "upstream_id": "A",
+      "name": "Console Type",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": ""
+    },
+    {
+      "upstream_id": "B",
+      "name": "Drive",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": "%",
+      "display_expr": "int2string((VstInt32)(B*200))"
+    },
+    {
+      "upstream_id": "C",
+      "name": "Output",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": "",
+      "display_expr": "float2string(C)"
+    }
+  ],
+  "description": "Channel9 is Channel8 with ultrasonic filtering, and new Teac and Mackie 'low end' settings."
+}

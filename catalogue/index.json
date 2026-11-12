@@ -102,6 +102,45 @@
       "tracking_safe": true
     },
     {
+      "id": "air2",
+      "name": "Air2",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Treble exciter: three boost bands (hiss, glitter, air) plus a Silk control that adds soft harmonics to the highs; adds sparkle EQ cannot.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "drum bus",
+        "master"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "channel9",
+      "name": "Channel9",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Mixing-desk channel: choose a Neve, API, SSL, Teac or Mackie voicing with drive; a more coloured console option than Console8.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "bass guitar",
+        "electric guitar",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "drum bus",
+        "kick",
+        "snare"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
       "id": "console8",
       "name": "Console8",
       "kind": "effect",
@@ -117,6 +156,27 @@
         "synth",
         "drum bus",
         "master"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "density",
+      "name": "Density",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Smooth sine-shaped saturation that fattens and pushes a sound forward; negative settings thin it and push it back. A highpass keeps the fattening out of the lows.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "bass guitar",
+        "electric guitar",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "drum bus",
+        "kick",
+        "snare"
       ],
       "cpu_points": 1,
       "tracking_safe": true
@@ -140,6 +200,42 @@
         "master"
       ],
       "cpu_points": 7,
+      "tracking_safe": true
+    },
+    {
+      "id": "tube2",
+      "name": "Tube2",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Tube-style saturation: warm even harmonics and soft clipping with an input trim; a rounder, thicker alternative to Console8 or tape.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "bass guitar",
+        "electric guitar",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "drum bus"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "chorus_ensemble",
+      "name": "ChorusEnsemble",
+      "kind": "effect",
+      "category": "delay_modulation",
+      "purpose": "Multi-tap chorus with a lush, textured sound that sits well away from the original; thickens pads, backing vocals and guitars, and doubles a vocal when blended low.",
+      "good_for": [
+        "backing vocal",
+        "synth",
+        "keys",
+        "pad",
+        "electric guitar",
+        "acoustic guitar"
+      ],
+      "cpu_points": 1,
       "tracking_safe": true
     },
     {
