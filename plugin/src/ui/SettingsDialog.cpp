@@ -78,6 +78,11 @@ SettingsDialog::SettingsDialog(PlugsalotProcessor& p) : proc(p)
     modelNote.setJustificationType(juce::Justification::topLeft);
     addAndMakeVisible(modelNote);
 
+    modelWarning.setFont(juce::FontOptions(12.5f, juce::Font::bold));
+    modelWarning.setColour(juce::Label::textColourId, theme::warning);
+    modelWarning.setJustificationType(juce::Justification::topLeft);
+    addAndMakeVisible(modelWarning);
+
     connectButton.setColour(juce::TextButton::buttonColourId, theme::accent.darker(0.3f));
     connectButton.onClick = [this] { connect(); };
     addAndMakeVisible(connectButton);
@@ -178,6 +183,13 @@ void SettingsDialog::updateProviderUi()
     modelNote.setText(gemini
         ? "Automatic uses the best free Flash model and switches to another if one is busy. Pro models usually need billing turned on in Google AI Studio."
         : "Automatic uses " + juce::String(LlmClient::defaultClaudeModel) + " (fast, low cost). Sonnet gives more detailed advice.",
+        juce::dontSendNotification);
+
+    modelWarning.setText(gemini
+        ? "Warning: newer, higher-end models (for example Gemini Pro) take noticeably longer to answer. "
+          "The recommended Flash models are faster but reduce quality slightly."
+        : "Warning: higher-end models (for example Claude Opus) take noticeably longer to answer. "
+          "The recommended Haiku model is faster but reduces quality slightly.",
         juce::dontSendNotification);
 
     // Each provider keeps its own key and model.
@@ -348,7 +360,8 @@ void SettingsDialog::resized()
     modelLabel.setBounds(r.removeFromTop(18));
     modelBox.setBounds(r.removeFromTop(28));
     modelNote.setBounds(r.removeFromTop(34).withTrimmedTop(3));
-    r.removeFromTop(4);
+    modelWarning.setBounds(r.removeFromTop(34).withTrimmedTop(2));
+    r.removeFromTop(2);
     result.setBounds(r.removeFromTop(54));
     auto bottom = r.removeFromBottom(30);
     closeButton.setBounds(bottom.removeFromRight(90));

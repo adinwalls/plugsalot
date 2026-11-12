@@ -117,6 +117,8 @@ LlmResult LlmClient::listGemini(const juce::String& apiKey, std::vector<ModelInf
             auto label = m.getProperty("displayName", id).toString();
             if (! label.containsIgnoreCase(id))
                 label << "  (" << id << ")";
+            if (geminiRank(id) <= 1)   // same set Automatic picks from
+                label << "  - recommended, faster";
             items.push_back({ { id, label }, geminiRank(id), geminiVersion(id) });
         }
     std::stable_sort(items.begin(), items.end(), [](const Item& a, const Item& b)
@@ -139,14 +141,19 @@ LlmResult LlmClient::listClaude(const juce::String& apiKey, std::vector<ModelInf
             {
                 const auto id = m.getProperty("id", {}).toString();
                 if (id.startsWith("claude-"))
-                    out.push_back({ id, m.getProperty("display_name", id).toString() + "  (" + id + ")" });
+                {
+                    auto label = m.getProperty("display_name", id).toString() + "  (" + id + ")";
+                    if (id.containsIgnoreCase("haiku"))
+                        label << "  - recommended, faster";
+                    out.push_back({ id, label });
+                }
             }
     if (out.empty() && ! r.isKeyRejected())
     {
         // Couldn't list (offline or endpoint unavailable): offer the current models.
-        out = { { "claude-haiku-5-5", "Claude Haiku 5.5  (fast, low cost)" },
-                { "claude-sonnet-5-5", "Claude Sonnet 5.5  (more detailed)" },
-                { "claude-opus-5-5", "Claude Opus 5.5  (most capable, highest cost)" } };
+        out = { { "claude-haiku-5-5", "Claude Haiku 5.5  - recommended, faster" },
+                { "claude-sonnet-5-5", "Claude Sonnet 5.5  - more detailed, slower" },
+                { "claude-opus-5-5", "Claude Opus 5.5  - most capable, slowest, highest cost" } };
     }
     return r;
 }

@@ -39,7 +39,7 @@ private:
     juce::Rectangle<int> card() const;
 
     PlugsalotProcessor& proc;
-    juce::Label heading, steps, keyLabel, modelLabel, modelNote, result, note, linkNote;
+    juce::Label heading, steps, keyLabel, modelLabel, modelNote, modelWarning, result, note, linkNote;
     juce::ComboBox provider, modelBox;
     juce::StringArray modelIds;        // parallel to modelBox items; "" = automatic
     juce::TextEditor key, link;
