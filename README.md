@@ -22,7 +22,7 @@ Plugsalot is nothing without the people who build and give away incredible plugi
 | --- | --- | --- |
 | [Airwindows](https://www.airwindows.com/) | Chris Johnson | DeBess (de-esser), ButterComp2 (compressor), Console8 and Channel9 (console warmth), Tube2 and Density (saturation), Air2 (treble air), ChorusEnsemble (chorus), Srsly2 and SweetWide (stereo wideners) |
 | [Adin Brew](https://github.com/adinwalls/adin-brew) | Adin Walls | TuneBrew Autotune (pitch correction) |
-| [Dusk Audio](https://github.com/dusk-audio/dusk-audio-plugins) | Dusk Audio | 4K EQ 2 (console EQ), Multi-Comp (compressor), TapeMachine 2 (tape), Tape Echo 2 (tape delay) |
+| [Dusk Audio](https://github.com/dusk-audio/dusk-audio-plugins) | Dusk Audio | 4K EQ 2 (console EQ), Multi-Comp (compressor), TapeMachine 2 (tape), Tape Echo 2 (tape delay), DuskVerb (plates, halls, chambers, rooms, spring, shimmer) |
 | [Guitarix](https://guitarix.org/) | Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose | BlueAmp (clean/blues amp), Plexi (classic rock amp), Supersonic (high-gain amp), Guvnor (overdrive pedal), UltraCab (speaker cabinet) |
 | [Dragonfly Reverb](https://github.com/michaelwillis/dragonfly-reverb) | Michael Willis and contributors (with freeverb3 by Teru Kamogashira) | Plate, Hall and Room reverbs |
 | [x42 plugins](https://github.com/x42/dpl.lv2) | Robin Gareus | Digital Peak Limiter |
@@ -53,6 +53,7 @@ Plugsalot also includes a simple Clean Delay that I wrote for this project, and 
 | `sweetwide` | Airwindows SweetWide | MIT |
 | `console8` | Airwindows Console8 (channel In/Hype + Out) | MIT |
 | `tube2`, `density`, `air2`, `channel9`, `chorus_ensemble` | Airwindows Tube2, Density, Air2, Channel9, ChorusEnsemble | MIT |
+| `duskverb` | Dusk Audio DuskVerb | GPL-3.0 |
 | `tunebrew` | Adin Brew TuneBrew Autotune | GPL-3.0 |
 | `drum_sampler` | sfizz (catalogue only) | BSD-2-Clause |
 

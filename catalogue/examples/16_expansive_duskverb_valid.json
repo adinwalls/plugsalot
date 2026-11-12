@@ -1,0 +1,41 @@
+{
+  "expect": "valid",
+  "reply": {
+    "schema_version": 1,
+    "source": "lead vocal",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "console_eq",
+        "params": {
+          "hpf_enabled": true,
+          "hpf_hz": 100
+        }
+      },
+      {
+        "module": "multicomp",
+        "params": {
+          "mode": "Opto",
+          "opto_peak_reduction": 45
+        }
+      },
+      {
+        "module": "deess",
+        "params": {
+          "intensity": 0.4
+        }
+      },
+      {
+        "module": "duskverb",
+        "params": {
+          "preset": "Cathedral Large Hall",
+          "mix": 18,
+          "decay_scale": 1.2,
+          "tone": -0.3,
+          "duck": 0.4
+        }
+      }
+    ],
+    "explanation": "A huge, dark cathedral that ducks while you sing and blooms in the gaps."
+  }
+}
