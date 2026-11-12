@@ -1,0 +1,62 @@
+{
+  "module": "air2",
+  "source_key": "airwindows",
+  "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+  "extractor": {
+    "type": "airwindows",
+    "effect": "Air2"
+  },
+  "params": [
+    {
+      "upstream_id": "A",
+      "name": "Hiss",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string((A*2.0)-1.0)"
+    },
+    {
+      "upstream_id": "B",
+      "name": "Glitter",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string((B*2.0)-1.0)"
+    },
+    {
+      "upstream_id": "C",
+      "name": "Air",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string((C*2.0)-1.0)"
+    },
+    {
+      "upstream_id": "D",
+      "name": "Silk",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.0,
+      "unit": "",
+      "display_expr": "float2string(D)"
+    },
+    {
+      "upstream_id": "E",
+      "name": "Dry/Wet",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 1.0,
+      "unit": "",
+      "display_expr": "float2string(E)"
+    }
+  ],
+  "description": "Air2 is a different bright EQ with silk tone and high sample rate support."
+}

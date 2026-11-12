@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "id": "tube2",
+  "name": "Tube2",
+  "kind": "effect",
+  "category": "character",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/Tube2",
+    "upstream_name": "Airwindows Tube2",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "airwindows"
+  },
+  "purpose": "Tube-style saturation: warm even harmonics and soft clipping with an input trim; a rounder, thicker alternative to Console8 or tape.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "bass guitar",
+    "electric guitar",
+    "acoustic guitar",
+    "keys",
+    "synth",
+    "drum bus"
+  ],
+  "avoid_for": [
+    "material that must stay clean and dynamic"
+  ],
+  "tags": [
+    "tube",
+    "saturation",
+    "warmth",
+    "harmonics",
+    "fatten"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "maker": "Airwindows",
+  "tape": "TUBE WARMTH",
+  "knobs": [
+    {
+      "param": "input",
+      "label": "INPUT",
+      "colour": "grey"
+    },
+    {
+      "param": "tube",
+      "label": "TUBE",
+      "colour": "red"
+    }
+  ],
+  "params": [
+    {
+      "id": "input",
+      "upstream_id": "A",
+      "name": "Input",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Input trim into the tube. 0.5 is roughly level-matched; raise it to push the tube harder (louder, denser), lower it to pad the signal back."
+    },
+    {
+      "id": "tube",
+      "upstream_id": "B",
+      "name": "Tube",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Amount of tube behaviour. Lower is more linear; higher is softer and more saturated. 0.3-0.5 for gentle warmth on a vocal, 0.7+ for obvious tube grit."
+    }
+  ],
+  "hidden_params": {
+    "count": 0
+  },
+  "notes": [
+    "All Airwindows parameters are 0..1. Tube2 is designed to top out at 0 dB, so heavy input can raise the level: trim later in the chain.",
+    "CPU: 0.26% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

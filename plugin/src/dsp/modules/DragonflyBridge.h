@@ -25,4 +25,34 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
+class DragonflyHall
+{
+public:
+    explicit DragonflyHall(double sampleRate);
+    ~DragonflyHall();
+    static int numParams();
+    void setParameterValue(int index, float value);
+    void run(const float** inputs, float** outputs, uint32_t frames);
+    void mute();
+
+private:
+    struct Impl;
+    std::unique_ptr<Impl> impl;
+};
+
+class DragonflyRoom
+{
+public:
+    explicit DragonflyRoom(double sampleRate);
+    ~DragonflyRoom();
+    static int numParams();
+    void setParameterValue(int index, float value);
+    void run(const float** inputs, float** outputs, uint32_t frames);
+    void mute();
+
+private:
+    struct Impl;
+    std::unique_ptr<Impl> impl;
+};
+
 } // namespace plugsalot

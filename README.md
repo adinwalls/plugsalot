@@ -20,10 +20,11 @@ Plugsalot is nothing without the people who build and give away incredible plugi
 
 | Project | Developer(s) | Plugins used in Plugsalot |
 | --- | --- | --- |
-| [Airwindows](https://www.airwindows.com/) | Chris Johnson | DeBess (de-esser), ButterComp2 (compressor), Console8 (console warmth), Srsly2 and SweetWide (stereo wideners) |
+| [Airwindows](https://www.airwindows.com/) | Chris Johnson | DeBess (de-esser), ButterComp2 (compressor), Console8 and Channel9 (console warmth), Tube2 and Density (saturation), Air2 (treble air), ChorusEnsemble (chorus), Srsly2 and SweetWide (stereo wideners) |
+| [Adin Brew](https://github.com/adinwalls/adin-brew) | Adin Walls | TuneBrew Autotune (pitch correction) |
 | [Dusk Audio](https://github.com/dusk-audio/dusk-audio-plugins) | Dusk Audio | 4K EQ 2 (console EQ), Multi-Comp (compressor), TapeMachine 2 (tape), Tape Echo 2 (tape delay) |
 | [Guitarix](https://guitarix.org/) | Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose | BlueAmp (clean/blues amp), Plexi (classic rock amp), Supersonic (high-gain amp), Guvnor (overdrive pedal), UltraCab (speaker cabinet) |
-| [Dragonfly Reverb](https://github.com/michaelwillis/dragonfly-reverb) | Michael Willis and contributors (with freeverb3 by Teru Kamogashira) | Plate Reverb |
+| [Dragonfly Reverb](https://github.com/michaelwillis/dragonfly-reverb) | Michael Willis and contributors (with freeverb3 by Teru Kamogashira) | Plate, Hall and Room reverbs |
 | [x42 plugins](https://github.com/x42/dpl.lv2) | Robin Gareus | Digital Peak Limiter |
 | [Neural Amp Modeler](https://github.com/sdatkinson/NeuralAmpModelerCore) and AudioDSPTools | Steven Atkinson | NAM Amp and Cabinet IR (still in the plugin, but the AI doesn't offer them for now) |
 | [LSP Plugins](https://github.com/lsp-plugins) | Vladimir Sadovnikov and the Linux Studio Plugins Project | Parametric EQ (coming soon) |
@@ -40,7 +41,7 @@ Plugsalot also includes a simple Clean Delay that I wrote for this project, and 
 | `multicomp` | Dusk Audio Multi-Comp | GPL-3.0 |
 | `deess` | Airwindows DeBess | MIT |
 | `tape` | Dusk Audio TapeMachine 2 | GPL-3.0 |
-| `plate` | Dragonfly Plate Reverb | GPL-3.0 |
+| `plate`, `hall`, `room` | Dragonfly Plate, Hall and Room Reverb | GPL-3.0 |
 | `limiter` | x42 Digital Peak Limiter | GPL-3.0 |
 | `gx_blueamp`, `gx_plexi`, `gx_supersonic`, `gx_guvnor`, `gx_ultracab` | Guitarix GxPlugins.lv2 (BlueAmp, Plexi, Supersonic, Guvnor, UltraCab; knobs, no files) | GPL-2.0-or-later |
 | `nam_amp` | Neural Amp Modeler Core (runs, but the AI no longer offers it) | MIT |
@@ -51,6 +52,8 @@ Plugsalot also includes a simple Clean Delay that I wrote for this project, and 
 | `srsly2` | Airwindows Srsly2 | MIT |
 | `sweetwide` | Airwindows SweetWide | MIT |
 | `console8` | Airwindows Console8 (channel In/Hype + Out) | MIT |
+| `tube2`, `density`, `air2`, `channel9`, `chorus_ensemble` | Airwindows Tube2, Density, Air2, Channel9, ChorusEnsemble | MIT |
+| `tunebrew` | Adin Brew TuneBrew Autotune | GPL-3.0 |
 | `drum_sampler` | sfizz (catalogue only) | BSD-2-Clause |
 
 ## Setting it up

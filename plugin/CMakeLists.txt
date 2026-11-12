@@ -19,6 +19,16 @@ add_library(plugsalot_upstream_dsp STATIC
     ${V}/airwindows/plugins/LinuxVST/src/Srsly2/Srsly2Proc.cpp
     ${V}/airwindows/plugins/LinuxVST/src/SweetWide/SweetWide.cpp
     ${V}/airwindows/plugins/LinuxVST/src/SweetWide/SweetWideProc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Tube2/Tube2.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Tube2/Tube2Proc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Density/Density.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Density/DensityProc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Air2/Air2.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Air2/Air2Proc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Channel9/Channel9.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/Channel9/Channel9Proc.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/ChorusEnsemble/ChorusEnsemble.cpp
+    ${V}/airwindows/plugins/LinuxVST/src/ChorusEnsemble/ChorusEnsembleProc.cpp
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelIn/Console8ChannelIn.cpp
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelIn/Console8ChannelInProc.cpp
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelHype/Console8ChannelHype.cpp
@@ -32,10 +42,16 @@ target_include_directories(plugsalot_upstream_dsp PUBLIC
     ${DUSK}/shared-daf/dsp
     ${DUSKE}/tape-echo/core
     ${V}/x42-dpl/src
+    ${V}/adin-brew/src
     ${V}/airwindows/plugins/LinuxVST/src/DeBess
     ${V}/airwindows/plugins/LinuxVST/src/ButterComp2
     ${V}/airwindows/plugins/LinuxVST/src/Srsly2
     ${V}/airwindows/plugins/LinuxVST/src/SweetWide
+    ${V}/airwindows/plugins/LinuxVST/src/Tube2
+    ${V}/airwindows/plugins/LinuxVST/src/Density
+    ${V}/airwindows/plugins/LinuxVST/src/Air2
+    ${V}/airwindows/plugins/LinuxVST/src/Channel9
+    ${V}/airwindows/plugins/LinuxVST/src/ChorusEnsemble
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelIn
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelHype
     ${V}/airwindows/plugins/LinuxVST/src/Console8ChannelOut
@@ -45,7 +61,7 @@ target_include_directories(plugsalot_upstream_dsp PUBLIC
 set_source_files_properties(
     ${V}/airwindows/plugins/LinuxVST/src/DeBess/DeBess.cpp
     PROPERTIES COMPILE_DEFINITIONS "createEffectInstance=createEffectInstance_DeBess")
-foreach(fx ButterComp2 Srsly2 SweetWide Console8ChannelIn Console8ChannelHype Console8ChannelOut)
+foreach(fx ButterComp2 Srsly2 SweetWide Tube2 Density Air2 Channel9 ChorusEnsemble Console8ChannelIn Console8ChannelHype Console8ChannelOut)
     set_source_files_properties(${V}/airwindows/plugins/LinuxVST/src/${fx}/${fx}.cpp
         PROPERTIES COMPILE_DEFINITIONS "createEffectInstance=createEffectInstance_${fx}")
 endforeach()
@@ -79,6 +95,37 @@ if(MSVC)
 else()
     target_compile_options(plugsalot_dragonfly PRIVATE -w)
 endif()
+
+# TuneBrew's header-only engine uses M_PI, which MSVC only declares with _USE_MATH_DEFINES set
+# before the first <cmath> include.
+set_source_files_properties(src/dsp/modules/TuneBrewModule.cpp PROPERTIES COMPILE_DEFINITIONS _USE_MATH_DEFINES)
+
+# Dragonfly Hall and Room. Every Dragonfly plug-in names its DSP class DragonflyReverbDSP and its
+# parameter header DistrhoPluginInfo.h, so each one is its own small library with the class renamed.
+foreach(df hall room)
+    string(SUBSTRING ${df} 0 1 df_first)
+    string(TOUPPER ${df_first} df_first)
+    string(SUBSTRING ${df} 1 -1 df_rest)
+    set(df_name ${df_first}${df_rest})
+    add_library(plugsalot_dragonfly_${df} STATIC
+        ${DF}/plugins/dragonfly-${df}-reverb/DSP.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/dsp/modules/Dragonfly${df_name}Bridge.cpp
+    )
+    set_target_properties(plugsalot_dragonfly_${df} PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED ON)
+    target_compile_definitions(plugsalot_dragonfly_${df} PRIVATE LIBFV3_FLOAT DragonflyReverbDSP=Dragonfly${df_name}DSP)
+    target_include_directories(plugsalot_dragonfly_${df} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/shims/dpf
+        ${DF}/common
+        ${DF}/plugins/dragonfly-${df}-reverb
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/dsp/modules
+    )
+    if(MSVC)
+        target_compile_options(plugsalot_dragonfly_${df} PRIVATE /W0 /D_USE_MATH_DEFINES)
+    else()
+        target_compile_options(plugsalot_dragonfly_${df} PRIVATE -w)
+    endif()
+    target_link_libraries(plugsalot_dragonfly_${df} PUBLIC plugsalot_dragonfly)
+endforeach()
 
 # TONE3000 publishable key (client id). Safe to ship: it only identifies the app. Leave empty
 # for builds without TONE3000, or set PLUGSALOT_TONE3000_CLIENT_ID in the environment at run time.
@@ -127,7 +174,7 @@ endif()
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide tunebrew hall room tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(f BarlowCondensed-SemiBold BarlowCondensed-Bold BarlowCondensed-Medium Barlow-Regular Barlow-Medium PermanentMarker-Regular)
     list(APPEND PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/${f}.ttf)
@@ -170,6 +217,9 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/TapeModule.cpp
     src/dsp/modules/ConsoleEqModule.cpp
     src/dsp/modules/PlateModule.cpp
+    src/dsp/modules/HallModule.cpp
+    src/dsp/modules/TuneBrewModule.cpp
+    src/dsp/modules/RoomModule.cpp
     src/dsp/modules/LimiterModule.cpp
     src/dsp/modules/DeEssModule.cpp
     src/dsp/modules/NamAmpModule.cpp
@@ -178,6 +228,11 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/TapeEchoModule.cpp
     src/dsp/modules/ButterComp2Module.cpp
     src/dsp/modules/Srsly2Module.cpp
+    src/dsp/modules/Tube2Module.cpp
+    src/dsp/modules/DensityModule.cpp
+    src/dsp/modules/Air2Module.cpp
+    src/dsp/modules/Channel9Module.cpp
+    src/dsp/modules/ChorusEnsembleModule.cpp
     src/dsp/modules/SweetWideModule.cpp
     src/dsp/modules/Console8Module.cpp
     src/dsp/modules/GuitarixModule.cpp
@@ -255,7 +310,7 @@ target_link_libraries(Plugsalot
     PRIVATE
         PlugsalotData
         plugsalot_upstream_dsp
-        plugsalot_dragonfly
+        plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly
         plugsalot_nam
         juce::juce_audio_utils
         juce::juce_dsp
@@ -276,7 +331,7 @@ if(PLUGSALOT_BUILD_TESTS)
         JUCE_WEB_BROWSER=0 JUCE_USE_CURL=1 JUCE_STANDALONE_APPLICATION=1 PLUGSALOT_VERSION="${PROJECT_VERSION}"
         PLUGSALOT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
     target_link_libraries(PlugsalotTests PRIVATE
-        PlugsalotData plugsalot_upstream_dsp plugsalot_dragonfly plugsalot_nam
+        PlugsalotData plugsalot_upstream_dsp plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly plugsalot_nam
         juce::juce_core juce::juce_events juce::juce_audio_basics juce::juce_data_structures
         juce::juce_recommended_config_flags)
 endif()

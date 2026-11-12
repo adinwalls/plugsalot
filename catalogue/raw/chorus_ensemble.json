@@ -1,0 +1,42 @@
+{
+  "module": "chorus_ensemble",
+  "source_key": "airwindows",
+  "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+  "extractor": {
+    "type": "airwindows",
+    "effect": "ChorusEnsemble"
+  },
+  "params": [
+    {
+      "upstream_id": "A",
+      "name": "Speed",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string(A)"
+    },
+    {
+      "upstream_id": "B",
+      "name": "Range",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "display_expr": "float2string(B)"
+    },
+    {
+      "upstream_id": "C",
+      "name": "Dry/Wet",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.8,
+      "unit": "",
+      "display_expr": "float2string(C)"
+    }
+  ],
+  "description": "ChorusEnsemble is a more complex, multi-tap mono chorus."
+}

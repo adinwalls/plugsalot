@@ -79,6 +79,27 @@ def extract(root: Path, cfg: dict) -> dict:
     dm = re.search(r"DEFAULT_PRESET\s*=\s*(\d+)", src)
     default_preset = presets[int(dm.group(1))] if dm and presets else None
 
+    # Hall and Room group their presets into banks: banks[] = { {"Bank", { {"Preset", {...}}, ... }}, ... }
+    bm = re.search(r"\bbanks\s*\[[^\]]*\]\s*=\s*\{", src)
+    if bm and not presets:
+        per_bank = []
+        bbody, _ = balanced(src, bm.end() - 1, "{", "}")
+        for brow in split_top_level(bbody):
+            brow = brow.strip()
+            inner = brow[brow.index("{", 1) :]
+            bank = []
+            for prow in split_top_level(balanced(inner, 0, "{", "}")[0]):
+                prow = prow.strip()
+                name = all_strings(prow)[0]
+                vals_text = prow[prow.index("{", 1) :]
+                vals = split_top_level(balanced(vals_text, 0, "{", "}")[0])
+                bank.append({"name": name, "params": {r["symbol"]: to_value(r["symbol"], v) for r, v in zip(rows, vals)}})
+            per_bank.append(bank)
+            presets.extend(bank)
+        db = re.search(r"DEFAULT_BANK\s*=\s*(\d+)", src)
+        if dm and db:
+            default_preset = per_bank[int(db.group(1))][int(dm.group(1))]
+
     params = []
     for r in rows:
         p: dict = {"upstream_id": r["symbol"], "name": r["name"]}

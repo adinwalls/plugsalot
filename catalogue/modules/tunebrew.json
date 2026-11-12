@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "id": "tunebrew",
+  "name": "TuneBrew",
+  "kind": "effect",
+  "category": "tuning",
+  "source": {
+    "source_key": "adin-brew",
+    "repo": "https://github.com/adinwalls/adin-brew",
+    "commit": "024da8837ffc71535bd0a3435e4c53b717a3c9b0",
+    "path": "src",
+    "upstream_name": "TuneBrew Autotune",
+    "license": "GPL-3.0",
+    "authors": "Adin Walls",
+    "extractor": "manual"
+  },
+  "purpose": "Real-time vocal pitch correction. Natural mode tunes tightly while keeping vibrato, slides and held-note life; Classic mode is the hard-tune robot effect.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal"
+  ],
+  "avoid_for": [
+    "anything that is not a single clean voice",
+    "chords",
+    "vocals with bleed or backing vocals in the same track"
+  ],
+  "tags": [
+    "pitch correction",
+    "autotune",
+    "tuning",
+    "hard tune",
+    "vocal"
+  ],
+  "cpu_points": 2,
+  "cpu_measured": true,
+  "latency": {
+    "type": "fixed",
+    "note": "About 49 ms at 48 kHz (set by the lowest trackable pitch, 70 Hz), reported to the host. Too much for tracking."
+  },
+  "tracking_safe": false,
+  "channels": [
+    "mono",
+    "stereo"
+  ],
+  "maker": "Adin Brew",
+  "tape": "TUNE THE VOCAL",
+  "knobs": [
+    {
+      "param": "retune",
+      "label": "RETUNE",
+      "colour": "red"
+    },
+    {
+      "param": "amount",
+      "label": "AMOUNT",
+      "colour": "cream"
+    },
+    {
+      "param": "vibrato",
+      "label": "VIBRATO",
+      "colour": "cream"
+    },
+    {
+      "param": "flex",
+      "label": "FLEX",
+      "colour": "grey"
+    },
+    {
+      "param": "humanize",
+      "label": "HUMANIZE",
+      "colour": "grey"
+    }
+  ],
+  "params": [
+    {
+      "upstream_id": "key",
+      "id": "key",
+      "name": "Key",
+      "type": "enum",
+      "options": [
+        "C",
+        "C#",
+        "D",
+        "D#",
+        "E",
+        "F",
+        "F#",
+        "G",
+        "G#",
+        "A",
+        "A#",
+        "B"
+      ],
+      "default": "C",
+      "convert": "enum_index",
+      "ai_hint": "The song's key, as told by the user. Ignored when scale is Chromatic."
+    },
+    {
+      "upstream_id": "scale",
+      "id": "scale",
+      "name": "Scale",
+      "type": "enum",
+      "options": [
+        "Chromatic",
+        "Major",
+        "Minor",
+        "Harmonic Minor",
+        "Melodic Minor",
+        "Major Pentatonic",
+        "Minor Pentatonic",
+        "Blues",
+        "Dorian",
+        "Mixolydian"
+      ],
+      "default": "Chromatic",
+      "convert": "enum_index",
+      "ai_hint": "Use Chromatic (nearest semitone) unless the user has told you the key; never guess a key."
+    },
+    {
+      "upstream_id": "mode",
+      "id": "mode",
+      "name": "Mode",
+      "type": "enum",
+      "options": [
+        "Classic",
+        "Natural"
+      ],
+      "default": "Natural",
+      "convert": "enum_index",
+      "ai_hint": "Natural: human-sounding tuning. Classic: plain hard-tune for the robot / T-Pain effect (with retune 0)."
+    },
+    {
+      "upstream_id": "retune",
+      "id": "retune",
+      "name": "Retune",
+      "type": "float",
+      "min": 0,
+      "max": 400,
+      "default": 20,
+      "unit": "ms",
+      "ai_hint": "0 = instant. 10-30 tight pop. 40-80 soft and transparent. In Natural mode 0 is still human; in Classic 0 is the robot effect."
+    },
+    {
+      "upstream_id": "amount",
+      "id": "amount",
+      "name": "Amount",
+      "type": "float",
+      "min": 0,
+      "max": 100,
+      "default": 100,
+      "unit": "%",
+      "ai_hint": "How far to pull towards the target note. 100 is full correction; 70-85 is a gentle touch-up."
+    },
+    {
+      "upstream_id": "vibrato",
+      "id": "vibrato",
+      "name": "Vibrato",
+      "type": "float",
+      "min": 0,
+      "max": 200,
+      "default": 100,
+      "unit": "%",
+      "ai_hint": "Natural mode. How much of the singer's own vibrato to keep: 100 untouched, 0 flattened."
+    },
+    {
+      "upstream_id": "flex",
+      "id": "flex",
+      "name": "Flex",
+      "type": "float",
+      "min": 0,
+      "max": 100,
+      "default": 20,
+      "unit": "%",
+      "ai_hint": "Natural mode. Higher lets deliberate bends and blue notes pass uncorrected; 0 corrects everything."
+    },
+    {
+      "upstream_id": "humanize",
+      "id": "humanize",
+      "name": "Humanize",
+      "type": "float",
+      "min": 0,
+      "max": 100,
+      "default": 30,
+      "unit": "%",
+      "ai_hint": "Natural mode. Higher corrects long held notes more gently; 0 keeps everything tight."
+    },
+    {
+      "upstream_id": "transition",
+      "id": "transition",
+      "name": "Transition",
+      "type": "float",
+      "min": 0,
+      "max": 150,
+      "default": 40,
+      "unit": "ms",
+      "ai_hint": "Natural mode. Lets note attacks, scoops and slides through for this long; 20 tight, 40-60 natural."
+    },
+    {
+      "upstream_id": "transpose",
+      "id": "transpose",
+      "name": "Transpose",
+      "type": "int",
+      "min": -12,
+      "max": 12,
+      "default": 0,
+      "unit": "st",
+      "ai_hint": "Shift in semitones with formants kept. Leave at 0 unless asked."
+    },
+    {
+      "upstream_id": "ref_hz",
+      "id": "ref_hz",
+      "name": "Ref A4",
+      "type": "float",
+      "min": 415,
+      "max": 466,
+      "default": 440,
+      "unit": "Hz",
+      "ai_hint": "Tuning reference. Leave at 440 unless the user gives another."
+    },
+    {
+      "upstream_id": "mix",
+      "id": "mix",
+      "name": "Mix",
+      "type": "float",
+      "min": 0,
+      "max": 100,
+      "default": 100,
+      "unit": "%",
+      "ai_hint": "Dry/wet. Keep at 100; blending dry with tuned vocal causes chorusing."
+    }
+  ],
+  "notes": [
+    "Written against TuneBrew 1.4.3 (TuneParams.hpp, TuneBrewPlugin.cpp). The upstream Detect Key button, output gain and meters are not exposed: Plugsalot has no key-detection UI yet, so the key comes from the user.",
+    "Put it first in the chain, before EQ, compression and effects.",
+    "CPU: 2.06% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, rounded up."
+  ]
+}

@@ -1,0 +1,611 @@
+{
+  "schema_version": 1,
+  "id": "room",
+  "name": "Room Reverb",
+  "kind": "effect",
+  "category": "reverb",
+  "source": {
+    "source_key": "dragonfly-reverb",
+    "repo": "https://github.com/michaelwillis/dragonfly-reverb",
+    "commit": "440ec7b3b3db2fec34b9f80cf4890102ca14d1c3",
+    "path": "plugins/dragonfly-room-reverb",
+    "upstream_name": "Dragonfly Room Reverb",
+    "license": "GPL-3.0",
+    "authors": "Michael Willis and contributors",
+    "extractor": "dpf_param_table"
+  },
+  "purpose": "Room reverb with clear early reflections and a short to medium natural tail; puts a dry vocal or instrument in a believable space.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "acoustic guitar",
+    "electric guitar",
+    "snare",
+    "full kit",
+    "software drums",
+    "keys"
+  ],
+  "avoid_for": [
+    "bass",
+    "kick"
+  ],
+  "tags": [
+    "ambience",
+    "space",
+    "room",
+    "natural",
+    "short reverb",
+    "studio"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "maker": "Dragonfly",
+  "tape": "A REAL ROOM",
+  "knobs": [
+    {
+      "param": "decay",
+      "label": "DECAY",
+      "colour": "cream"
+    },
+    {
+      "param": "size",
+      "label": "SIZE",
+      "colour": "cream"
+    },
+    {
+      "param": "predelay",
+      "label": "PRE-DLY",
+      "colour": "cream"
+    },
+    {
+      "param": "damping",
+      "label": "DAMP",
+      "colour": "black"
+    },
+    {
+      "param": "wet",
+      "label": "MIX",
+      "colour": "cream"
+    }
+  ],
+  "params": [
+    {
+      "id": "dry",
+      "upstream_id": "dry_level",
+      "name": "Dry Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 80.0,
+      "unit": "%",
+      "ai_hint": "Dry signal level. Keep at 100% when used as an insert."
+    },
+    {
+      "id": "early",
+      "upstream_id": "early_level",
+      "name": "Early Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 10.0,
+      "unit": "%",
+      "ai_hint": "Early reflections level: the sound of the walls. 5-15%."
+    },
+    {
+      "id": "wet",
+      "upstream_id": "late_level",
+      "name": "Late Level",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 20.0,
+      "unit": "%",
+      "ai_hint": "Reverb tail level. 8-18% for a natural room on a vocal."
+    },
+    {
+      "id": "size",
+      "upstream_id": "size",
+      "name": "Size",
+      "type": "float",
+      "min": 8.0,
+      "max": 32.0,
+      "default": 12.0,
+      "unit": "m",
+      "ai_hint": "Room size in metres. 8-12 small booth or room, 15-20 studio live room, 25+ large room."
+    },
+    {
+      "id": "width",
+      "upstream_id": "width",
+      "name": "Width",
+      "type": "float",
+      "min": 50.0,
+      "max": 150.0,
+      "default": 100.0,
+      "unit": "%",
+      "ai_hint": "Stereo width of the reverb."
+    },
+    {
+      "id": "predelay",
+      "upstream_id": "predelay",
+      "name": "Predelay",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 8.0,
+      "unit": "ms",
+      "ai_hint": "0-20 ms; small rooms need little predelay."
+    },
+    {
+      "id": "decay",
+      "upstream_id": "decay",
+      "name": "Decay",
+      "type": "float",
+      "min": 0.1,
+      "max": 10.0,
+      "default": 0.4,
+      "unit": "s",
+      "ai_hint": "Tail length in seconds. 0.3-0.8 s for a tight room, 1-1.5 s for a large live room."
+    },
+    {
+      "id": "diffuse",
+      "upstream_id": "diffuse",
+      "name": "Diffuse",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "default": 70.0,
+      "unit": "%",
+      "ai_hint": "Density of the tail. Higher is smoother."
+    },
+    {
+      "id": "low_cut",
+      "upstream_id": "in_low_cut",
+      "name": "Low Cut",
+      "type": "float",
+      "min": 0.0,
+      "max": 200.0,
+      "default": 4.0,
+      "unit": "Hz",
+      "ai_hint": "Raise to 100-200 Hz to keep the room out of the low end."
+    },
+    {
+      "id": "high_cut",
+      "upstream_id": "in_high_cut",
+      "name": "High Cut",
+      "type": "float",
+      "min": 1000.0,
+      "max": 16000.0,
+      "default": 16000,
+      "unit": "Hz",
+      "ai_hint": "Lower to darken what enters the reverb."
+    },
+    {
+      "id": "damping",
+      "upstream_id": "late_damp",
+      "name": "Late Damp",
+      "type": "float",
+      "min": 1000.0,
+      "max": 16000.0,
+      "default": 9400,
+      "unit": "Hz",
+      "ai_hint": "High-frequency damping of the tail; lower is darker and softer."
+    }
+  ],
+  "hidden_params": {
+    "count": 6
+  },
+  "presets": [
+    {
+      "name": "Small Bright Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 8.0,
+        "width": 90.0,
+        "predelay": 4.0,
+        "decay": 0.2,
+        "diffuse": 60.0,
+        "high_cut": 16000,
+        "damping": 16000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Small Clear Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 8.0,
+        "width": 90.0,
+        "predelay": 4.0,
+        "decay": 0.2,
+        "diffuse": 60.0,
+        "high_cut": 16000,
+        "damping": 10000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Small Dark Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 8.0,
+        "width": 90.0,
+        "predelay": 4.0,
+        "decay": 0.3,
+        "diffuse": 70.0,
+        "high_cut": 16000,
+        "damping": 5500,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Small Drum Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 9.0,
+        "width": 90.0,
+        "predelay": 8.0,
+        "decay": 0.2,
+        "diffuse": 24.0,
+        "high_cut": 16000,
+        "damping": 7000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Small Vocal Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 8.0,
+        "width": 90.0,
+        "predelay": 0.0,
+        "decay": 0.3,
+        "diffuse": 86.0,
+        "high_cut": 16000,
+        "damping": 6400,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Medium Bright Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 12.0,
+        "width": 100.0,
+        "predelay": 8.0,
+        "decay": 0.4,
+        "diffuse": 60.0,
+        "high_cut": 16000,
+        "damping": 14000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Medium Clear Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 12.0,
+        "width": 100.0,
+        "predelay": 8.0,
+        "decay": 0.4,
+        "diffuse": 70.0,
+        "high_cut": 16000,
+        "damping": 9400,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Medium Dark Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 12.0,
+        "width": 100.0,
+        "predelay": 8.0,
+        "decay": 0.5,
+        "diffuse": 70.0,
+        "high_cut": 16000,
+        "damping": 4600,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Medium Drum Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 12.0,
+        "width": 100.0,
+        "predelay": 12.0,
+        "decay": 0.4,
+        "diffuse": 32.0,
+        "high_cut": 16000,
+        "damping": 6000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Medium Vocal Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 12.0,
+        "width": 100.0,
+        "predelay": 2.0,
+        "decay": 0.6,
+        "diffuse": 92.0,
+        "high_cut": 16000,
+        "damping": 6000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Large Bright Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 15.0,
+        "width": 100.0,
+        "predelay": 12.0,
+        "decay": 0.7,
+        "diffuse": 70.0,
+        "high_cut": 16000,
+        "damping": 14000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Large Clear Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 15.0,
+        "width": 100.0,
+        "predelay": 12.0,
+        "decay": 0.7,
+        "diffuse": 80.0,
+        "high_cut": 16000,
+        "damping": 8500,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Large Dark Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 15.0,
+        "width": 100.0,
+        "predelay": 12.0,
+        "decay": 0.8,
+        "diffuse": 80.0,
+        "high_cut": 16000,
+        "damping": 4000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Large Drum Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 14.0,
+        "width": 100.0,
+        "predelay": 16.0,
+        "decay": 0.7,
+        "diffuse": 40.0,
+        "high_cut": 16000,
+        "damping": 5000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Large Vocal Room",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 15.0,
+        "width": 100.0,
+        "predelay": 4.0,
+        "decay": 1.0,
+        "diffuse": 98.0,
+        "high_cut": 16000,
+        "damping": 5000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Bright Hall",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 24.0,
+        "width": 100.0,
+        "predelay": 12.0,
+        "decay": 1.6,
+        "diffuse": 78.0,
+        "high_cut": 16000,
+        "damping": 14000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Clear Hall",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 24.0,
+        "width": 100.0,
+        "predelay": 12.0,
+        "decay": 1.6,
+        "diffuse": 84.0,
+        "high_cut": 16000,
+        "damping": 12000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Dark Hall",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 24.0,
+        "width": 100.0,
+        "predelay": 12.0,
+        "decay": 1.9,
+        "diffuse": 80.0,
+        "high_cut": 16000,
+        "damping": 6000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Percussion Hall",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 20.0,
+        "width": 100.0,
+        "predelay": 16.0,
+        "decay": 1.5,
+        "diffuse": 40.0,
+        "high_cut": 16000,
+        "damping": 5000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Vocal Hall",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 25.0,
+        "width": 100.0,
+        "predelay": 4.0,
+        "decay": 2.0,
+        "diffuse": 98.0,
+        "high_cut": 16000,
+        "damping": 5000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Bright Plate",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 10.0,
+        "width": 100.0,
+        "predelay": 0.0,
+        "decay": 1.8,
+        "diffuse": 78.0,
+        "high_cut": 16000,
+        "damping": 15000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Dark Plate",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 10.0,
+        "width": 100.0,
+        "predelay": 0.0,
+        "decay": 2.0,
+        "diffuse": 78.0,
+        "high_cut": 16000,
+        "damping": 4000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Brick Wall",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 20.0,
+        "width": 80.0,
+        "predelay": 80.0,
+        "decay": 0.4,
+        "diffuse": 12.0,
+        "high_cut": 16000,
+        "damping": 15000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Echo Chamber",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 12.0,
+        "width": 120.0,
+        "predelay": 10.0,
+        "decay": 4.0,
+        "diffuse": 24.0,
+        "high_cut": 16000,
+        "damping": 9000,
+        "low_cut": 4.0
+      }
+    },
+    {
+      "name": "Long Tunnel",
+      "params": {
+        "dry": 80.0,
+        "early": 10.0,
+        "wet": 20.0,
+        "size": 25.0,
+        "width": 50.0,
+        "predelay": 0.0,
+        "decay": 8.0,
+        "diffuse": 90.0,
+        "high_cut": 16000,
+        "damping": 6000,
+        "low_cut": 4.0
+      }
+    }
+  ],
+  "notes": [
+    "Upstream symbol for the tail level is 'late_level'; exposed here as 'wet'.",
+    "Defaults come from the upstream default preset.",
+    "CPU: 1.66% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

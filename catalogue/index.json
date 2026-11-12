@@ -102,6 +102,45 @@
       "tracking_safe": true
     },
     {
+      "id": "air2",
+      "name": "Air2",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Treble exciter: three boost bands (hiss, glitter, air) plus a Silk control that adds soft harmonics to the highs; adds sparkle EQ cannot.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "drum bus",
+        "master"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "channel9",
+      "name": "Channel9",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Mixing-desk channel: choose a Neve, API, SSL, Teac or Mackie voicing with drive; a more coloured console option than Console8.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "bass guitar",
+        "electric guitar",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "drum bus",
+        "kick",
+        "snare"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
       "id": "console8",
       "name": "Console8",
       "kind": "effect",
@@ -117,6 +156,27 @@
         "synth",
         "drum bus",
         "master"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "density",
+      "name": "Density",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Smooth sine-shaped saturation that fattens and pushes a sound forward; negative settings thin it and push it back. A highpass keeps the fattening out of the lows.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "bass guitar",
+        "electric guitar",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "drum bus",
+        "kick",
+        "snare"
       ],
       "cpu_points": 1,
       "tracking_safe": true
@@ -140,6 +200,42 @@
         "master"
       ],
       "cpu_points": 7,
+      "tracking_safe": true
+    },
+    {
+      "id": "tube2",
+      "name": "Tube2",
+      "kind": "effect",
+      "category": "character",
+      "purpose": "Tube-style saturation: warm even harmonics and soft clipping with an input trim; a rounder, thicker alternative to Console8 or tape.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "bass guitar",
+        "electric guitar",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "drum bus"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "chorus_ensemble",
+      "name": "ChorusEnsemble",
+      "kind": "effect",
+      "category": "delay_modulation",
+      "purpose": "Multi-tap chorus with a lush, textured sound that sits well away from the original; thickens pads, backing vocals and guitars, and doubles a vocal when blended low.",
+      "good_for": [
+        "backing vocal",
+        "synth",
+        "keys",
+        "pad",
+        "electric guitar",
+        "acoustic guitar"
+      ],
+      "cpu_points": 1,
       "tracking_safe": true
     },
     {
@@ -305,6 +401,25 @@
       "tracking_safe": false
     },
     {
+      "id": "hall",
+      "name": "Hall Reverb",
+      "kind": "effect",
+      "category": "reverb",
+      "purpose": "Concert-hall reverb with early reflections and a long, smooth, modulated tail; for big, spacious, expansive vocals, pads and ballads.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "pad",
+        "strings",
+        "snare"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
       "id": "plate",
       "name": "Plate Reverb",
       "kind": "effect",
@@ -320,6 +435,38 @@
       ],
       "cpu_points": 1,
       "tracking_safe": true
+    },
+    {
+      "id": "room",
+      "name": "Room Reverb",
+      "kind": "effect",
+      "category": "reverb",
+      "purpose": "Room reverb with clear early reflections and a short to medium natural tail; puts a dry vocal or instrument in a believable space.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "electric guitar",
+        "snare",
+        "full kit",
+        "software drums",
+        "keys"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "tunebrew",
+      "name": "TuneBrew",
+      "kind": "effect",
+      "category": "tuning",
+      "purpose": "Real-time vocal pitch correction. Natural mode tunes tightly while keeping vibrato, slides and held-note life; Classic mode is the hard-tune robot effect.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal"
+      ],
+      "cpu_points": 2,
+      "tracking_safe": false
     },
     {
       "id": "srsly2",

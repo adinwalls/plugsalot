@@ -1,0 +1,112 @@
+{
+  "id": "air2",
+  "name": "Air2",
+  "kind": "effect",
+  "category": "character",
+  "source": {
+    "source_key": "airwindows",
+    "path": "plugins/LinuxVST/src/Air2",
+    "upstream_name": "Airwindows Air2"
+  },
+  "extractor": {
+    "type": "airwindows",
+    "effect": "Air2"
+  },
+  "purpose": "Treble exciter: three boost bands (hiss, glitter, air) plus a Silk control that adds soft harmonics to the highs; adds sparkle EQ cannot.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "acoustic guitar",
+    "keys",
+    "synth",
+    "drum bus",
+    "master"
+  ],
+  "avoid_for": [
+    "harsh or sibilant sources (de-ess first)"
+  ],
+  "tags": [
+    "air",
+    "exciter",
+    "sparkle",
+    "brightness",
+    "silk",
+    "treble"
+  ],
+  "cpu_points": 1,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "notes": [
+    "All Airwindows parameters are 0..1; the three bands display as (value*2)-1, so 0.5 is neutral.",
+    "Unlike Air, Air2 works at high sample rates.",
+    "Place after the de-esser so it does not exaggerate sibilance.",
+    "CPU: 0.20% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ],
+  "cpu_measured": true,
+  "maker": "Airwindows",
+  "tape": "ADD SPARKLE",
+  "knobs": [
+    {
+      "param": "hiss",
+      "label": "HISS",
+      "colour": "grey"
+    },
+    {
+      "param": "glitter",
+      "label": "GLITTER",
+      "colour": "grey"
+    },
+    {
+      "param": "air",
+      "label": "AIR",
+      "colour": "red"
+    },
+    {
+      "param": "silk",
+      "label": "SILK",
+      "colour": "cream"
+    },
+    {
+      "param": "dry_wet",
+      "label": "DRY/WET",
+      "colour": "cream"
+    }
+  ],
+  "expose": [
+    {
+      "upstream_id": "A",
+      "id": "hiss",
+      "default": 0.5,
+      "ai_hint": "Upper-treble band. 0.5 is off; 0.6-0.7 adds a little sheen, below 0.5 cuts. Start at 0.5 on a vocal and use the Air band first."
+    },
+    {
+      "upstream_id": "B",
+      "id": "glitter",
+      "default": 0.5,
+      "ai_hint": "Mid-treble band. 0.5 is off; 0.55-0.65 adds clarity; be careful, it adds harshness when pushed on vocals."
+    },
+    {
+      "upstream_id": "C",
+      "id": "air",
+      "default": 0.5,
+      "ai_hint": "Broad air band, the softest and prettiest of the three. 0.5 is off; 0.6-0.8 is typical for vocal air."
+    },
+    {
+      "upstream_id": "D",
+      "id": "silk",
+      "default": 0.0,
+      "ai_hint": "Silk: soft harmonics added to the highs. 0 is off; 0.2-0.5 gives a smooth, expensive top end."
+    },
+    {
+      "upstream_id": "E",
+      "id": "dry_wet",
+      "default": 0.7,
+      "ai_hint": "Up to 0.75 you keep the full dry signal and add the effect on top; above 0.75 the dry fades out. 0.5-0.75 for normal use."
+    }
+  ]
+}

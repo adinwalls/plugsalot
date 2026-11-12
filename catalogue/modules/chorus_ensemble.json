@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "id": "chorus_ensemble",
+  "name": "ChorusEnsemble",
+  "kind": "effect",
+  "category": "delay_modulation",
+  "source": {
+    "source_key": "airwindows",
+    "repo": "https://github.com/airwindows/airwindows",
+    "commit": "dfa54018e788fd67b8e57ae6c8012a05f1f086a6",
+    "path": "plugins/LinuxVST/src/ChorusEnsemble",
+    "upstream_name": "Airwindows ChorusEnsemble",
+    "license": "MIT",
+    "authors": "Chris Johnson (airwindows)",
+    "extractor": "airwindows"
+  },
+  "purpose": "Multi-tap chorus with a lush, textured sound that sits well away from the original; thickens pads, backing vocals and guitars, and doubles a vocal when blended low.",
+  "good_for": [
+    "backing vocal",
+    "synth",
+    "keys",
+    "pad",
+    "electric guitar",
+    "acoustic guitar"
+  ],
+  "avoid_for": [
+    "lead vocal unless blended very low",
+    "bass",
+    "kick",
+    "snare"
+  ],
+  "tags": [
+    "chorus",
+    "ensemble",
+    "modulation",
+    "thicken",
+    "doubling",
+    "width"
+  ],
+  "cpu_points": 1,
+  "cpu_measured": true,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "maker": "Airwindows",
+  "tape": "LUSH CHORUS",
+  "knobs": [
+    {
+      "param": "speed",
+      "label": "SPEED",
+      "colour": "grey"
+    },
+    {
+      "param": "range",
+      "label": "RANGE",
+      "colour": "red"
+    },
+    {
+      "param": "dry_wet",
+      "label": "DRY/WET",
+      "colour": "cream"
+    }
+  ],
+  "params": [
+    {
+      "id": "speed",
+      "upstream_id": "A",
+      "name": "Speed",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Modulation speed. Lower is slow and gentle; higher is faster and more obviously chorused."
+    },
+    {
+      "id": "range",
+      "upstream_id": "B",
+      "name": "Range",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "ai_hint": "Modulation depth. Lower is subtle thickening; higher is more detuned and obvious. Extreme settings sound wrong on purpose."
+    },
+    {
+      "id": "dry_wet",
+      "upstream_id": "C",
+      "name": "Dry/Wet",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "default": 0.4,
+      "unit": "",
+      "ai_hint": "Dry/wet. 0.2-0.4 thickens or doubles a vocal; 0.6-0.9 is an obvious chorus on pads and synths."
+    }
+  ],
+  "hidden_params": {
+    "count": 0
+  },
+  "notes": [
+    "Upstream description: ChorusEnsemble is a more complex, multi-tap mono chorus.",
+    "All Airwindows parameters are 0..1. Stereo in, stereo out; the multi-tap character depends mainly on Range.",
+    "Keep it low on lead vocals: heavy chorus can smear the centre.",
+    "CPU: 0.51% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ]
+}

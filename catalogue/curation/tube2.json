@@ -1,0 +1,77 @@
+{
+  "id": "tube2",
+  "name": "Tube2",
+  "kind": "effect",
+  "category": "character",
+  "source": {
+    "source_key": "airwindows",
+    "path": "plugins/LinuxVST/src/Tube2",
+    "upstream_name": "Airwindows Tube2"
+  },
+  "extractor": {
+    "type": "airwindows",
+    "effect": "Tube2"
+  },
+  "purpose": "Tube-style saturation: warm even harmonics and soft clipping with an input trim; a rounder, thicker alternative to Console8 or tape.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "bass guitar",
+    "electric guitar",
+    "acoustic guitar",
+    "keys",
+    "synth",
+    "drum bus"
+  ],
+  "avoid_for": [
+    "material that must stay clean and dynamic"
+  ],
+  "tags": [
+    "tube",
+    "saturation",
+    "warmth",
+    "harmonics",
+    "fatten"
+  ],
+  "cpu_points": 1,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "notes": [
+    "All Airwindows parameters are 0..1. Tube2 is designed to top out at 0 dB, so heavy input can raise the level: trim later in the chain.",
+    "CPU: 0.26% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ],
+  "cpu_measured": true,
+  "maker": "Airwindows",
+  "tape": "TUBE WARMTH",
+  "knobs": [
+    {
+      "param": "input",
+      "label": "INPUT",
+      "colour": "grey"
+    },
+    {
+      "param": "tube",
+      "label": "TUBE",
+      "colour": "red"
+    }
+  ],
+  "expose": [
+    {
+      "upstream_id": "A",
+      "id": "input",
+      "default": 0.5,
+      "ai_hint": "Input trim into the tube. 0.5 is roughly level-matched; raise it to push the tube harder (louder, denser), lower it to pad the signal back."
+    },
+    {
+      "upstream_id": "B",
+      "id": "tube",
+      "default": 0.5,
+      "ai_hint": "Amount of tube behaviour. Lower is more linear; higher is softer and more saturated. 0.3-0.5 for gentle warmth on a vocal, 0.7+ for obvious tube grit."
+    }
+  ]
+}
