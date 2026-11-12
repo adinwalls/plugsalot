@@ -401,6 +401,25 @@
       "tracking_safe": false
     },
     {
+      "id": "hall",
+      "name": "Hall Reverb",
+      "kind": "effect",
+      "category": "reverb",
+      "purpose": "Concert-hall reverb with early reflections and a long, smooth, modulated tail; for big, spacious, expansive vocals, pads and ballads.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "keys",
+        "synth",
+        "pad",
+        "strings",
+        "snare"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
       "id": "plate",
       "name": "Plate Reverb",
       "kind": "effect",
@@ -413,6 +432,25 @@
         "acoustic guitar",
         "keys",
         "synth"
+      ],
+      "cpu_points": 1,
+      "tracking_safe": true
+    },
+    {
+      "id": "room",
+      "name": "Room Reverb",
+      "kind": "effect",
+      "category": "reverb",
+      "purpose": "Room reverb with clear early reflections and a short to medium natural tail; puts a dry vocal or instrument in a believable space.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal",
+        "acoustic guitar",
+        "electric guitar",
+        "snare",
+        "full kit",
+        "software drums",
+        "keys"
       ],
       "cpu_points": 1,
       "tracking_safe": true

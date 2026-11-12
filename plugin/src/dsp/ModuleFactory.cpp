@@ -17,6 +17,8 @@ std::unique_ptr<Module> createTapeEchoModule(const ModuleSpec&);
 std::unique_ptr<Module> createButterComp2Module(const ModuleSpec&);
 std::unique_ptr<Module> createConsole8Module(const ModuleSpec&);
 std::unique_ptr<Module> createSrsly2Module(const ModuleSpec&);
+std::unique_ptr<Module> createHallModule(const ModuleSpec&);
+std::unique_ptr<Module> createRoomModule(const ModuleSpec&);
 std::unique_ptr<Module> createTube2Module(const ModuleSpec&);
 std::unique_ptr<Module> createDensityModule(const ModuleSpec&);
 std::unique_ptr<Module> createAir2Module(const ModuleSpec&);
@@ -36,6 +38,8 @@ std::unique_ptr<Module> createModule(const ModuleSpec& spec)
     else if (spec.id == "tape")       m = createTapeModule(spec);
     else if (spec.id == "console_eq") m = createConsoleEqModule(spec);
     else if (spec.id == "plate")      m = createPlateModule(spec);
+    else if (spec.id == "hall")       m = createHallModule(spec);
+    else if (spec.id == "room")       m = createRoomModule(spec);
     else if (spec.id == "limiter")    m = createLimiterModule(spec);
     else if (spec.id == "deess")      m = createDeEssModule(spec);
     else if (spec.id == "nam_amp")     m = createNamAmpModule(spec);

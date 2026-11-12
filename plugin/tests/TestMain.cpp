@@ -43,7 +43,7 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 24, "twenty-four runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 26, "twenty-six runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
@@ -89,7 +89,7 @@ static void testModules(const Catalogue& cat)
         if (spec.id == "deess") m->setParam("intensity", 0.6);
         if (spec.id == "tape") m->setParam("drive", 6.0);
         if (spec.id == "console_eq") { m->setParam("hpf_enabled", true); m->setParam("hpf_hz", 100.0); m->setParam("hm_gain", 4.0); }
-        if (spec.id == "plate") m->setParam("wet", 30.0);
+        if (spec.id == "plate" || spec.id == "hall" || spec.id == "room") m->setParam("wet", 30.0);
         if (spec.id == "limiter") m->setParam("input_gain", 6.0);
         if (spec.id == "air2") m->setParam("dry_wet", 0.7);   // upstream default is wet-only, which is silent with the bands neutral
 

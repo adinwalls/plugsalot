@@ -1,0 +1,133 @@
+{
+  "id": "hall",
+  "name": "Hall Reverb",
+  "kind": "effect",
+  "category": "reverb",
+  "source": {
+    "source_key": "dragonfly-reverb",
+    "path": "plugins/dragonfly-hall-reverb",
+    "upstream_name": "Dragonfly Hall Reverb"
+  },
+  "extractor": {
+    "type": "dpf_param_table",
+    "file": "plugins/dragonfly-hall-reverb/DistrhoPluginInfo.h"
+  },
+  "purpose": "Concert-hall reverb with early reflections and a long, smooth, modulated tail; for big, spacious, expansive vocals, pads and ballads.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "acoustic guitar",
+    "keys",
+    "synth",
+    "pad",
+    "strings",
+    "snare"
+  ],
+  "avoid_for": [
+    "bass",
+    "kick"
+  ],
+  "tags": [
+    "ambience",
+    "space",
+    "hall",
+    "spacious",
+    "expansive",
+    "vocal reverb",
+    "long tail"
+  ],
+  "cpu_points": 1,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "expose": [
+    {
+      "upstream_id": "dry_level",
+      "ai_hint": "Dry signal level. Keep at 100% when used as an insert.",
+      "id": "dry"
+    },
+    {
+      "upstream_id": "early_level",
+      "ai_hint": "Early reflections level: the sense of walls close by. 5-15%.",
+      "id": "early"
+    },
+    {
+      "upstream_id": "late_level",
+      "ai_hint": "Reverb tail level. 10-20% for a vocal; 25%+ for an obviously big hall.",
+      "id": "wet"
+    },
+    {
+      "upstream_id": "size",
+      "ai_hint": "Hall size in metres. 15-25 small hall, 30-40 concert hall, 50+ cathedral scale."
+    },
+    {
+      "upstream_id": "width",
+      "ai_hint": "Stereo width of the reverb. Above 100% is wider than natural."
+    },
+    {
+      "upstream_id": "delay",
+      "ai_hint": "30-60 ms keeps a vocal clear in front of a long tail.",
+      "id": "predelay"
+    },
+    {
+      "upstream_id": "decay",
+      "ai_hint": "Tail length in seconds. 1.5-2.5 s for a vocal hall, 3-5 s for huge, slow, expansive sounds."
+    },
+    {
+      "upstream_id": "diffuse",
+      "ai_hint": "Density of the tail. 70-90% is smooth for vocals; lower is grainier."
+    },
+    {
+      "upstream_id": "low_cut",
+      "ai_hint": "Raise towards 150-200 Hz to keep the reverb out of the low end."
+    },
+    {
+      "upstream_id": "high_cut",
+      "ai_hint": "Lower to 6000-9000 Hz to darken the tail and reduce sibilant splash."
+    },
+    {
+      "upstream_id": "modulation",
+      "ai_hint": "Movement in the tail. 15-30% adds lushness; high values can sound chorused."
+    }
+  ],
+  "presets": "from_raw",
+  "notes": [
+    "Upstream symbol for the tail level is 'late_level'; exposed here as 'wet'. Predelay is 'delay' upstream.",
+    "Defaults come from the upstream default preset.",
+    "CPU: 1.84% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ],
+  "cpu_measured": true,
+  "maker": "Dragonfly",
+  "tape": "BIG OPEN SPACE",
+  "knobs": [
+    {
+      "param": "decay",
+      "label": "DECAY",
+      "colour": "cream"
+    },
+    {
+      "param": "size",
+      "label": "SIZE",
+      "colour": "cream"
+    },
+    {
+      "param": "predelay",
+      "label": "PRE-DLY",
+      "colour": "cream"
+    },
+    {
+      "param": "high_cut",
+      "label": "HI CUT",
+      "colour": "black"
+    },
+    {
+      "param": "wet",
+      "label": "MIX",
+      "colour": "cream"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "id": "room",
+  "name": "Room Reverb",
+  "kind": "effect",
+  "category": "reverb",
+  "source": {
+    "source_key": "dragonfly-reverb",
+    "path": "plugins/dragonfly-room-reverb",
+    "upstream_name": "Dragonfly Room Reverb"
+  },
+  "extractor": {
+    "type": "dpf_param_table",
+    "file": "plugins/dragonfly-room-reverb/DistrhoPluginInfo.h"
+  },
+  "purpose": "Room reverb with clear early reflections and a short to medium natural tail; puts a dry vocal or instrument in a believable space.",
+  "good_for": [
+    "lead vocal",
+    "backing vocal",
+    "acoustic guitar",
+    "electric guitar",
+    "snare",
+    "full kit",
+    "software drums",
+    "keys"
+  ],
+  "avoid_for": [
+    "bass",
+    "kick"
+  ],
+  "tags": [
+    "ambience",
+    "space",
+    "room",
+    "natural",
+    "short reverb",
+    "studio"
+  ],
+  "cpu_points": 1,
+  "latency": {
+    "type": "none"
+  },
+  "tracking_safe": true,
+  "channels": [
+    "stereo"
+  ],
+  "expose": [
+    {
+      "upstream_id": "dry_level",
+      "ai_hint": "Dry signal level. Keep at 100% when used as an insert.",
+      "id": "dry"
+    },
+    {
+      "upstream_id": "early_level",
+      "ai_hint": "Early reflections level: the sound of the walls. 5-15%.",
+      "id": "early"
+    },
+    {
+      "upstream_id": "late_level",
+      "ai_hint": "Reverb tail level. 8-18% for a natural room on a vocal.",
+      "id": "wet"
+    },
+    {
+      "upstream_id": "size",
+      "ai_hint": "Room size in metres. 8-12 small booth or room, 15-20 studio live room, 25+ large room."
+    },
+    {
+      "upstream_id": "width",
+      "ai_hint": "Stereo width of the reverb."
+    },
+    {
+      "upstream_id": "predelay",
+      "ai_hint": "0-20 ms; small rooms need little predelay."
+    },
+    {
+      "upstream_id": "decay",
+      "ai_hint": "Tail length in seconds. 0.3-0.8 s for a tight room, 1-1.5 s for a large live room."
+    },
+    {
+      "upstream_id": "diffuse",
+      "ai_hint": "Density of the tail. Higher is smoother."
+    },
+    {
+      "upstream_id": "in_low_cut",
+      "ai_hint": "Raise to 100-200 Hz to keep the room out of the low end.",
+      "id": "low_cut"
+    },
+    {
+      "upstream_id": "in_high_cut",
+      "ai_hint": "Lower to darken what enters the reverb.",
+      "id": "high_cut"
+    },
+    {
+      "upstream_id": "late_damp",
+      "ai_hint": "High-frequency damping of the tail; lower is darker and softer.",
+      "id": "damping"
+    }
+  ],
+  "presets": "from_raw",
+  "notes": [
+    "Upstream symbol for the tail level is 'late_level'; exposed here as 'wet'.",
+    "Defaults come from the upstream default preset.",
+    "CPU: 1.66% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, minimum 1."
+  ],
+  "cpu_measured": true,
+  "maker": "Dragonfly",
+  "tape": "A REAL ROOM",
+  "knobs": [
+    {
+      "param": "decay",
+      "label": "DECAY",
+      "colour": "cream"
+    },
+    {
+      "param": "size",
+      "label": "SIZE",
+      "colour": "cream"
+    },
+    {
+      "param": "predelay",
+      "label": "PRE-DLY",
+      "colour": "cream"
+    },
+    {
+      "param": "damping",
+      "label": "DAMP",
+      "colour": "black"
+    },
+    {
+      "param": "wet",
+      "label": "MIX",
+      "colour": "cream"
+    }
+  ]
+}

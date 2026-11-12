@@ -211,9 +211,15 @@
       "common/freeverb/zrev2_t.hpp",
       "common/freeverb/zrev_t.hpp",
       "common/fv3_config.h",
+      "plugins/dragonfly-hall-reverb/DSP.cpp",
+      "plugins/dragonfly-hall-reverb/DSP.hpp",
+      "plugins/dragonfly-hall-reverb/DistrhoPluginInfo.h",
       "plugins/dragonfly-plate-reverb/DSP.cpp",
       "plugins/dragonfly-plate-reverb/DSP.hpp",
-      "plugins/dragonfly-plate-reverb/DistrhoPluginInfo.h"
+      "plugins/dragonfly-plate-reverb/DistrhoPluginInfo.h",
+      "plugins/dragonfly-room-reverb/DSP.cpp",
+      "plugins/dragonfly-room-reverb/DSP.hpp",
+      "plugins/dragonfly-room-reverb/DistrhoPluginInfo.h"
     ]
   },
   "x42-dpl": {

@@ -95,6 +95,33 @@ else()
     target_compile_options(plugsalot_dragonfly PRIVATE -w)
 endif()
 
+# Dragonfly Hall and Room. Every Dragonfly plug-in names its DSP class DragonflyReverbDSP and its
+# parameter header DistrhoPluginInfo.h, so each one is its own small library with the class renamed.
+foreach(df hall room)
+    string(SUBSTRING ${df} 0 1 df_first)
+    string(TOUPPER ${df_first} df_first)
+    string(SUBSTRING ${df} 1 -1 df_rest)
+    set(df_name ${df_first}${df_rest})
+    add_library(plugsalot_dragonfly_${df} STATIC
+        ${DF}/plugins/dragonfly-${df}-reverb/DSP.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/dsp/modules/Dragonfly${df_name}Bridge.cpp
+    )
+    set_target_properties(plugsalot_dragonfly_${df} PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED ON)
+    target_compile_definitions(plugsalot_dragonfly_${df} PRIVATE LIBFV3_FLOAT DragonflyReverbDSP=Dragonfly${df_name}DSP)
+    target_include_directories(plugsalot_dragonfly_${df} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/shims/dpf
+        ${DF}/common
+        ${DF}/plugins/dragonfly-${df}-reverb
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/dsp/modules
+    )
+    if(MSVC)
+        target_compile_options(plugsalot_dragonfly_${df} PRIVATE /W0 /D_USE_MATH_DEFINES)
+    else()
+        target_compile_options(plugsalot_dragonfly_${df} PRIVATE -w)
+    endif()
+    target_link_libraries(plugsalot_dragonfly_${df} PUBLIC plugsalot_dragonfly)
+endforeach()
+
 # TONE3000 publishable key (client id). Safe to ship: it only identifies the app. Leave empty
 # for builds without TONE3000, or set PLUGSALOT_TONE3000_CLIENT_ID in the environment at run time.
 set(PLUGSALOT_TONE3000_CLIENT_ID "" CACHE STRING "TONE3000 publishable key compiled into the plugin")
@@ -142,7 +169,7 @@ endif()
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide hall room tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(f BarlowCondensed-SemiBold BarlowCondensed-Bold BarlowCondensed-Medium Barlow-Regular Barlow-Medium PermanentMarker-Regular)
     list(APPEND PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/${f}.ttf)
@@ -185,6 +212,8 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/TapeModule.cpp
     src/dsp/modules/ConsoleEqModule.cpp
     src/dsp/modules/PlateModule.cpp
+    src/dsp/modules/HallModule.cpp
+    src/dsp/modules/RoomModule.cpp
     src/dsp/modules/LimiterModule.cpp
     src/dsp/modules/DeEssModule.cpp
     src/dsp/modules/NamAmpModule.cpp
@@ -275,7 +304,7 @@ target_link_libraries(Plugsalot
     PRIVATE
         PlugsalotData
         plugsalot_upstream_dsp
-        plugsalot_dragonfly
+        plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly
         plugsalot_nam
         juce::juce_audio_utils
         juce::juce_dsp
@@ -296,7 +325,7 @@ if(PLUGSALOT_BUILD_TESTS)
         JUCE_WEB_BROWSER=0 JUCE_USE_CURL=1 JUCE_STANDALONE_APPLICATION=1 PLUGSALOT_VERSION="${PROJECT_VERSION}"
         PLUGSALOT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
     target_link_libraries(PlugsalotTests PRIVATE
-        PlugsalotData plugsalot_upstream_dsp plugsalot_dragonfly plugsalot_nam
+        PlugsalotData plugsalot_upstream_dsp plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly plugsalot_nam
         juce::juce_core juce::juce_events juce::juce_audio_basics juce::juce_data_structures
         juce::juce_recommended_config_flags)
 endif()
