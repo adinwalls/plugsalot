@@ -1,0 +1,18 @@
+{
+  "expect": "invalid",
+  "reply": {
+    "schema_version": 1,
+    "source": "lead vocal",
+    "stage": "tracking",
+    "chain": [
+      {
+        "module": "tunebrew",
+        "params": {
+          "mode": "Classic",
+          "retune": 0
+        }
+      }
+    ],
+    "explanation": "Hard tune while tracking."
+  }
+}

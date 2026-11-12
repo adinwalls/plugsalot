@@ -43,7 +43,7 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 26, "twenty-six runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 27, "twenty-seven runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
@@ -539,6 +539,42 @@ static void testWideners(const Catalogue& cat)
     const double swNarrow = sideOverMid("sweetwide", { { "un_wide", 0.1 }, { "soar", 0.0 } }, cpu, finite);
     check(finite && swWide > swNarrow, "SweetWide widens and narrows (narrow " + juce::String(swNarrow, 3) + ", neutral " + juce::String(sw, 3) + ", wide " + juce::String(swWide, 3) + ")");
     std::cout << "  SweetWide CPU: " << cpu << "% of one core at 48 kHz\n";
+
+    // TuneBrew: a voice-like tone sung 35 cents sharp of A3 comes out on A3.
+    if (auto* tb = cat.find("tunebrew"))
+    {
+        auto m = createModule(*tb);
+        const double sr = 48000.0; const int block = 256;
+        m->prepare(sr, block); m->reset();
+        m->setParam("scale", "Chromatic"); m->setParam("mode", "Classic"); m->setParam("retune", 0.0);
+        const double f0 = 220.0 * std::pow(2.0, 35.0 / 1200.0);
+        std::vector<float> l((size_t) block), r((size_t) block), out;
+        double ph = 0; bool fin = true;
+        for (int b = 0; b < (int) (4 * sr / block); ++b)
+        {
+            for (int i = 0; i < block; ++i)
+            {
+                ph += f0 / sr; if (ph >= 1.0) ph -= 1.0;
+                float x = 0; for (int h = 1; h <= 6; ++h) x += (float) (std::sin(2.0 * juce::MathConstants<double>::pi * h * ph) / h);
+                l[(size_t) i] = r[(size_t) i] = 0.2f * x;
+            }
+            float* ch[2] = { l.data(), r.data() };
+            m->process(ch, block);
+            for (int i = 0; i < block; ++i) { fin &= std::isfinite(l[(size_t) i]); out.push_back(l[(size_t) i]); }
+        }
+        // Fundamental of the last two seconds by autocorrelation around 220 Hz.
+        const size_t start = out.size() / 2, len = out.size() - start - 400;
+        double best = -1e30, bestLag = 0;
+        for (double lag = sr / 235.0; lag <= sr / 205.0; lag += 0.05)
+        {
+            const int li = (int) lag; const double fr = lag - li; double acc = 0;
+            for (size_t i = start; i < start + len; ++i)
+                acc += out[i] * ((1.0 - fr) * out[i + (size_t) li] + fr * out[i + (size_t) li + 1]);
+            if (acc > best) { best = acc; bestLag = lag; }
+        }
+        const double cents = 1200.0 * std::log2((sr / bestLag) / 220.0);
+        check(fin && std::abs(cents) < 6.0, "TuneBrew pulls a 35-cent-sharp note onto pitch (" + juce::String(cents, 1) + " cents off, latency " + juce::String(m->latencySamples()) + " samples)");
+    }
 }
 
 static void testGuitarix(const Catalogue& cat)

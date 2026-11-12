@@ -42,6 +42,7 @@ target_include_directories(plugsalot_upstream_dsp PUBLIC
     ${DUSK}/shared-daf/dsp
     ${DUSKE}/tape-echo/core
     ${V}/x42-dpl/src
+    ${V}/adin-brew/src
     ${V}/airwindows/plugins/LinuxVST/src/DeBess
     ${V}/airwindows/plugins/LinuxVST/src/ButterComp2
     ${V}/airwindows/plugins/LinuxVST/src/Srsly2
@@ -169,7 +170,7 @@ endif()
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
 # (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide hall room tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
+set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide tunebrew hall room tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(f BarlowCondensed-SemiBold BarlowCondensed-Bold BarlowCondensed-Medium Barlow-Regular Barlow-Medium PermanentMarker-Regular)
     list(APPEND PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/${f}.ttf)
@@ -213,6 +214,7 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/ConsoleEqModule.cpp
     src/dsp/modules/PlateModule.cpp
     src/dsp/modules/HallModule.cpp
+    src/dsp/modules/TuneBrewModule.cpp
     src/dsp/modules/RoomModule.cpp
     src/dsp/modules/LimiterModule.cpp
     src/dsp/modules/DeEssModule.cpp

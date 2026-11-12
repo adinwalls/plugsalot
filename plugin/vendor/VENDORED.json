@@ -329,6 +329,16 @@
       "dsp/plexipoweramptone_table.h"
     ]
   },
+  "adin-brew": {
+    "commit": "024da8837ffc71535bd0a3435e4c53b717a3c9b0",
+    "license": "GPL-3.0",
+    "files": [
+      "LICENSE",
+      "src/KeyDetect.hpp",
+      "src/TuneEngine.hpp",
+      "src/TuneParams.hpp"
+    ]
+  },
   "nam-core": {
     "commit": "0b3d3c97b0859a3a8c92a8628c4dd89a25eb5842",
     "license": "MIT",

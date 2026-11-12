@@ -84,6 +84,7 @@ FILES = {
     "gx-guvnor": ["LICENSE", "dsp/guvnor.cc", "dsp/gx_pluginlv2.h"],
     "gx-ultracab": ["LICENSE", "dsp/ultracab.cc", "dsp/unicab_p2_table.h", "dsp/unicab_p3_table.h", "dsp/gx_pluginlv2.h"],
     "gx-plexi": ["LICENSE", "dsp/plexi.cc", "dsp/plexi*_table.h", "dsp/gx_pluginlv2.h"],
+    "adin-brew": ["LICENSE", "src/TuneEngine.hpp", "src/KeyDetect.hpp", "src/TuneParams.hpp"],
     "nam-core": [
         "LICENSE",
         "NAM/*.h",

@@ -456,6 +456,19 @@
       "tracking_safe": true
     },
     {
+      "id": "tunebrew",
+      "name": "TuneBrew",
+      "kind": "effect",
+      "category": "tuning",
+      "purpose": "Real-time vocal pitch correction. Natural mode tunes tightly while keeping vibrato, slides and held-note life; Classic mode is the hard-tune robot effect.",
+      "good_for": [
+        "lead vocal",
+        "backing vocal"
+      ],
+      "cpu_points": 2,
+      "tracking_safe": false
+    },
+    {
       "id": "srsly2",
       "name": "Srsly2",
       "kind": "effect",

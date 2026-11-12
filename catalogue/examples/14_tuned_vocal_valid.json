@@ -1,0 +1,40 @@
+{
+  "expect": "valid",
+  "reply": {
+    "schema_version": 1,
+    "source": "lead vocal",
+    "stage": "mixing",
+    "chain": [
+      {
+        "module": "tunebrew",
+        "params": {
+          "key": "A",
+          "scale": "Minor",
+          "mode": "Natural",
+          "retune": 15
+        }
+      },
+      {
+        "module": "console_eq",
+        "params": {
+          "hpf_enabled": true,
+          "hpf_hz": 100
+        }
+      },
+      {
+        "module": "multicomp",
+        "params": {
+          "mode": "Opto",
+          "opto_peak_reduction": 45
+        }
+      },
+      {
+        "module": "plate",
+        "params": {
+          "wet": 15
+        }
+      }
+    ],
+    "explanation": "Natural tuning in A minor first, then cleanup, levelling and a plate."
+  }
+}

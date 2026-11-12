@@ -93,7 +93,7 @@ Also worth doing regardless: tag `sweetwide`, `limiter` and `srsly2` for the voc
 
 ## 6. Status (updated 2026-11-12)
 
-Adin approved batch 1. Added and passing the headless tests (26 runnable modules):
+Adin approved batch 1. Added and passing the headless tests (27 runnable modules):
 
 | Module | Upstream | Fills |
 | --- | --- | --- |
@@ -104,6 +104,7 @@ Adin approved batch 1. Added and passing the headless tests (26 runnable modules
 | `chorus_ensemble` | Airwindows ChorusEnsemble | Chorus, thickening, light doubling |
 | `hall` | Dragonfly Hall Reverb | Big, spacious reverb |
 | `room` | Dragonfly Room Reverb | Small natural spaces |
+| `tunebrew` | Adin Brew TuneBrew Autotune (`adinwalls/adin-brew`, main) | Pitch correction. Only used when asked for; first in the chain; mixing only (about 49 ms latency) |
 
 The AI guidelines (`plugin/resources/guidelines.md`) now say when to pick each colour stage and each reverb.
 
@@ -112,5 +113,5 @@ Not yet listened to on real vocals: default levels and the hint ranges are from 
 Still to do:
 
 - **DuskVerb** (Dusk Audio, same pinned repo as Multi-Comp). It has a framework-free core (`plugins/DuskVerb/core`) with many engines (halls, chambers, plates, spring, shimmer, non-linear, reverse). It is a bigger port than the others because its factory presets carry engine configuration, so it is its own piece of work.
-- **TuneBrew** as the built-in pitch corrector, replacing the x42 Auto-Tune idea in section 3C. Needs access to its source.
+- **TuneBrew key detection.** TuneBrew is in, but its Detect Key button is not wired up: Plugsalot has no UI for it, so the AI uses Chromatic unless the user states the key. Wiring detection into the input analyser would let the AI set key and scale itself.
 - LSP Gate and the remaining candidates, if still wanted.

@@ -183,6 +183,20 @@
       "license_file": "LICENSE",
       "authors": "Hermann Meyer, James Warden, Andreas Degert, Pete Shorthose and the Guitarix project; packaged by Hermann Meyer (brummer10)",
       "includes": "Plexi classic-rock amp: Faust-generated DSP (dsp/), compiled unmodified. Source headers say GPL-2.0-or-later (the repo LICENSE file is the GPL-3 text); compatible with Plugsalot's GPL-3.0-or-later."
+    },
+    "adin-brew": {
+      "repo": "https://github.com/adinwalls/adin-brew",
+      "commit": "024da8837ffc71535bd0a3435e4c53b717a3c9b0",
+      "commit_date": "2026-11-07",
+      "license": "GPL-3.0",
+      "license_file": "LICENSE",
+      "authors": "Adin Walls",
+      "includes": "TuneBrew Autotune engine (src/TuneEngine.hpp, src/KeyDetect.hpp), header-only",
+      "sparse_paths": [
+        "/LICENSE",
+        "/src/",
+        "/plugins/TuneBrew/README.md"
+      ]
     }
   }
 }
