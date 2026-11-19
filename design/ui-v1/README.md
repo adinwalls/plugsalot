@@ -7,7 +7,7 @@ reference for porting the look into the JUCE plugin. It is not wired into the bu
 What it settles:
 
 - Wooden case (teak by default) around a dark blue-grey enamel panel.
-- Each module is a 500-series-style card in a six-slot rack, signal flowing left to right.
+- Each module is a 500-series-style card in a seven-slot rack, signal flowing left to right.
 - Knob colour = function: blue tone, red dynamics, grey level, cream time and space, black filters.
 - A masking-tape scribble strip on each module says what it does in plain words.
 - Hover a module for 2 seconds to see its catalogue description.

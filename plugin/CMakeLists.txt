@@ -200,7 +200,7 @@ endif()
 # ---------------------------------------------------------------------------
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
-# (drum_sampler) are left out so the AI never offers them.
+# (none at the moment) are left out so the AI never offers them.
 set(PLUGSALOT_MODULES console_eq para_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide tunebrew hall room tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(f BarlowCondensed-SemiBold BarlowCondensed-Bold BarlowCondensed-Medium Barlow-Regular Barlow-Medium PermanentMarker-Regular)

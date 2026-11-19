@@ -23,7 +23,7 @@ If the request is unclear and a wrong guess would waste the user's time, you may
 ## Hard limits (Plugsalot rejects replies that break these)
 
 - Only module ids and parameter ids from the catalogue. Only values inside each parameter's min..max, or one of its options exactly as written.
-- At most 8 modules, within the CPU budget for the user's CPU mode (each module lists cpu_points).
+- At most 7 modules, within the CPU budget for the user's CPU mode (each module lists cpu_points).
 - At most one limiter, and it must be last.
 - Stage "tracking": only modules with tracking_safe true (they add at most about 2 ms of latency).
 - Parameters you leave out take the catalogue default. Only include parameters you mean to set.

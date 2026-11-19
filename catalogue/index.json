@@ -275,18 +275,6 @@
       "tracking_safe": false
     },
     {
-      "id": "drum_sampler",
-      "name": "Drum Sampler",
-      "kind": "instrument",
-      "category": "drums",
-      "purpose": "SFZ sample player that turns MIDI from the DAW into drum sounds from a chosen kit; the sound source for the software drums chain.",
-      "good_for": [
-        "software drums"
-      ],
-      "cpu_points": null,
-      "tracking_safe": true
-    },
-    {
       "id": "buttercomp2",
       "name": "ButterComp2",
       "kind": "effect",

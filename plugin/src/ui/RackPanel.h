@@ -1,5 +1,5 @@
 // Plugsalot - GPL-3.0-or-later
-// The rack: six slots, each holding a module faceplate with colour-coded knobs.
+// The rack: seven slots, each holding a module faceplate with colour-coded knobs.
 // Knobs follow the catalogue's `knobs` list; every other parameter is in the
 // module's settings overlay (click the name plate).
 #pragma once
@@ -13,8 +13,8 @@ namespace plugsalot
 class RackPanel final : public juce::Component, private juce::Timer
 {
 public:
-    static constexpr int maxSlots = 6;
-    static constexpr int cardWidth = 124, cardHeight = 568, pad = 16, gap = 8;
+    static constexpr int maxSlots = 7;
+    static constexpr int cardWidth = 106, cardHeight = 568, pad = 16, gap = 6;
 
     explicit RackPanel(PlugsalotProcessor& p);
     ~RackPanel() override;

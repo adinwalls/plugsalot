@@ -44,7 +44,7 @@ float easeOutBack(float t)
 class RackPanel::Knob final : public juce::Component, public juce::SettableTooltipClient, private juce::Timer
 {
 public:
-    static constexpr int ringSize = 52;
+    static constexpr int ringSize = 46, capSize = 36;   // scaled with the 106 px card
 
     Knob(PlugsalotProcessor& p, int slotIndex, ParamSpec spec, KnobSpec ks)
         : proc(p), slot(slotIndex), param(std::move(spec)), knob(std::move(ks))
@@ -110,7 +110,7 @@ public:
 
     void paint(juce::Graphics& g) override
     {
-        vintage::drawKnob(g, { getWidth() * 0.5f, (float) ringSize * 0.5f }, knob.colour, (float) shown);
+        vintage::drawKnob(g, { getWidth() * 0.5f, (float) ringSize * 0.5f }, knob.colour, (float) shown, (float) ringSize, (float) capSize);
         g.setColour(juce::Colour(0xffccd4de));
         g.setFont(vintage::condensed(11.0f, false).withExtraKerningFactor(0.1f));
         const bool showValue = dragging || isMouseOver();
@@ -352,7 +352,7 @@ private:
         int y = top;
         for (auto* k : knobs)
         {
-            k->setBounds((getWidth() - 76) / 2, y, 76, pitch);
+            k->setBounds((getWidth() - 70) / 2, y, 70, pitch);
             y += pitch;
         }
     }
