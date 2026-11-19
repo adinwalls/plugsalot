@@ -106,7 +106,8 @@ add_library(plugsalot_lsp STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dsp/modules/LspKernels.cpp
 )
 set_target_properties(plugsalot_lsp PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON POSITION_INDEPENDENT_CODE ON)
-target_compile_definitions(plugsalot_lsp PUBLIC LSP_DSP_LIB_USE_CXX_IFACE)
+# BUILTIN: the code is compiled into the plug-in, so nothing is dllimport-ed on Windows.
+target_compile_definitions(plugsalot_lsp PUBLIC LSP_DSP_LIB_USE_CXX_IFACE LSP_DSP_UNITS_BUILTIN LSP_COMMON_LIB_BUILTIN LSP_DSP_LIB_BUILTIN)
 target_include_directories(plugsalot_lsp PUBLIC
     ${V}/lsp-dsp-units/include
     ${V}/lsp-common-lib/include
