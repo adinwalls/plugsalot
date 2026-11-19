@@ -9,12 +9,17 @@
 // push() runs on the audio thread; everything else may be called from any thread.
 #pragma once
 
-#include "KeyDetect.hpp" // plugin/vendor/adin-brew/src, compiled unmodified
 #include <algorithm>
 #include <atomic>
 #include <cmath>
 #include <cstdint>
 #include <vector>
+
+// The vendored header uses M_PI, which MSVC only defines with _USE_MATH_DEFINES.
+#ifndef M_PI
+ #define M_PI 3.14159265358979323846
+#endif
+#include "KeyDetect.hpp" // plugin/vendor/adin-brew/src, compiled unmodified
 
 namespace plugsalot
 {
