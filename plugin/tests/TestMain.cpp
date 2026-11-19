@@ -44,7 +44,7 @@ static void fillTestSignal(juce::AudioBuffer<float>& b, int offset, double sr)
 static void testCatalogue(const Catalogue& cat)
 {
     std::cout << "Catalogue\n";
-    check(cat.modules().size() == 27, "twenty-seven runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
+    check(cat.modules().size() == 28, "twenty-eight runnable modules embedded (" + juce::String((int) cat.modules().size()) + ")");
     for (auto& m : cat.modules())
     {
         bool defaultsOk = true;
@@ -496,6 +496,73 @@ static void testAirwindowsAdditions(const Catalogue& cat)
     std::cout << "  ButterComp2 CPU: " << comp.cpu << "% of one core at 48 kHz\n";
 }
 
+static void testParaEq(const Catalogue& cat)
+{
+    std::cout << "Corrective EQ (LSP Parametric Equalizer, IIR)\n";
+    struct Band { const char* type; double freq, gain, q; const char* slope; };
+    // Gain in dB of a sine at toneHz through the EQ once it has settled; also reports CPU and finiteness.
+    auto measure = [&](double sr, const std::vector<Band>& bands, double toneHz, double& cpuPercent, bool& finite) {
+        auto m = createModule(*cat.find("para_eq"));
+        const int block = 256, total = (int) sr;
+        m->prepare(sr, block);
+        for (size_t i = 0; i < bands.size(); ++i)
+        {
+            const juce::String p = "band" + juce::String((int) i) + "_";
+            m->setParam(p + "type", bands[i].type);
+            m->setParam(p + "freq", bands[i].freq);
+            m->setParam(p + "gain", bands[i].gain);
+            m->setParam(p + "q", bands[i].q);
+            m->setParam(p + "slope", bands[i].slope);
+        }
+        double inSum = 0, outSum = 0, seconds = 0;
+        finite = true;
+        for (int s = 0; s < total; s += block)
+        {
+            std::vector<float> l((size_t) block), r((size_t) block), ref((size_t) block);
+            for (int i = 0; i < block; ++i)
+                ref[(size_t) i] = l[(size_t) i] = r[(size_t) i] = 0.3f * (float) std::sin(2.0 * juce::MathConstants<double>::pi * toneHz * (s + i) / sr);
+            float* c[2] = { l.data(), r.data() };
+            auto t0 = std::chrono::high_resolution_clock::now();
+            m->process(c, block);
+            seconds += std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - t0).count();
+            for (int i = 0; i < block; ++i)
+            {
+                finite &= std::isfinite(l[(size_t) i]) && std::isfinite(r[(size_t) i]);
+                if (s + i >= total / 2) { inSum += (double) ref[(size_t) i] * ref[(size_t) i]; outSum += (double) l[(size_t) i] * l[(size_t) i]; }
+            }
+        }
+        cpuPercent = 100.0 * seconds;
+        return 10.0 * std::log10(outSum / inSum);
+    };
+    double cpu = 0; bool fin = true;
+    for (double sr : { 44100.0, 48000.0, 96000.0 })
+    {
+        const juce::String tag = " (" + juce::String(sr / 1000.0, 1) + " kHz)";
+        auto near = [&](const std::vector<Band>& b, double hz, double expected, double tol, const juce::String& what) {
+            const double g = measure(sr, b, hz, cpu, fin);
+            check(fin && std::abs(g - expected) <= tol, what + tag + ": " + juce::String(g, 2) + " dB, expected " + juce::String(expected, 1));
+        };
+        near({}, 1000.0, 0.0, 0.05, "All bands Off pass the signal unchanged");
+        near({ { "Bell", 1000.0, 6.0, 1.0, "x1" } }, 1000.0, 6.0, 0.3, "Bell +6 dB at its centre");
+        near({ { "Bell", 1000.0, -4.0, 3.0, "x1" } }, 1000.0, -4.0, 0.3, "Bell -4 dB at its centre");
+        near({ { "Bell", 1000.0, 6.0, 4.0, "x1" } }, 100.0, 0.0, 0.3, "Narrow bell leaves a tone a decade away alone");
+        near({ { "Hi-pass", 100.0, 0.0, 0.4, "x1" } }, 1000.0, 0.0, 0.3, "Hi-pass 100 Hz passes 1 kHz");
+        near({ { "Hi-pass", 100.0, 0.0, 0.4, "x1" } }, 25.0, -24.0, 6.0, "Hi-pass 100 Hz removes 25 Hz");
+        near({ { "Lo-pass", 8000.0, 0.0, 0.4, "x1" } }, 500.0, 0.0, 0.3, "Lo-pass 8 kHz passes 500 Hz");
+        near({ { "Notch", 60.0, 0.0, 10.0, "x1" } }, 60.0, -30.0, 40.0, "Notch removes 60 Hz hum");
+        near({ { "Hi-shelf", 5000.0, 4.0, 0.7, "x1" } }, 15000.0, 4.0, 0.7, "Hi-shelf +4 dB lifts 15 kHz");
+        near({ { "Lo-shelf", 200.0, -3.0, 0.7, "x1" } }, 40.0, -3.0, 0.7, "Lo-shelf -3 dB cuts 40 Hz");
+    }
+    // The notch must actually be deep, not just below a loose bound.
+    check(measure(48000.0, { { "Notch", 60.0, 0.0, 10.0, "x1" } }, 60.0, cpu, fin) < -30.0, "Notch at 60 Hz is deeper than 30 dB");
+    // Worst case: eight active bands (this is a CPU cost check, not a sound check).
+    std::vector<Band> all;
+    for (int i = 0; i < 8; ++i)
+        all.push_back({ i == 0 ? "Hi-pass" : i == 7 ? "Hi-shelf" : "Bell", 80.0 * std::pow(2.0, i), i == 0 ? 0.0 : -2.0, 0.7, "x2" });
+    measure(48000.0, all, 1000.0, cpu, fin);
+    check(fin && cpu < 3.0, "Eight active bands stay finite and light (" + juce::String(cpu, 2) + "% of one core at 48 kHz)");
+}
+
 static void testWideners(const Catalogue& cat)
 {
     std::cout << "Stereo wideners\n";
@@ -851,6 +918,7 @@ int main(int argc, char* argv[])
     testDelay(cat);
     testTapeEcho(cat);
     testAirwindowsAdditions(cat);
+    testParaEq(cat);
     testWideners(cat);
     testGuitarix(cat);
     testTone3000(cat);

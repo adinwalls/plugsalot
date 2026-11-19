@@ -7,6 +7,7 @@ namespace plugsalot
 std::unique_ptr<Module> createMultiCompModule(const ModuleSpec&);
 std::unique_ptr<Module> createTapeModule(const ModuleSpec&);
 std::unique_ptr<Module> createConsoleEqModule(const ModuleSpec&);
+std::unique_ptr<Module> createParaEqModule(const ModuleSpec&);
 std::unique_ptr<Module> createPlateModule(const ModuleSpec&);
 std::unique_ptr<Module> createLimiterModule(const ModuleSpec&);
 std::unique_ptr<Module> createDeEssModule(const ModuleSpec&);
@@ -38,6 +39,7 @@ std::unique_ptr<Module> createModule(const ModuleSpec& spec)
     if      (spec.id == "multicomp")  m = createMultiCompModule(spec);
     else if (spec.id == "tape")       m = createTapeModule(spec);
     else if (spec.id == "console_eq") m = createConsoleEqModule(spec);
+    else if (spec.id == "para_eq")    m = createParaEqModule(spec);
     else if (spec.id == "plate")      m = createPlateModule(spec);
     else if (spec.id == "tunebrew")   m = createTuneBrewModule(spec);
     else if (spec.id == "hall")       m = createHallModule(spec);

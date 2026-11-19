@@ -53,7 +53,9 @@ Bundled libraries inside those upstreams:
 Supporting sources (constants only, not ported code):
 
 - lsp-plugin-fw: https://github.com/lsp-plugins/lsp-plugin-fw at `45f2e23ba8` (LGPL-3.0-or-later). Constants only (frequency limits); needed to resolve lsp-para-equalizer ranges.
-- lsp-dsp-units: https://github.com/lsp-plugins/lsp-dsp-units at `8dd2a6905c` (LGPL-3.0-or-later). Constants only (SPEC_FREQ_MIN/MAX, gain constants).
+- lsp-dsp-units: https://github.com/lsp-plugins/lsp-dsp-units at `8dd2a6905c` (LGPL-3.0-or-later). Filter and FilterBank (the IIR filters used by the Corrective EQ) plus constants (SPEC_FREQ_MIN/MAX, gain constants) for the extractor.
+- lsp-common-lib: https://github.com/lsp-plugins/lsp-common-lib at `33523b4939` (LGPL-3.0-or-later). Headers only; types and helpers the LSP filter code includes.
+- lsp-dsp-lib: https://github.com/lsp-plugins/lsp-dsp-lib at `6a4d5ba7a4` (LGPL-3.0-or-later). Generic C++ filter kernels only (biquads, filter transfer); no assembly or CPU dispatch.
 
 ## Fonts (embedded in the plugin window)
 

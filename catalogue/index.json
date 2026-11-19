@@ -353,10 +353,10 @@
     },
     {
       "id": "para_eq",
-      "name": "Parametric EQ (8-band)",
+      "name": "Corrective EQ (8-band)",
       "kind": "effect",
       "category": "eq",
-      "purpose": "Eight-band parametric EQ for high-pass and low-pass filtering, corrective cuts (mud, boxiness, harshness) and broad tonal shaping.",
+      "purpose": "Clean, transparent 8-band corrective EQ (LSP Parametric Equalizer, minimum-phase IIR): high-pass and low-pass filters, notches for hum or resonances, and surgical cuts for boxiness, mud and harshness. Use it for cleanup BEFORE console_eq, which is the character EQ for colour and broad tone shaping.",
       "good_for": [
         "lead vocal",
         "backing vocal",
@@ -372,7 +372,7 @@
         "bus",
         "master"
       ],
-      "cpu_points": null,
+      "cpu_points": 1,
       "tracking_safe": true
     },
     {

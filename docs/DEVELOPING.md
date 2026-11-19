@@ -66,7 +66,7 @@ Curation can only **narrow** what upstream allows. If a bumped upstream commit c
 | `dpf_param_table` | DPF `PARAMS[]` tables + presets | Dragonfly Reverb |
 | `lv2_ttl` | LV2 Turtle port lists | x42 and other LV2 plugins |
 | `airwindows` | Airwindows effect sources + Airwindopedia | all ~500 Airwindows effects |
-| `lsp_para_eq` | LSP port macros | LSP Parametric Equalizer |
+| `lsp_para_eq` | LSP port macros | LSP Parametric Equalizer (Corrective EQ) |
 | `manual` | written in the curation file | library APIs |
 
 ## Quick start
