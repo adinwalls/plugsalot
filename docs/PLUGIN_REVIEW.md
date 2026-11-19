@@ -23,7 +23,6 @@ Written 2026-11-12 from `catalogue/index.json`, `THIRD_PARTY.md` and `docs/HANDO
 | `limiter` | x42 DPL (GPL-3) | Final peak limiter | bus/master only |
 | `gx_blueamp`, `gx_plexi`, `gx_supersonic`, `gx_guvnor`, `gx_ultracab` | Guitarix (GPL-2+) | Amps, overdrive, cabinet | guitar |
 | `nam_amp`, `cab_ir` | NAM Core, AudioDSPTools (MIT) | Hidden from the AI for now | guitar |
-| `drum_sampler` | sfizz (BSD-2) | Software drums source | drums |
 
 Typical vocal path today: EQ (cleanup) -> de-ess -> compressor (multicomp and/or buttercomp2) -> colour (console8 / tape) -> EQ (tone) -> delay / tape echo -> plate. The variety within each slot is thin: one de-esser, one reverb type, one saturation family, no modulation, no gate, no pitch tools.
 

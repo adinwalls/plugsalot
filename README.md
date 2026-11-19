@@ -28,7 +28,6 @@ Plugsalot is nothing without the people who build and give away incredible plugi
 | [x42 plugins](https://github.com/x42/dpl.lv2) | Robin Gareus | Digital Peak Limiter |
 | [Neural Amp Modeler](https://github.com/sdatkinson/NeuralAmpModelerCore) and AudioDSPTools | Steven Atkinson | NAM Amp and Cabinet IR (still in the plugin, but the AI doesn't offer them for now) |
 | [LSP Plugins](https://github.com/lsp-plugins) | Vladimir Sadovnikov and the Linux Studio Plugins Project | Parametric EQ (coming soon) |
-| [sfizz](https://github.com/sfztools/sfizz) | sfizz contributors | Drum sampler (coming soon) |
 
 Plugsalot also includes a simple Clean Delay that I wrote for this project, and uses the [Barlow](https://github.com/jpt/barlow) and [Permanent Marker](https://fonts.google.com/specimen/Permanent+Marker) fonts. Plugsalot itself is free software, **GPL-3.0-or-later**, and is built with [JUCE](https://juce.com/).
 
@@ -54,7 +53,6 @@ Plugsalot also includes a simple Clean Delay that I wrote for this project, and 
 | `console8` | Airwindows Console8 (channel In/Hype + Out) | MIT |
 | `tube2`, `density`, `air2`, `channel9`, `chorus_ensemble` | Airwindows Tube2, Density, Air2, Channel9, ChorusEnsemble | MIT |
 | `tunebrew` | Adin Brew TuneBrew Autotune | GPL-3.0 |
-| `drum_sampler` | sfizz (catalogue only) | BSD-2-Clause |
 
 ## Setting it up
 
@@ -120,7 +118,7 @@ More things to try, and what to look out for, are in [docs/TESTING.md](docs/TEST
 
 Plugsalot is an alpha, so there's plenty still to do:
 
-- The LSP Parametric EQ and the sfizz drum sampler are catalogued but not in the plugin yet.
+- The LSP Parametric EQ is catalogued but not in the plugin yet.
 - The guitar amps still need lots of listening with real guitar, especially output levels, and Windows/macOS testing.
 - Hosted AI for Patreon supporters, so you won't need your own key.
 - API keys stored in the system keychain.
