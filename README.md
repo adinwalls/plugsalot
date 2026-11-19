@@ -61,7 +61,7 @@ You need three things: the plugin installed, an AI key, and a few minutes. It ta
 ### Step 1: Download Plugsalot
 
 1. Go to the [Releases page](https://github.com/adinwalls/plugsalot/releases) and open the newest release.
-2. Under **Assets**, download the zip for your system: `Linux`, `Windows` or `macOS`.
+2. Under **Assets**, download the zip for your system: `Linux` or `Windows`. macOS builds are paused for now.
 3. Unzip it. Inside is the VST3 plugin, a standalone app, and (Linux) an LV2 plugin.
 
 ### Step 2: Install it
@@ -76,7 +76,7 @@ You need three things: the plugin installed, an AI key, and a few minutes. It ta
 2. The standalone app is `Plugsalot.exe`. Windows may warn that it's from an unknown publisher (builds aren't signed yet): choose **More info**, then **Run anyway**.
 3. Open your DAW and rescan plugins.
 
-**macOS**
+**macOS** (builds are paused for now; these steps are for when they return)
 1. Copy `Plugsalot.vst3` into `~/Library/Audio/Plug-Ins/VST3/`. For the AU version, copy `Plugsalot.component` into `~/Library/Audio/Plug-Ins/Components/`.
 2. Builds aren't notarized yet, so the first time, right-click the app (or plugin) and choose **Open**.
 3. Open your DAW and rescan plugins.
