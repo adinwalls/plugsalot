@@ -96,6 +96,28 @@ else()
     target_compile_options(plugsalot_dragonfly PRIVATE -w)
 endif()
 
+# LSP Parametric Equalizer: the vendored LSP Filter and FilterBank classes (LGPL-3.0-or-later) with
+# the generic C++ kernels from lsp-dsp-lib bound in LspKernels.cpp. Built as its own library with
+# upstream warnings silenced.
+set(LSPV ${V})
+add_library(plugsalot_lsp STATIC
+    ${V}/lsp-dsp-units/src/main/filters/Filter.cpp
+    ${V}/lsp-dsp-units/src/main/filters/FilterBank.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/dsp/modules/LspKernels.cpp
+)
+set_target_properties(plugsalot_lsp PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON POSITION_INDEPENDENT_CODE ON)
+target_compile_definitions(plugsalot_lsp PUBLIC LSP_DSP_LIB_USE_CXX_IFACE)
+target_include_directories(plugsalot_lsp PUBLIC
+    ${V}/lsp-dsp-units/include
+    ${V}/lsp-common-lib/include
+    ${V}/lsp-dsp-lib/include
+)
+if(MSVC)
+    target_compile_options(plugsalot_lsp PRIVATE /W0 /D_USE_MATH_DEFINES)
+else()
+    target_compile_options(plugsalot_lsp PRIVATE -w)
+endif()
+
 # TuneBrew's header-only engine uses M_PI, which MSVC only declares with _USE_MATH_DEFINES set
 # before the first <cmath> include.
 set_source_files_properties(src/dsp/modules/TuneBrewModule.cpp PROPERTIES COMPILE_DEFINITIONS _USE_MATH_DEFINES)
@@ -173,8 +195,8 @@ endif()
 # ---------------------------------------------------------------------------
 set(CAT ${CMAKE_SOURCE_DIR}/catalogue)
 # Modules the plugin can run. Catalogue entries without DSP in the plugin yet
-# (para_eq, drum_sampler) are left out so the AI never offers them.
-set(PLUGSALOT_MODULES console_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide tunebrew hall room tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
+# (drum_sampler) are left out so the AI never offers them.
+set(PLUGSALOT_MODULES console_eq para_eq multicomp deess tape plate limiter nam_amp cab_ir delay tape_echo buttercomp2 console8 srsly2 sweetwide tunebrew hall room tube2 density air2 channel9 chorus_ensemble gx_supersonic gx_blueamp gx_plexi gx_guvnor gx_ultracab)
 set(PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/guidelines.md)
 foreach(f BarlowCondensed-SemiBold BarlowCondensed-Bold BarlowCondensed-Medium Barlow-Regular Barlow-Medium PermanentMarker-Regular)
     list(APPEND PLUGSALOT_DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/fonts/${f}.ttf)
@@ -216,6 +238,7 @@ set(PLUGSALOT_ENGINE_SOURCES
     src/dsp/modules/MultiCompModule.cpp
     src/dsp/modules/TapeModule.cpp
     src/dsp/modules/ConsoleEqModule.cpp
+    src/dsp/modules/ParaEqModule.cpp
     src/dsp/modules/PlateModule.cpp
     src/dsp/modules/HallModule.cpp
     src/dsp/modules/TuneBrewModule.cpp
@@ -311,7 +334,7 @@ target_link_libraries(Plugsalot
         PlugsalotData
         plugsalot_upstream_dsp
         plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly
-        plugsalot_nam
+        plugsalot_nam plugsalot_lsp
         juce::juce_audio_utils
         juce::juce_dsp
     PUBLIC
@@ -331,7 +354,7 @@ if(PLUGSALOT_BUILD_TESTS)
         JUCE_WEB_BROWSER=0 JUCE_USE_CURL=1 JUCE_STANDALONE_APPLICATION=1 PLUGSALOT_VERSION="${PROJECT_VERSION}"
         PLUGSALOT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
     target_link_libraries(PlugsalotTests PRIVATE
-        PlugsalotData plugsalot_upstream_dsp plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly plugsalot_nam
+        PlugsalotData plugsalot_upstream_dsp plugsalot_dragonfly_hall plugsalot_dragonfly_room plugsalot_dragonfly plugsalot_nam plugsalot_lsp
         juce::juce_core juce::juce_events juce::juce_audio_basics juce::juce_data_structures
         juce::juce_recommended_config_flags)
 endif()

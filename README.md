@@ -27,7 +27,7 @@ Plugsalot is nothing without the people who build and give away incredible plugi
 | [Dragonfly Reverb](https://github.com/michaelwillis/dragonfly-reverb) | Michael Willis and contributors (with freeverb3 by Teru Kamogashira) | Plate, Hall and Room reverbs |
 | [x42 plugins](https://github.com/x42/dpl.lv2) | Robin Gareus | Digital Peak Limiter |
 | [Neural Amp Modeler](https://github.com/sdatkinson/NeuralAmpModelerCore) and AudioDSPTools | Steven Atkinson | NAM Amp and Cabinet IR (still in the plugin, but the AI doesn't offer them for now) |
-| [LSP Plugins](https://github.com/lsp-plugins) | Vladimir Sadovnikov and the Linux Studio Plugins Project | Parametric EQ (coming soon) |
+| [LSP Plugins](https://github.com/lsp-plugins) | Vladimir Sadovnikov and the Linux Studio Plugins Project | Corrective Parametric EQ (8-band) |
 | [sfizz](https://github.com/sfztools/sfizz) | sfizz contributors | Drum sampler (coming soon) |
 
 Plugsalot also includes a simple Clean Delay that I wrote for this project, and uses the [Barlow](https://github.com/jpt/barlow) and [Permanent Marker](https://fonts.google.com/specimen/Permanent+Marker) fonts. Plugsalot itself is free software, **GPL-3.0-or-later**, and is built with [JUCE](https://juce.com/).
@@ -37,7 +37,7 @@ Plugsalot also includes a simple Clean Delay that I wrote for this project, and 
 | Module | Upstream | Licence |
 | --- | --- | --- |
 | `console_eq` | Dusk Audio 4K EQ 2 | GPL-3.0 |
-| `para_eq` | LSP Parametric Equalizer (catalogue only) | LGPL-3.0 |
+| `para_eq` | LSP Parametric Equalizer (IIR mode) | LGPL-3.0 |
 | `multicomp` | Dusk Audio Multi-Comp | GPL-3.0 |
 | `deess` | Airwindows DeBess | MIT |
 | `tape` | Dusk Audio TapeMachine 2 | GPL-3.0 |
@@ -120,7 +120,7 @@ More things to try, and what to look out for, are in [docs/TESTING.md](docs/TEST
 
 Plugsalot is an alpha, so there's plenty still to do:
 
-- The LSP Parametric EQ and the sfizz drum sampler are catalogued but not in the plugin yet.
+- The sfizz drum sampler is catalogued but not in the plugin yet. The new corrective EQ (LSP Parametric EQ) has been measured but not listened to yet.
 - The guitar amps still need lots of listening with real guitar, especially output levels, and Windows/macOS testing.
 - Hosted AI for Patreon supporters, so you won't need your own key.
 - API keys stored in the system keychain.

@@ -51,7 +51,7 @@
       "license": "LGPL-3.0-or-later",
       "license_file": "COPYING.LESSER",
       "authors": "Linux Studio Plugins Project",
-      "note": "Constants only (SPEC_FREQ_MIN/MAX, gain constants)."
+      "note": "Filter and FilterBank (the IIR filters used by the Corrective EQ) plus constants (SPEC_FREQ_MIN/MAX, gain constants) for the extractor."
     },
     "airwindows": {
       "repo": "https://github.com/airwindows/airwindows",
@@ -197,6 +197,24 @@
         "/src/",
         "/plugins/TuneBrew/README.md"
       ]
+    },
+    "lsp-common-lib": {
+      "repo": "https://github.com/lsp-plugins/lsp-common-lib",
+      "commit": "33523b493988e41dfb6c49e53282f73fdd353f3c",
+      "commit_date": "2026-08-20",
+      "license": "LGPL-3.0-or-later",
+      "license_file": "COPYING.LESSER",
+      "authors": "Linux Studio Plugins Project",
+      "note": "Headers only; types and helpers the LSP filter code includes."
+    },
+    "lsp-dsp-lib": {
+      "repo": "https://github.com/lsp-plugins/lsp-dsp-lib",
+      "commit": "6a4d5ba7a42378ab614129f05de6bd7a1afccc2f",
+      "commit_date": "2026-08-20",
+      "license": "LGPL-3.0-or-later",
+      "license_file": "COPYING.LESSER",
+      "authors": "Linux Studio Plugins Project",
+      "note": "Generic C++ filter kernels only (biquads, filter transfer); no assembly or CPU dispatch."
     }
   }
 }

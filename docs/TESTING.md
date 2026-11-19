@@ -68,7 +68,7 @@ To compare with Claude, choose **Claude: your own API key** in Settings and past
 
 ## Known limits
 
-- Modules: Console EQ (Dusk 4K EQ 2), Multi-Comp (Dusk), DeBess (Airwindows), TapeMachine 2 (Dusk), Plate Reverb (Dragonfly), Peak Limiter (x42), NAM Amp (Neural Amp Modeler), Cabinet IR, Clean Delay (Plugsalot's own) Tape Echo (Dusk Tape Echo 2), ButterComp2, Console8, Srsly2 and SweetWide (all Airwindows). The LSP 8-band EQ and the sfizz drum sampler are in the catalogue but not in the plugin yet.
+- Modules: Console EQ (Dusk 4K EQ 2), Multi-Comp (Dusk), DeBess (Airwindows), TapeMachine 2 (Dusk), Plate Reverb (Dragonfly), Peak Limiter (x42), NAM Amp (Neural Amp Modeler), Cabinet IR, Clean Delay (Plugsalot's own) Tape Echo (Dusk Tape Echo 2), ButterComp2, Console8, Srsly2 and SweetWide (all Airwindows). The Corrective EQ (LSP 8-band Parametric EQ, IIR mode) is in the plugin; the sfizz drum sampler is in the catalogue but not in the plugin yet.
 - Your API key is saved in a plain settings file in your user folder (not yet the system keychain).
 - Reverb is an insert with a dry/wet mix, not a send.
 - Bypassing a module that has latency briefly shifts timing; a latency-matched bypass is planned.
