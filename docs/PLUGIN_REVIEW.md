@@ -112,5 +112,5 @@ Not yet listened to on real vocals: default levels and the hint ranges are from 
 Still to do:
 
 - **DuskVerb** was ported and then dropped on 2026-11-12 at Adin's request. It worked (20 factory spaces behind a preset choice, with mix, decay, tone, character and duck on top) but measured 5-11% of a core against under 2% for Hall and Room. Decision: listen to the lighter Dragonfly Hall and Room first, and revisit DuskVerb only if their quality is not good enough. The port is in the branch history (commit 90cf88f) if it is wanted again.
-- **TuneBrew key detection.** TuneBrew is in, but its Detect Key button is not wired up: Plugsalot has no UI for it, so the AI uses Chromatic unless the user states the key. Wiring detection into the input analyser would let the AI set key and scale itself.
+- **TuneBrew key detection** is wired in: the input analyser follows the pitch of a single voice or instrument and estimates the key, the AI is told the key (and its confidence) and sets TuneBrew from it, and the TuneBrew slot shows the key with a confidence LED and a LOCK button. Untested by ear and in the real UI: needs a listen on real vocals.
 - LSP Gate and the remaining candidates, if still wanted.

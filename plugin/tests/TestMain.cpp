@@ -9,6 +9,7 @@
 #include "core/Library.h"
 #include "core/Tone3000.h"
 #include "dsp/ChainEngine.h"
+#include "dsp/InputAnalyser.h"
 #include <juce_events/juce_events.h>
 #include <chrono>
 #include <iostream>
@@ -725,6 +726,92 @@ static void testTone3000(const Catalogue& cat)
     tmp.deleteRecursively();
 }
 
+// Feeds a sung-style melody (harmonic tone, steps of 0.4 s, with short gaps) through the analyser.
+static AudioAnalysis analyseMelody(InputAnalyser& an, const std::vector<int>& midiNotes, double sr, double cents = 0.0)
+{
+    const int block = 256;
+    juce::AudioBuffer<float> buf(2, block);
+    double ph = 0;
+    int64_t pos = 0;
+    for (int note : midiNotes)
+    {
+        const double f0 = 440.0 * std::pow(2.0, (note - 69 + cents / 100.0) / 12.0);
+        for (int b = 0; b < (int) (0.4 * sr / block); ++b)
+        {
+            for (int i = 0; i < block; ++i, ++pos)
+            {
+                ph += f0 / sr; if (ph >= 1.0) ph -= 1.0;
+                const double inNote = std::fmod((double) pos / sr, 0.4);
+                const float env = inNote > 0.36 ? 0.0f : 1.0f; // brief breath between notes
+                float x = 0;
+                for (int h = 1; h <= 5; ++h) x += (float) (std::sin(2.0 * juce::MathConstants<double>::pi * h * ph) / h);
+                buf.setSample(0, i, 0.2f * x * env);
+                buf.setSample(1, i, 0.2f * x * env);
+            }
+            an.push(buf);
+        }
+    }
+    return an.snapshot();
+}
+
+static void testKeyDetection()
+{
+    std::cout << "Key detection\n";
+    const double sr = 48000.0;
+    // A minor melody: tonic-heavy walk around A3..A4 using the natural minor scale.
+    const std::vector<int> aMinor = { 57, 59, 60, 62, 64, 62, 60, 59, 57, 52, 57, 60, 64, 65, 64, 62, 60, 59, 57, 55, 57, 59, 60, 59, 57,
+                                      57, 60, 64, 62, 60, 57, 59, 57, 52, 55, 57, 62, 60, 59, 57 };
+    // C major melody.
+    const std::vector<int> cMajor = { 60, 62, 64, 65, 67, 65, 64, 62, 60, 55, 60, 64, 67, 69, 67, 65, 64, 62, 60, 59, 60, 62, 64, 62, 60,
+                                      60, 64, 67, 65, 64, 60, 62, 60, 55, 59, 60, 65, 64, 62, 60 };
+    {
+        InputAnalyser an; an.prepare(sr);
+        auto a = analyseMelody(an, aMinor, sr);
+        check(a.keyIndex == 12 + 9, "A minor melody is heard as A minor (got " + AudioAnalysis::keyName(a.keyIndex)
+              + ", confidence " + juce::String(a.keyConfidence, 2) + ")");
+        check(a.keyConfidence > 0.3f, "and with some confidence");
+        check(a.describe().contains("A minor"), "the AI is told the key: " + a.describe().fromFirstOccurrenceOf("Detected", true, false));
+        // A 30-cent-flat singer is still the same key.
+        InputAnalyser flat; flat.prepare(sr);
+        auto f = analyseMelody(flat, aMinor, sr, -30.0);
+        check(f.keyIndex == 12 + 9, "a singer 30 cents flat is still A minor (got " + AudioAnalysis::keyName(f.keyIndex) + ")");
+        // Lock it, then keep playing something in C major: the locked key must not move.
+        check(an.lockKey(), "lock accepts the detected key");
+        auto afterLock = analyseMelody(an, cMajor, sr);
+        check(afterLock.keyLocked && afterLock.keyIndex == 12 + 9 && afterLock.keyConfidence >= 1.0f, "locked key stays A minor while C major plays");
+        check(afterLock.describe().contains("locked"), "the AI is told the user locked it");
+        an.unlockKey();
+        auto relearn = analyseMelody(an, cMajor, sr);
+        check(! relearn.keyLocked && relearn.keyIndex == 0, "after unlocking it relearns: C major (got " + AudioAnalysis::keyName(relearn.keyIndex) + ")");
+    }
+    {
+        InputAnalyser an; an.prepare(sr);
+        juce::AudioBuffer<float> silence(2, 256);
+        silence.clear();
+        for (int i = 0; i < 400; ++i) an.push(silence);
+        check(an.snapshot().keyIndex < 0 && ! an.lockKey(), "silence gives no key and nothing to lock");
+        juce::Random rng(7);
+        juce::AudioBuffer<float> noise(2, 256);
+        for (int i = 0; i < 1000; ++i)
+        {
+            for (int c = 0; c < 2; ++c) for (int j = 0; j < 256; ++j) noise.setSample(c, j, 0.2f * (rng.nextFloat() * 2 - 1));
+            an.push(noise);
+        }
+        check(an.snapshot().keyConfidence < 0.3f, "noise gives no confident key (" + juce::String(an.snapshot().keyConfidence, 2) + ")");
+    }
+    {   // CPU: a full minute of melody + noise at 48 kHz
+        InputAnalyser an; an.prepare(sr);
+        juce::AudioBuffer<float> buf(2, 256);
+        for (int i = 0; i < 256; ++i) { buf.setSample(0, i, 0.3f * std::sin(i * 0.1f)); buf.setSample(1, i, 0.3f * std::sin(i * 0.1f)); }
+        const auto t0 = std::chrono::steady_clock::now();
+        const int blocks = (int) (30.0 * sr / 256);
+        for (int i = 0; i < blocks; ++i) an.push(buf);
+        const double secs = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+        std::cout << "  Input analyser incl. key tracking: " << juce::String(100.0 * secs / 30.0, 2) << "% of one core\n";
+        check(secs / 30.0 < 0.05, "key tracking stays cheap");
+    }
+}
+
 static void testLive(const Catalogue& cat)
 {
     ProviderSettings ps;
@@ -767,6 +854,7 @@ int main(int argc, char* argv[])
     testWideners(cat);
     testGuitarix(cat);
     testTone3000(cat);
+    testKeyDetection();
     testLive(cat);
 
     std::cout << (failures == 0 ? "\nAll tests passed\n" : "\n" + std::to_string(failures) + " test(s) failed\n");

@@ -63,6 +63,8 @@ public:
     const std::vector<ChatMessage>& getChat() const { return chat; }
     SessionContext& context() { return ctx; }
     AudioAnalysis analysis() const { return analyser.snapshot(); }
+    // Commit to the detected key (also sets any TuneBrew in the chain to it), or go back to listening.
+    void setKeyLocked(bool locked);
     int chainCpuPoints() const;
     // Peak output level since the last call (linear), for the VU meter; message thread only.
     float takeOutputPeak() noexcept { return outputPeak.exchange(0.0f); }

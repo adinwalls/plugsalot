@@ -15,6 +15,13 @@ struct AudioAnalysis
     float peakDb = -120.0f, rmsDb = -120.0f, crestDb = 0.0f;
     float lowDb = -120.0f, midDb = -120.0f, highDb = -120.0f; // band energy, relative
     double seconds = 0.0;
+    // Estimated key of what the input is playing: 0..11 major, 12..23 minor (tonic = value % 12), -1 unknown.
+    int keyIndex = -1;
+    float keyConfidence = 0.0f;   // 0..1
+    bool keyLocked = false;       // the user committed to this key
+    double keySeconds = 0.0;      // how much held singing/playing it is based on
+
+    static juce::String keyName(int index);   // "A minor", "F# major"; empty for -1
 
     juce::String describe() const;
 };

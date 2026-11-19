@@ -93,7 +93,7 @@
       ],
       "default": "C",
       "convert": "enum_index",
-      "ai_hint": "The song's key, as told by the user. Ignored when scale is Chromatic."
+      "ai_hint": "The song's key tonic: the user's stated key, else the key Plugsalot detected (Audio line) when locked or at least 60% confident. Ignored when scale is Chromatic."
     },
     {
       "upstream_id": "scale",
@@ -114,7 +114,7 @@
       ],
       "default": "Chromatic",
       "convert": "enum_index",
-      "ai_hint": "Use Chromatic (nearest semitone) unless the user has told you the key; never guess a key."
+      "ai_hint": "Use Major or Minor with the key set when the key is known (stated by the user, locked, or detected with 60%+ confidence); otherwise Chromatic (nearest semitone). Never guess a key."
     },
     {
       "upstream_id": "mode",
@@ -230,7 +230,7 @@
     }
   ],
   "notes": [
-    "Written against TuneBrew 1.4.3 (TuneParams.hpp, TuneBrewPlugin.cpp). The upstream Detect Key button, output gain and meters are not exposed: Plugsalot has no key-detection UI yet, so the key comes from the user.",
+    "Written against TuneBrew 1.4.3 (TuneParams.hpp, TuneBrewPlugin.cpp). The upstream Detect Key button, output gain and meters are not exposed. Plugsalot detects the key itself (plugin/src/dsp/KeyTracker.h, using the vendored KeyDetect.hpp on the input) and shows it on the slot.",
     "Put it first in the chain, before EQ, compression and effects.",
     "CPU: 2.06% of one core at 48 kHz on Plugsalot's 2-core build machine (plugin/tests/TestMain.cpp); 1 point per 2%, rounded up."
   ]

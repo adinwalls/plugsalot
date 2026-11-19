@@ -6,14 +6,36 @@
 namespace plugsalot
 {
 
+juce::String AudioAnalysis::keyName(int index)
+{
+    static const char* const names[12] = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+    if (index < 0 || index > 23)
+        return {};
+    return juce::String(names[index % 12]) + (index < 12 ? " major" : " minor");
+}
+
 juce::String AudioAnalysis::describe() const
 {
+    juce::String s;
     if (! valid)
-        return "No audio analysed yet (play the track through the plugin for a few seconds to include it).";
-    auto f = [](float v) { return juce::String(v, 1); };
-    return "Measured on the input over the last " + juce::String(seconds, 0) + " s: peak " + f(peakDb) + " dBFS, RMS "
-           + f(rmsDb) + " dBFS, crest factor " + f(crestDb) + " dB. Band balance relative to RMS: low (<250 Hz) "
-           + f(lowDb - rmsDb) + " dB, mid (250 Hz-4 kHz) " + f(midDb - rmsDb) + " dB, high (>4 kHz) " + f(highDb - rmsDb) + " dB.";
+    {
+        s = "No audio analysed yet (play the track through the plugin for a few seconds to include it).";
+    }
+    else
+    {
+        auto f = [](float v) { return juce::String(v, 1); };
+        s = "Measured on the input over the last " + juce::String(seconds, 0) + " s: peak " + f(peakDb) + " dBFS, RMS "
+            + f(rmsDb) + " dBFS, crest factor " + f(crestDb) + " dB. Band balance relative to RMS: low (<250 Hz) "
+            + f(lowDb - rmsDb) + " dB, mid (250 Hz-4 kHz) " + f(midDb - rmsDb) + " dB, high (>4 kHz) " + f(highDb - rmsDb) + " dB.";
+    }
+    if (keyIndex >= 0 && keyLocked)
+        s << " Key: " << keyName(keyIndex) << " (the user locked this key in, so treat it as certain).";
+    else if (keyIndex >= 0)
+        s << " Detected key: " << keyName(keyIndex) << ", confidence " << juce::String(juce::roundToInt(keyConfidence * 100.0f))
+          << "% (from " << juce::String(juce::roundToInt((float) keySeconds)) << " s of held notes; only meaningful when the input is one voice or instrument).";
+    else
+        s << " Key: not detected yet.";
+    return s;
 }
 
 juce::String PromptBuilder::systemPrompt(const Catalogue& catalogue)
