@@ -20,7 +20,7 @@ struct ValidationResult
 class ChainValidator
 {
 public:
-    static constexpr int maxModules = 8;
+    static constexpr int maxModules = 7;
     static int cpuBudget(const juce::String& cpuMode);   // light 6, normal 12, high 20
 
     explicit ChainValidator(const Catalogue& c) : catalogue(c) {}
