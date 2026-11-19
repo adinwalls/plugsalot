@@ -67,7 +67,7 @@ Curation can only **narrow** what upstream allows. If a bumped upstream commit c
 | `lv2_ttl` | LV2 Turtle port lists | x42 and other LV2 plugins |
 | `airwindows` | Airwindows effect sources + Airwindopedia | all ~500 Airwindows effects |
 | `lsp_para_eq` | LSP port macros | LSP Parametric Equalizer |
-| `manual` | written in the curation file | library APIs such as sfizz |
+| `manual` | written in the curation file | library APIs |
 
 ## Quick start
 
