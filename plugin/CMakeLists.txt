@@ -113,7 +113,8 @@ target_include_directories(plugsalot_lsp PUBLIC
     ${V}/lsp-dsp-lib/include
 )
 if(MSVC)
-    target_compile_options(plugsalot_lsp PRIVATE /W0 /D_USE_MATH_DEFINES)
+    target_include_directories(plugsalot_lsp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/shims/msvc-lsp)
+    target_compile_options(plugsalot_lsp PRIVATE /W0 /D_USE_MATH_DEFINES /FI${CMAKE_CURRENT_SOURCE_DIR}/shims/msvc-lsp/lsp_msvc_compat.h)
 else()
     target_compile_options(plugsalot_lsp PRIVATE -w)
 endif()
