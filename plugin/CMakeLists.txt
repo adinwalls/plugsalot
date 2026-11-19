@@ -115,6 +115,10 @@ target_include_directories(plugsalot_lsp PUBLIC
 if(MSVC)
     target_include_directories(plugsalot_lsp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/shims/msvc-lsp)
     target_compile_options(plugsalot_lsp PRIVATE /W0 /D_USE_MATH_DEFINES /FI${CMAKE_CURRENT_SOURCE_DIR}/shims/msvc-lsp/lsp_msvc_compat.h)
+    # The wrapper includes the same LSP headers, so it needs the same shims.
+    set_source_files_properties(src/dsp/modules/ParaEqModule.cpp PROPERTIES
+        INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/shims/msvc-lsp
+        COMPILE_OPTIONS "/FI${CMAKE_CURRENT_SOURCE_DIR}/shims/msvc-lsp/lsp_msvc_compat.h")
 else()
     target_compile_options(plugsalot_lsp PRIVATE -w)
 endif()
