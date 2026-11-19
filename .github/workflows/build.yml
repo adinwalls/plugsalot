@@ -16,8 +16,8 @@ jobs:
             os: ubuntu-22.04        # older glibc so the build runs on Ubuntu/Pop!_OS 22.04 and newer
           - name: windows
             os: windows-latest
-          - name: macos
-            os: macos-14
+          # macOS is paused for now (the hosted runner is unsupported and the job is cancelled instantly).
+          # Re-add a macOS entry here, plus its Xcode configure branch below, when it is back.
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.name }}
 
@@ -39,8 +39,6 @@ jobs:
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then
             cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DPLUGSALOT_TONE3000_CLIENT_ID="$T3K_CLIENT_ID"
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            cmake -S . -B build -G Xcode -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" -DPLUGSALOT_TONE3000_CLIENT_ID="$T3K_CLIENT_ID"
           else
             cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DPLUGSALOT_TONE3000_CLIENT_ID="$T3K_CLIENT_ID"
           fi

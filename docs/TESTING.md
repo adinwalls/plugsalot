@@ -4,10 +4,10 @@ This build is about whether the idea works: you describe a sound, the AI builds 
 
 ## 1. Get the build
 
-GitHub builds every version automatically for Linux, Windows and macOS:
+GitHub builds every version automatically for Linux and Windows (macOS builds are paused for now):
 
 1. Open the repo on GitHub, go to **Actions**, and click the latest green **Build plugin** run.
-2. Under **Artifacts**, download `Plugsalot-linux`, `Plugsalot-windows` or `Plugsalot-macos`.
+2. Under **Artifacts**, download `Plugsalot-linux`, or `Plugsalot-windows`.
 
 ## 2. Install
 

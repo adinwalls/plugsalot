@@ -28,7 +28,7 @@ cmake --build build --config Release
 build/plugin/PlugsalotTests_artefacts/Release/PlugsalotTests   # headless tests
 ```
 
-Linux needs: `libasound2-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxext-dev libfreetype-dev libfontconfig1-dev libcurl4-openssl-dev libgl1-mesa-dev`. GitHub Actions builds Linux, Windows and macOS on every push (`.github/workflows/build.yml`).
+Linux needs: `libasound2-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxext-dev libfreetype-dev libfontconfig1-dev libcurl4-openssl-dev libgl1-mesa-dev`. GitHub Actions builds Linux and Windows on every push (macOS builds are paused) (`.github/workflows/build.yml`).
 
 JUCE 8 is used under the AGPLv3, which GPLv3 explicitly allows combining with (GPLv3 section 13).
 

@@ -1,7 +1,7 @@
 # Handover notes (written 2026-10-31, after v0.3.0 UI port)
 
 ## State
-- `main` at the vintage-rack UI commit (6c22b95, version 0.3.0). CI is green on Linux, Windows and macOS. The user creates release tags themselves (tag pushes are blocked from the build environment): `v0.3.0` is ready to tag, as a **pre-release / alpha** (not "public beta"; it goes to a few musicians).
+- `main` at the vintage-rack UI commit (6c22b95, version 0.3.0). CI is green on Linux and Windows (macOS builds are paused). The user creates release tags themselves (tag pushes are blocked from the build environment): `v0.3.0` is ready to tag, as a **pre-release / alpha** (not "public beta"; it goes to a few musicians).
 - 14 runnable modules: console_eq, multicomp, deess, tape, plate, limiter, nam_amp, cab_ir, delay, tape_echo, buttercomp2, console8, srsly2, sweetwide.
 - The user records vocals on Linux (Ardour, Pop!_OS) today and will test the electric guitar features.
 - TONE3000: no reply yet. The publishable key goes in the GitHub repository variable `TONE3000_CLIENT_ID` (never the secret `t3k_cs_...` key). The user did not want to capture amps: only use and approve existing licensed captures.
