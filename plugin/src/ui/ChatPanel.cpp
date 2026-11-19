@@ -345,9 +345,10 @@ void ChatPanel::resized()
     auto quickArea = r.removeFromBottom(rows * 36 - 6);
     fb.performLayout(quickArea);
     r.removeFromBottom(10 - 6 + 0);
+    r.removeFromBottom(16);   // room for the tape label so it sits below the transcript instead of over it
     history.setBounds(r);
 
-    tweakTape = juce::Rectangle<float>(5.0f, (float) r.getBottom() - 12.0f, 190.0f, 22.0f);
+    tweakTape = juce::Rectangle<float>(5.0f, (float) r.getBottom() - 2.0f, 190.0f, 22.0f);
 }
 
 } // namespace plugsalot
