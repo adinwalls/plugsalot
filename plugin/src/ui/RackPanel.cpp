@@ -1,5 +1,6 @@
 // Plugsalot - GPL-3.0-or-later
 #include "RackPanel.h"
+#include "KeyDisplay.h"
 
 namespace plugsalot
 {
@@ -201,6 +202,11 @@ public:
         inButton.setMouseCursor(juce::MouseCursor::PointingHandCursor);
         inButton.setTooltip(tip);
         addAndMakeVisible(inButton);
+        if (cs.moduleId == "tunebrew") // pitch correction wants the song's key: show what the input analyser hears
+        {
+            keyDisplay = std::make_unique<KeyDisplay>(proc);
+            addAndMakeVisible(*keyDisplay);
+        }
         bypassed = cs.bypass;
         rebuildKnobs(false);
     }
@@ -274,6 +280,8 @@ public:
     {
         plate.setBounds(2, 64, getWidth() - 4, 42);
         inButton.setBounds((getWidth() - 46) / 2, 494, 46, 28);
+        if (keyDisplay != nullptr)
+            keyDisplay->setBounds(6, 106, getWidth() - 12, KeyDisplay::height);
         layoutKnobs();
     }
 
@@ -347,7 +355,7 @@ private:
     {
         if (knobs.isEmpty())
             return;
-        const int top = 108, bottom = 490;
+        const int top = keyDisplay != nullptr ? 106 + KeyDisplay::height + 6 : 108, bottom = 490;
         const int pitch = juce::jmin(75, (bottom - top) / knobs.size());
         int y = top;
         for (auto* k : knobs)
@@ -365,6 +373,7 @@ private:
     bool bypassed = false, frozen = false;
     Plate plate;
     InButton inButton;
+    std::unique_ptr<KeyDisplay> keyDisplay;
     juce::OwnedArray<Knob> knobs;
 };
 

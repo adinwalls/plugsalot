@@ -235,6 +235,35 @@ void PlugsalotProcessor::setManualParam(int slot, const juce::String& paramId, c
     engine.setParam(slot, paramId, value);
 }
 
+void PlugsalotProcessor::setKeyLocked(bool locked)
+{
+    if (! locked)
+    {
+        analyser.unlockKey();
+        postNote("Key unlocked. Listening for the key again.");
+        return;
+    }
+    if (! analyser.lockKey())
+        return;
+    const int k = analyser.snapshot().keyIndex;
+    const auto keyNames = juce::StringArray { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+    int tuned = 0;
+    for (int i = 0; i < (int) chain.slots.size(); ++i)
+    {
+        auto& cs = chain.slots[(size_t) i];
+        if (cs.moduleId != "tunebrew")
+            continue;
+        // Only touch the scale if it is a plain major/minor/chromatic one; a chosen Dorian or Blues stays as it is.
+        const auto scale = cs.params.contains("scale") ? cs.params["scale"].toString() : juce::String("Chromatic");
+        if (scale != "Chromatic" && scale != "Major" && scale != "Minor")
+            continue;
+        setManualParam(i, "key", keyNames[k % 12]);
+        setManualParam(i, "scale", k < 12 ? "Major" : "Minor");
+        ++tuned;
+    }
+    postNote("Key locked: " + AudioAnalysis::keyName(k) + (tuned > 0 ? ". TuneBrew is set to it." : "."));
+}
+
 void PlugsalotProcessor::setSlotFile(int slot, const juce::String& fileName)
 {
     if (slot < 0 || slot >= (int) chain.slots.size() || chain.slots[(size_t) slot].file == fileName)

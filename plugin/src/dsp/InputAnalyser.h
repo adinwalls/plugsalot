@@ -1,8 +1,10 @@
 // Plugsalot - GPL-3.0-or-later
 // Measures the input the AI is asked about: peak, RMS, crest factor and a
 // three-band balance, averaged over roughly the last ten seconds of signal.
+// Also follows the pitch of a single voice or instrument to estimate the song's key.
 #pragma once
 
+#include "KeyTracker.h"
 #include "ai/PromptBuilder.h"
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <atomic>
@@ -16,6 +18,7 @@ public:
     void prepare(double sampleRate)
     {
         sr = sampleRate;
+        keys.prepare(sampleRate);
         lowCoef = std::exp(-2.0 * juce::MathConstants<double>::pi * 250.0 / sr);
         highCoef = std::exp(-2.0 * juce::MathConstants<double>::pi * 4000.0 / sr);
         reset();
@@ -34,6 +37,7 @@ public:
     {
         const int n = b.getNumSamples();
         if (n == 0) return;
+        keys.push(b.getReadPointer(0), b.getNumChannels() > 1 ? b.getReadPointer(1) : nullptr, n);
         double sq = 0, lo = 0, hi = 0, mid = 0;
         float blockPeak = 0;
         for (int i = 0; i < n; ++i)
@@ -68,9 +72,15 @@ public:
         a.seconds = activeSeconds.load();
         a.valid = a.seconds >= 2.0;
         a.peakDb = peakDb.load(); a.rmsDb = rmsDb.load(); a.crestDb = a.peakDb - a.rmsDb;
+        a.keyIndex = keys.keyIndex(); a.keyConfidence = keys.confidence();
+        a.keyLocked = keys.isLocked(); a.keySeconds = keys.secondsHeard();
         a.lowDb = lowDb.load(); a.midDb = midDb.load(); a.highDb = highDb.load();
         return a;
     }
+
+    // Message thread. Commit to the key being shown (false if none yet), or go back to listening.
+    bool lockKey() { return keys.lock(); }
+    void unlockKey() { keys.unlock(); }
 
 private:
     void publish() noexcept
@@ -81,6 +91,7 @@ private:
         peakDb.store(juce::Decibels::gainToDecibels(peak, -120.0f));
     }
 
+    KeyTracker keys;
     double sr = 44100.0, lowCoef = 0, highCoef = 0, lowState = 0, highState = 0;
     double meanSq = 0, lowSq = 0, midSq = 0, highSq = 0;
     float peak = 0;
